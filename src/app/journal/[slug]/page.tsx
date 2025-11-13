@@ -91,28 +91,28 @@ const PostNavigation = async ({ currentSlug }: { currentSlug: string }) => {
   if (!prevPost && !nextPost) return null;
 
   return (
-    <nav className="relative mt-8">
-      <div className="absolute inset-0 flex items-center pointer-events-none">
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+    <nav className="relative">
+      <div className="absolute left-0 right-0 top-0 flex items-center justify-center">
+        <div className="h-px w-24 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       </div>
-      <div className="relative grid gap-4 pt-12 md:grid-cols-2">
+      <div className="grid grid-cols-2 gap-6 pt-12">
         {prevPost ? (
           <Link
             href={`/journal/${prevPost.slug}`}
-            className="group relative flex flex-col gap-3 rounded-xl border border-white/10 bg-black/30 p-6 transition-all hover:border-zen-gold/40 hover:bg-zen-gold/5 hover:shadow-lg hover:shadow-zen-gold/10"
+            className="group flex flex-col gap-4 rounded-lg border border-white/10 bg-black/20 p-6 transition-all hover:border-zen-gold/30 hover:bg-zen-gold/5"
           >
-            <div className="absolute right-4 top-4 opacity-0 transition-opacity group-hover:opacity-100">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-zen-gold/40 bg-zen-gold/10 text-zen-gold">
-                <ArrowLeft className="h-3.5 w-3.5" />
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zen-gold/20 bg-zen-gold/5 text-zen-gold transition-all group-hover:border-zen-gold/40 group-hover:bg-zen-gold/10">
+                <ArrowLeft className="h-4 w-4" />
               </div>
+              <p className="text-xs uppercase tracking-[0.3em] text-zen-gold/60">
+                Previous
+              </p>
             </div>
-            <p className="text-xs uppercase tracking-[0.4em] text-zen-gold/60">
-              Previous
-            </p>
-            <h3 className="font-display text-xl leading-tight text-zen-mist transition-colors group-hover:text-zen-gold pr-8">
+            <h3 className="font-display text-lg leading-snug text-zen-mist transition-colors group-hover:text-zen-gold">
               {prevPost.title}
             </h3>
-            <p className="text-sm text-zen-mist/60">
+            <p className="text-xs text-zen-mist/50">
               {formatJournalDate(prevPost.publishedAt)}
             </p>
           </Link>
@@ -123,24 +123,26 @@ const PostNavigation = async ({ currentSlug }: { currentSlug: string }) => {
         {nextPost ? (
           <Link
             href={`/journal/${nextPost.slug}`}
-            className="group relative flex flex-col gap-3 rounded-xl border border-white/10 bg-black/30 p-6 transition-all hover:border-zen-gold/40 hover:bg-zen-gold/5 hover:shadow-lg hover:shadow-zen-gold/10"
+            className="group flex flex-col gap-4 rounded-lg border border-white/10 bg-black/20 p-6 transition-all hover:border-zen-gold/30 hover:bg-zen-gold/5"
           >
-            <div className="absolute right-4 top-4 opacity-0 transition-opacity group-hover:opacity-100">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-zen-gold/40 bg-zen-gold/10 text-zen-gold">
-                <ArrowRight className="h-3.5 w-3.5" />
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zen-gold/20 bg-zen-gold/5 text-zen-gold transition-all group-hover:border-zen-gold/40 group-hover:bg-zen-gold/10">
+                <ArrowRight className="h-4 w-4" />
               </div>
+              <p className="text-xs uppercase tracking-[0.3em] text-zen-gold/60">
+                Next
+              </p>
             </div>
-            <p className="text-xs uppercase tracking-[0.4em] text-zen-gold/60">
-              Next
-            </p>
-            <h3 className="font-display text-xl leading-tight text-zen-mist transition-colors group-hover:text-zen-gold pr-8">
+            <h3 className="font-display text-lg leading-snug text-zen-mist transition-colors group-hover:text-zen-gold">
               {nextPost.title}
             </h3>
-            <p className="text-sm text-zen-mist/60">
+            <p className="text-xs text-zen-mist/50">
               {formatJournalDate(nextPost.publishedAt)}
             </p>
           </Link>
-        ) : null}
+        ) : (
+          <div />
+        )}
       </div>
     </nav>
   );
