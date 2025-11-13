@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, Space_Grotesk } from "next/font/google";
+import { Inter, Playfair_Display, Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import "./globals.css";
-import ParticleBackground from "@/components/particles/ParticleBackground";
 import FloatingElements from "@/components/animations/FloatingElements";
+import ParticleBackground from "@/components/particles/ParticleBackground";
+import "./globals.css";
 
 const heading = Playfair_Display({
   subsets: ["latin"],
