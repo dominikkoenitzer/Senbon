@@ -68,59 +68,61 @@ const GuestbookForm = ({ onSubmitted }: Props) => {
   });
 
   return (
-    <div className="space-y-6">
-      <p className="text-xs uppercase tracking-[0.4em] text-zen-gold/50">
+    <div className="space-y-8">
+      <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/40">
         Write a message
       </p>
       
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="space-y-2">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-3">
           <Input
             id="name"
             placeholder="Your name"
             {...form.register("name")}
             disabled={status === "pending"}
-            className="bg-transparent border-white/10 focus:border-zen-gold/30 rounded-none border-x-0 border-t-0 border-b"
+            className="bg-transparent border-0 border-b border-white/10 focus:border-zen-gold/30 rounded-none px-0 focus-visible:ring-0 focus-visible:ring-offset-0"
           />
           {form.formState.errors.name && (
-            <p className="text-xs text-zen-mist/50">
+            <p className="text-xs text-zen-mist/40">
               {form.formState.errors.name.message}
             </p>
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           <Textarea
             id="message"
-            rows={5}
+            rows={6}
             placeholder="Leave your message..."
             {...form.register("message")}
             disabled={status === "pending"}
-            className="bg-transparent border-white/10 focus:border-zen-gold/30 rounded-none resize-none"
+            className="bg-transparent border-0 border-b border-white/10 focus:border-zen-gold/30 rounded-none px-0 resize-none focus-visible:ring-0 focus-visible:ring-offset-0"
           />
           {form.formState.errors.message && (
-            <p className="text-xs text-zen-mist/50">
+            <p className="text-xs text-zen-mist/40">
               {form.formState.errors.message.message}
             </p>
           )}
         </div>
 
-        <Button
-          type="submit"
-          disabled={status === "pending"}
-          className="w-full rounded-none border border-zen-gold/20 bg-transparent text-zen-gold hover:bg-zen-gold/5 hover:border-zen-gold/30 transition-all"
-        >
-          {status === "pending" ? "Sending..." : "Submit"}
-        </Button>
+        <div className="pt-2">
+          <Button
+            type="submit"
+            disabled={status === "pending"}
+            className="w-full rounded-none border border-zen-gold/15 bg-transparent text-zen-gold/80 hover:bg-zen-gold/5 hover:border-zen-gold/25 transition-all"
+          >
+            {status === "pending" ? "Sending..." : "Submit"}
+          </Button>
+        </div>
 
         {status === "success" && (
-          <p className="text-xs text-zen-gold/70">
+          <p className="text-xs text-zen-gold/60">
             Message sent. It will appear after approval.
           </p>
         )}
         
         {status === "error" && errorMessage && (
-          <p className="text-xs text-zen-mist/60">{errorMessage}</p>
+          <p className="text-xs text-zen-mist/50">{errorMessage}</p>
         )}
       </form>
     </div>

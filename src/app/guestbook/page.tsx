@@ -15,24 +15,24 @@ const GuestbookPage = async () => {
   });
 
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-20 px-6 py-24">
-      <header className="space-y-6">
+    <div className="mx-auto flex max-w-5xl flex-col gap-24 px-6 py-24">
+      <header className="space-y-8">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-zen-mist/50 transition-colors hover:text-zen-gold/70"
+          className="inline-flex items-center gap-2 text-xs text-zen-mist/40 transition-colors hover:text-zen-gold/70"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-3.5 w-3.5" />
           <span>Back to garden</span>
         </Link>
         
-        <div className="space-y-4">
-          <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/50">
+        <div className="space-y-6">
+          <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/40">
             Guestbook
           </p>
           <h1 className="font-display text-4xl leading-[1.1] md:text-5xl lg:text-6xl">
             Leave a message
           </h1>
-          <p className="max-w-2xl text-base leading-relaxed text-zen-mist/60">
+          <p className="max-w-xl text-base leading-relaxed text-zen-mist/55">
             Messages are stored in Neon PostgreSQL and gently moderated before appearing publicly.
           </p>
         </div>
