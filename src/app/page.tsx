@@ -67,7 +67,7 @@ const Home = () => {
                 href="/guestbook"
                 title="Guestbook"
                 description="Leave a message"
-                position={{ x: "82%", y: "-5%" }}
+                position={{ x: "82%", y: "-15%" }}
                 delay={1.5}
                 icon={<MessageSquare className="w-7 h-7" />}
               />
