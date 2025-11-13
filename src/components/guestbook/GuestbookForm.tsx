@@ -1,12 +1,12 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import type { GuestbookEntry } from "@/lib/db";
 
 const schema = z.object({
@@ -72,7 +72,7 @@ const GuestbookForm = ({ onSubmitted }: Props) => {
       <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/40">
         Write a message
       </p>
-      
+
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-3">
           <Input
@@ -120,7 +120,7 @@ const GuestbookForm = ({ onSubmitted }: Props) => {
             Message sent. It will appear after approval.
           </p>
         )}
-        
+
         {status === "error" && errorMessage && (
           <p className="text-xs text-zen-mist/50">{errorMessage}</p>
         )}

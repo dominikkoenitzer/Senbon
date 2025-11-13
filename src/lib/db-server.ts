@@ -1,14 +1,10 @@
 import { sql } from "@vercel/postgres";
 import type { GuestbookEntry, GuestbookStatus } from "./db";
 
-// Server-side database functions that directly query the database
-// Use these in server components instead of making HTTP requests
-
 function useDb() {
   return Boolean(process.env.POSTGRES_URL || process.env.DATABASE_URL);
 }
 
-// Hydrate POSTGRES_URL from various env var names
 (function hydratePostgresEnv() {
   if (process.env.POSTGRES_URL) return;
 
@@ -66,7 +62,7 @@ async function ensureTable() {
     await sql`CREATE INDEX IF NOT EXISTS guestbook_created_at_idx ON guestbook (created_at DESC)`;
     await sql`CREATE INDEX IF NOT EXISTS guestbook_ip_hash_idx ON guestbook (ip_hash)`;
   } catch {
-    // ignore to avoid failing requests if DDL is restricted
+    // Ignore DDL errors if restricted
   }
 }
 
@@ -146,7 +142,6 @@ export const fetchGuestbookEntriesServer = async ({
     const items = rows.map(normalizeEntry);
 
     if (includePending) {
-      // Fetch pending entries too
       const { rows: pendingRows } = await sql<Row>`
         SELECT id, name, message, created_at, updated_at, edited, approved, rejected
         FROM guestbook
@@ -160,23 +155,23 @@ export const fetchGuestbookEntriesServer = async ({
 
     return items;
   } catch (error) {
-    // Silently fall back to demo entries if database is not configured
-    // This is expected behavior when DATABASE_URL is not set
     if (!useDb()) {
       return includePending
         ? FALLBACK_ENTRIES
         : FALLBACK_ENTRIES.slice(0, limit || 3);
     }
-    
-    // Only log actual database errors (not missing config)
+
     const errorMessage = error instanceof Error ? error.message : String(error);
-    if (!errorMessage.includes("fetch failed") && !errorMessage.includes("ECONNREFUSED")) {
+    if (
+      process.env.NODE_ENV === "development" &&
+      !errorMessage.includes("fetch failed") &&
+      !errorMessage.includes("ECONNREFUSED")
+    ) {
       console.warn("Database query failed, using fallback entries:", errorMessage);
     }
-    
+
     return includePending
       ? FALLBACK_ENTRIES
       : FALLBACK_ENTRIES.slice(0, limit || 3);
   }
 };
-

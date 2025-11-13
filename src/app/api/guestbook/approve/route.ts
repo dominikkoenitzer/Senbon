@@ -1,10 +1,12 @@
 export const runtime = "nodejs";
-
 export const dynamic = "force-dynamic";
 
 import { NextResponse, type NextRequest } from "next/server";
-
 import { sql } from "@vercel/postgres";
+
+function isDb() {
+  return Boolean(process.env.POSTGRES_URL || process.env.DATABASE_URL);
+}
 
 (function hydratePostgresEnv() {
   if (process.env.POSTGRES_URL) return;
@@ -37,10 +39,6 @@ import { sql } from "@vercel/postgres";
     }
   }
 })();
-
-function isDb() {
-  return Boolean(process.env.POSTGRES_URL || process.env.DATABASE_URL);
-}
 
 function getHeaderToken(req: NextRequest): string {
   const header = req.headers.get("x-admin-token") || "";
@@ -87,7 +85,7 @@ async function ensureTable() {
     await sql`ALTER TABLE guestbook ADD COLUMN IF NOT EXISTS ip_hash TEXT`;
     await sql`ALTER TABLE guestbook ADD COLUMN IF NOT EXISTS rejected BOOLEAN NOT NULL DEFAULT FALSE`;
   } catch {
-    // ignore DDL errors
+    // Ignore DDL errors if restricted
   }
 }
 
@@ -122,7 +120,6 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ items: rows });
   } catch {
-    // Missing table or DB issue
     return NextResponse.json({ items: [] });
   }
 }

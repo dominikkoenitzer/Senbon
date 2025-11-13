@@ -1,12 +1,9 @@
 export const runtime = "nodejs";
-
 export const dynamic = "force-dynamic";
 
-import { NextResponse, type NextRequest } from "next/server";
-
-import { sql } from "@vercel/postgres";
-
 import crypto from "crypto";
+import { NextResponse, type NextRequest } from "next/server";
+import { sql } from "@vercel/postgres";
 
 type GuestbookRow = {
   id: string;
@@ -17,16 +14,18 @@ type GuestbookRow = {
   edited: boolean;
 };
 
-// In-memory fallback for local dev when Postgres isn't configured
 const memory: Array<
   GuestbookRow & { ip_hash?: string; approved?: boolean; rejected?: boolean }
 > = [];
+
+const MAX_LIMIT = 50;
+const MAX_MESSAGE_LENGTH = 280;
+const RATE_LIMIT_WINDOW_MS = 30_000;
 
 function useDb() {
   return Boolean(process.env.POSTGRES_URL || process.env.DATABASE_URL);
 }
 
-// Allow Neon/Vercel setups with variant env names
 (function hydratePostgresEnv() {
   if (process.env.POSTGRES_URL) return;
 
@@ -58,10 +57,6 @@ function useDb() {
     }
   }
 })();
-
-const MAX_LIMIT = 50;
-const MAX_MESSAGE_LENGTH = 280;
-const RATE_LIMIT_WINDOW_MS = 30_000;
 
 function isAutoApprove() {
   const v = (process.env.GUESTBOOK_AUTO_APPROVE || "true").toLowerCase();
@@ -99,7 +94,7 @@ async function ensureTable() {
     await sql`CREATE INDEX IF NOT EXISTS guestbook_created_at_idx ON guestbook (created_at DESC)`;
     await sql`CREATE INDEX IF NOT EXISTS guestbook_ip_hash_idx ON guestbook (ip_hash)`;
   } catch {
-    // ignore to avoid failing requests if DDL is restricted
+    // Ignore DDL errors if restricted
   }
 }
 
@@ -140,7 +135,9 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const { rows } = await sql<GuestbookRow & { approved: boolean; rejected: boolean }>`
+    const { rows } = await sql<
+      GuestbookRow & { approved: boolean; rejected: boolean }
+    >`
       SELECT id, name, message, created_at, updated_at, edited, approved, rejected
       FROM guestbook
       WHERE approved = TRUE AND rejected = FALSE
@@ -166,13 +163,12 @@ export async function POST(req: NextRequest) {
   await ensureTable();
 
   const ipHash = getClientIpHash(req);
-
   let body: { name?: string; message?: string; hp?: string } = {};
 
   try {
     body = await req.json();
   } catch {
-    // ignore
+    // Ignore parse errors
   }
 
   const { name = null, message = "", hp = "" } = body;
@@ -225,10 +221,12 @@ export async function POST(req: NextRequest) {
     };
 
     memory.push(row);
-
     const { ip_hash, ...item } = row as any;
 
-    return NextResponse.json({ item, approved: row.approved !== false }, { status: 201 });
+    return NextResponse.json(
+      { item, approved: row.approved !== false },
+      { status: 201 },
+    );
   }
 
   if (isRateLimitEnabled()) {
@@ -259,7 +257,10 @@ export async function POST(req: NextRequest) {
     RETURNING id, name, message, created_at, updated_at, edited
   `;
 
-  return NextResponse.json({ item: inserted.rows[0], approved }, { status: 201 });
+  return NextResponse.json(
+    { item: inserted.rows[0], approved },
+    { status: 201 },
+  );
 }
 
 export async function PATCH() {
@@ -276,7 +277,9 @@ export async function DELETE(req: NextRequest) {
     try {
       const body = await req.json();
       id = (body?.id || "").trim();
-    } catch {}
+    } catch {
+      // Ignore parse errors
+    }
   }
 
   if (!id) return NextResponse.json({ error: "missing_id" }, { status: 400 });

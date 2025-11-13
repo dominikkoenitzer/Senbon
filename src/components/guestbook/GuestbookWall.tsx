@@ -38,7 +38,9 @@ const GuestbookWall = ({ initialEntries }: Props) => {
       }));
       setEntries(items);
     } catch (error) {
-      console.error("Failed to refresh guestbook entries:", error);
+      if (process.env.NODE_ENV === "development") {
+        console.error("Failed to refresh guestbook entries:", error);
+      }
     } finally {
       setRefreshing(false);
     }

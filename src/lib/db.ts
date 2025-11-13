@@ -15,12 +15,11 @@ export type GuestbookEntry = {
 
 const FALLBACK_ENTRIES: GuestbookEntry[] = [];
 
-// Convert API response to GuestbookEntry format
 function normalizeEntry(item: any): GuestbookEntry {
   const createdAt = item.created_at || item.createdAt || new Date().toISOString();
   const approved = item.approved !== false;
   const rejected = item.rejected === true;
-  
+
   let status: GuestbookStatus = "approved";
   if (rejected) status = "rejected";
   else if (!approved) status = "pending";
@@ -49,15 +48,11 @@ export const fetchGuestbookEntries = async ({
   includePending?: boolean;
   limit?: number;
 } = {}): Promise<GuestbookEntry[]> => {
-  // In server components, use direct database access
-  // In client components, use API routes
   if (typeof window === "undefined") {
-    // Server-side: import and use server function
     const { fetchGuestbookEntriesServer } = await import("./db-server");
     return fetchGuestbookEntriesServer({ includePending, limit });
   }
 
-  // Client-side: use API route
   try {
     const baseUrl = window.location.origin;
     const url = new URL("/api/guestbook", baseUrl);
@@ -80,7 +75,9 @@ export const fetchGuestbookEntries = async ({
 
     return items.filter((entry: GuestbookEntry) => entry.status === "approved");
   } catch (error) {
-    console.warn("Failed to fetch guestbook entries, using fallback:", error);
+    if (process.env.NODE_ENV === "development") {
+      console.warn("Failed to fetch guestbook entries, using fallback:", error);
+    }
     return includePending
       ? FALLBACK_ENTRIES
       : FALLBACK_ENTRIES.slice(0, limit || 3);
@@ -147,7 +144,6 @@ export const updateGuestbookEntryStatus = async ({
     throw new Error("Failed to update entry");
   }
 
-  // Fetch updated entry
   const entries = await fetchGuestbookEntries({ includePending: true });
   return entries.find((e) => e.id === id);
 };
