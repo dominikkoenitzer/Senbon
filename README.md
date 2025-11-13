@@ -52,17 +52,3 @@ CREATE TABLE IF NOT EXISTS guestbook_entries (
   user_agent TEXT
 );
 ```
-
-## Admin Panel
-
-- Public guestbook lives at `/guestbook`
-- Admin moderation dashboard lives at `/admin` (and hidden `/grove/keeper`)
-- Provide `ADMIN_TOKEN` via header input to approve/reject/delete entries
-
-## Easter Eggs
-
-- Konami code opens a portal to `/constellation/senbon-grove`
-- Click the 千本 wordmark seven times to reveal a secret link
-- Dawn (05:00–06:00) & lantern hour (20:00–22:00) show unique copy
-
-Enjoy the garden 🌸
