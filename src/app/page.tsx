@@ -126,9 +126,6 @@ const Home = async () => {
               3. Add the same env vars inside Vercel project settings before
               deploying.
             </li>
-            <li>
-              4. Approve guestbook entries at `/admin`.
-            </li>
           </ul>
         </div>
       </section>
