@@ -9,7 +9,7 @@ type Props = {
 
 const PostHeader = ({ post }: Props) => {
   return (
-    <header className="space-y-8 border-b border-white/10 pb-12">
+    <header className="space-y-8">
       <Link
         href="/journal"
         className="inline-flex items-center gap-2 text-sm text-zen-mist/60 transition-colors hover:text-zen-gold"
