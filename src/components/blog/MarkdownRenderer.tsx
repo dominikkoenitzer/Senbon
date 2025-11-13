@@ -84,6 +84,7 @@ const MarkdownRenderer = ({ content }: Props) => {
             )}
           />
         ),
+        hr: () => null,
       }}
       >
         {content}
