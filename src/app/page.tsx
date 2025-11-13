@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import LogoGlyph from "@/components/home/LogoGlyph";
 import ConstellationBackground from "@/components/home/ConstellationBackground";
 import ConstellationNode from "@/components/home/ConstellationNode";
 import { BookOpen, MessageSquare } from "lucide-react";
@@ -15,53 +14,40 @@ const Home = () => {
         {/* Top Section - Asymmetric Layout */}
         <div className="flex-1 flex items-start pt-16 md:pt-24 pb-8">
           <div className="w-full max-w-7xl mx-auto px-6 md:px-12">
-            <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
-              {/* Left Column - Title */}
-              <motion.div
-                className="md:col-span-7 space-y-6"
-                initial={{ opacity: 0, x: -40 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            <motion.div
+              className="space-y-6 max-w-4xl"
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <motion.p
+                className="text-xs uppercase tracking-[0.6em] text-zen-gold/35"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.8 }}
               >
-                <motion.p
-                  className="text-xs uppercase tracking-[0.6em] text-zen-gold/35"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2, duration: 0.8 }}
-                >
-                  senbon (千本) — "a thousand"
-                </motion.p>
-                
-                <motion.h1
-                  className="font-display text-5xl leading-[1.05] md:text-6xl lg:text-7xl xl:text-8xl"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  A zen garden journal
-                </motion.h1>
-                
-                <motion.p
-                  className="text-base md:text-lg leading-relaxed text-zen-mist/45 max-w-2xl"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.7, duration: 0.9 }}
-                >
-                  Built with Next.js 16, Tailwind, shadcn/ui, and Neon PostgreSQL.
-                  A clean, minimal space for thoughts, notes, and guest messages.
-                </motion.p>
-              </motion.div>
-
-              {/* Right Column - Logo */}
-              <motion.div
-                className="md:col-span-5 flex justify-end md:justify-start md:pt-12"
-                initial={{ opacity: 0, scale: 0.85, rotate: -3 }}
-                animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                transition={{ delay: 0.9, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+                senbon (千本) — "a thousand"
+              </motion.p>
+              
+              <motion.h1
+                className="font-display text-5xl leading-[1.05] md:text-6xl lg:text-7xl xl:text-8xl"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
               >
-                <LogoGlyph />
-              </motion.div>
-            </div>
+                A zen garden journal
+              </motion.h1>
+              
+              <motion.p
+                className="text-base md:text-lg leading-relaxed text-zen-mist/45 max-w-2xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7, duration: 0.9 }}
+              >
+                Built with Next.js 16, Tailwind, shadcn/ui, and Neon PostgreSQL.
+                A clean, minimal space for thoughts, notes, and guest messages.
+              </motion.p>
+            </motion.div>
           </div>
         </div>
 
