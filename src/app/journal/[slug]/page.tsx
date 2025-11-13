@@ -123,8 +123,11 @@ const PostNavigation = async ({ currentSlug }: { currentSlug: string }) => {
         {nextPost ? (
           <Link
             href={`/journal/${nextPost.slug}`}
-            className="group flex flex-1 items-center gap-4 rounded-2xl border border-white/10 bg-black/20 p-6 transition-all hover:border-zen-gold/40 hover:bg-zen-gold/5 hover:shadow-glow text-right"
+            className="group flex flex-1 items-center gap-4 rounded-2xl border border-white/10 bg-black/20 p-6 transition-all hover:border-zen-gold/40 hover:bg-zen-gold/5 hover:shadow-glow"
           >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zen-gold/30 bg-gradient-to-br from-zen-gold/20 to-zen-gold/5 text-zen-gold transition-all group-hover:border-zen-gold/60 group-hover:from-zen-gold/30 group-hover:to-zen-gold/10 group-hover:scale-110">
+              <ArrowRight className="h-4 w-4" />
+            </div>
             <div className="min-w-0 flex-1">
               <p className="text-xs uppercase tracking-[0.35em] text-zen-gold/60 mb-1.5">
                 Next Entry
@@ -135,9 +138,6 @@ const PostNavigation = async ({ currentSlug }: { currentSlug: string }) => {
               <p className="mt-1.5 text-xs text-zen-mist/60">
                 {formatJournalDate(nextPost.publishedAt)}
               </p>
-            </div>
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zen-gold/30 bg-gradient-to-br from-zen-gold/20 to-zen-gold/5 text-zen-gold transition-all group-hover:border-zen-gold/60 group-hover:from-zen-gold/30 group-hover:to-zen-gold/10 group-hover:scale-110">
-              <ArrowRight className="h-4 w-4" />
             </div>
           </Link>
         ) : null}
