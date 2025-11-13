@@ -8,7 +8,7 @@ import {
   type JournalPost,
 } from "@/lib/blog";
 import { formatJournalDate } from "@/lib/utils";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 type Params = {
   slug: string;
@@ -59,10 +59,10 @@ const PostHeader = ({ post }: { post: JournalPost }) => (
         <p className="max-w-3xl text-lg leading-relaxed text-zen-mist/85">
           {post.excerpt}
         </p>
-          <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
-            <div className="flex items-center gap-2 text-sm text-zen-mist/70">
-              <span>{Math.ceil(post.readingTime.minutes)} min read</span>
-            </div>
+        <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
+          <div className="flex items-center gap-2 text-sm text-zen-mist/70">
+            <span>{Math.ceil(post.readingTime.minutes)} min read</span>
+          </div>
           {post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {post.tags.map((tag) => (
@@ -91,33 +91,48 @@ const PostNavigation = async ({ currentSlug }: { currentSlug: string }) => {
   if (!prevPost && !nextPost) return null;
 
   return (
-    <nav className="zen-card grid gap-4 border-t border-white/10 pt-8 md:grid-cols-2">
+    <nav className="flex gap-4">
       {prevPost ? (
         <Link
           href={`/journal/${prevPost.slug}`}
-          className="group flex flex-col gap-2 rounded-lg border border-white/10 p-6 transition hover:border-zen-gold/40 hover:bg-zen-gold/5"
+          className="zen-card group flex-1 overflow-hidden transition-all hover:border-zen-gold/40 hover:bg-zen-gold/5"
         >
-          <p className="text-xs uppercase tracking-[0.3em] text-zen-gold/60">
-            Previous
-          </p>
-          <p className="font-display text-lg text-zen-mist group-hover:text-zen-gold transition">
-            {prevPost.title}
-          </p>
+          <div className="flex items-center gap-4 p-6">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-zen-gold/30 bg-zen-gold/10 text-zen-gold transition group-hover:border-zen-gold/60 group-hover:bg-zen-gold/20">
+              <ChevronLeft className="h-5 w-5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs uppercase tracking-[0.3em] text-zen-gold/60 mb-1">
+                Previous
+              </p>
+              <p className="font-display text-lg leading-tight text-zen-mist group-hover:text-zen-gold transition line-clamp-2">
+                {prevPost.title}
+              </p>
+            </div>
+          </div>
         </Link>
       ) : (
-        <div />
+        <div className="flex-1" />
       )}
+      
       {nextPost ? (
         <Link
           href={`/journal/${nextPost.slug}`}
-          className="group flex flex-col gap-2 rounded-lg border border-white/10 p-6 transition hover:border-zen-gold/40 hover:bg-zen-gold/5 text-right md:text-left"
+          className="zen-card group flex-1 overflow-hidden transition-all hover:border-zen-gold/40 hover:bg-zen-gold/5"
         >
-          <p className="text-xs uppercase tracking-[0.3em] text-zen-gold/60">
-            Next
-          </p>
-          <p className="font-display text-lg text-zen-mist group-hover:text-zen-gold transition">
-            {nextPost.title}
-          </p>
+          <div className="flex items-center gap-4 p-6">
+            <div className="min-w-0 flex-1 text-right">
+              <p className="text-xs uppercase tracking-[0.3em] text-zen-gold/60 mb-1">
+                Next
+              </p>
+              <p className="font-display text-lg leading-tight text-zen-mist group-hover:text-zen-gold transition line-clamp-2">
+                {nextPost.title}
+              </p>
+            </div>
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-zen-gold/30 bg-zen-gold/10 text-zen-gold transition group-hover:border-zen-gold/60 group-hover:bg-zen-gold/20">
+              <ChevronRight className="h-5 w-5" />
+            </div>
+          </div>
         </Link>
       ) : null}
     </nav>
