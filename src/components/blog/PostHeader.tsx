@@ -10,13 +10,22 @@ type Props = {
 const PostHeader = ({ post }: Props) => {
   return (
     <header className="space-y-8">
-      <Link
-        href="/journal"
-        className="inline-flex items-center gap-2 text-sm text-zen-mist/60 transition-colors hover:text-zen-gold"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        <span>Back to journal</span>
-      </Link>
+      <div className="flex items-center gap-4">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-sm text-zen-mist/60 transition-colors hover:text-zen-gold"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span>Back to garden</span>
+        </Link>
+        <span className="text-zen-mist/30">·</span>
+        <Link
+          href="/journal"
+          className="text-sm text-zen-mist/60 transition-colors hover:text-zen-gold"
+        >
+          Journal
+        </Link>
+      </div>
 
       <div className="space-y-6">
         <div>
