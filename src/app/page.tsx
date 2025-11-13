@@ -60,6 +60,23 @@ const Home = async () => {
               • Admin panel uses a token stored in `.env` + Vercel project
               secrets. No OAuth required.
             </p>
+            <div className="pt-4 border-t border-white/10 mt-4">
+              <p className="text-xs uppercase tracking-[0.35em] text-zen-gold/70 mb-3">
+                Deploy notes
+              </p>
+              <ol className="space-y-3 list-decimal list-inside">
+                <li>
+                  Duplicate <code>.env.example</code> → <code>.env.local</code> with{" "}
+                  <code>DATABASE_URL</code>, <code>ADMIN_TOKEN</code>, and{" "}
+                  <code>NEXT_PUBLIC_SITE_URL</code>.
+                </li>
+                <li>Create a Neon project + table (schema provided below).</li>
+                <li>
+                  Add the same env vars inside Vercel project settings before
+                  deploying.
+                </li>
+              </ol>
+            </div>
           </div>
         </div>
       </section>
@@ -111,22 +128,6 @@ const Home = async () => {
               />
             ))}
           </div>
-        </div>
-        <div className="space-y-4 rounded-3xl border border-white/10 bg-black/30 p-6">
-          <p className="text-xs uppercase tracking-[0.35em] text-zen-gold/70">
-            Deploy notes
-          </p>
-          <ul className="space-y-4 text-sm text-zen-mist/85">
-            <li>
-              1. Duplicate `.env.example` → `.env.local` with `DATABASE_URL`,
-              `ADMIN_TOKEN`, and `NEXT_PUBLIC_SITE_URL`.
-            </li>
-            <li>2. Create a Neon project + table (schema provided below).</li>
-            <li>
-              3. Add the same env vars inside Vercel project settings before
-              deploying.
-            </li>
-          </ul>
         </div>
       </section>
 
