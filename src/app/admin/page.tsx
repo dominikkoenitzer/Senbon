@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import AdminEntryCard from "@/components/guestbook/AdminEntryCard";
-import type { GuestbookEntry } from "@/lib/db";
+import type { GuestbookEntry, GuestbookStatus } from "@/lib/db";
 
 const AdminPage = () => {
   const [token, setToken] = useState("");
@@ -90,7 +90,7 @@ const AdminPage = () => {
 
   const handleAction = async (
     id: string,
-    action: "approved" | "rejected" | "delete",
+    action: GuestbookStatus | "delete",
   ) => {
     if (!token) return;
     setLoading(true);
@@ -105,6 +105,9 @@ const AdminPage = () => {
         });
         if (!response.ok) throw new Error("Delete failed.");
         setEntries((prev) => prev.filter((entry) => entry.id !== id));
+      } else if (action === "pending") {
+        // Can't set to pending, ignore
+        return;
       } else {
         const response = await fetch("/api/guestbook/approve", {
           method: "PATCH",
