@@ -140,8 +140,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const { rows } = await sql<GuestbookRow>`
-      SELECT id, name, message, created_at, updated_at, edited
+    const { rows } = await sql<GuestbookRow & { approved: boolean; rejected: boolean }>`
+      SELECT id, name, message, created_at, updated_at, edited, approved, rejected
       FROM guestbook
       WHERE approved = TRUE AND rejected = FALSE
       ORDER BY created_at DESC, id DESC

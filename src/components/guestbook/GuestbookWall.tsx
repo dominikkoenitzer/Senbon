@@ -17,7 +17,17 @@ const GuestbookWall = ({ initialEntries }: Props) => {
   const refreshEntries = async () => {
     setRefreshing(true);
     try {
-      const res = await fetch("/api/guestbook");
+      const res = await fetch("/api/guestbook", {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache",
+        },
+      });
+      
+      if (!res.ok) {
+        throw new Error("Failed to refresh entries");
+      }
+      
       const data = await res.json();
       const items = (data.items || []).map((item: any) => ({
         id: item.id,
@@ -28,7 +38,7 @@ const GuestbookWall = ({ initialEntries }: Props) => {
       }));
       setEntries(items);
     } catch (error) {
-      console.error(error);
+      console.error("Failed to refresh guestbook entries:", error);
     } finally {
       setRefreshing(false);
     }
