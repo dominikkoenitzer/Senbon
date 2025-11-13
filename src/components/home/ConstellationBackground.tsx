@@ -17,7 +17,7 @@ const ConstellationBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [mounted, setMounted] = useState(false);
   const starsRef = useRef<Star[]>([]);
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number | undefined>(undefined);
   const mouseRef = useRef({ x: 0, y: 0, active: false });
 
   useEffect(() => {
