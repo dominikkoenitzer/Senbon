@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter, Space_Grotesk } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import ParticleBackground from "@/components/particles/ParticleBackground";
 import FloatingElements from "@/components/animations/FloatingElements";
@@ -67,6 +68,7 @@ export default function RootLayout({
         <ParticleBackground />
         <FloatingElements />
         <main className="relative z-10">{children}</main>
+        <Analytics />
       </body>
     </html>
   );
