@@ -18,8 +18,9 @@ export const generateStaticParams = async () => {
   return slugs.map((slug) => ({ slug }));
 };
 
-export const generateMetadata = async ({ params }: { params: Params }) => {
-  const post = await getPostBySlug(params.slug);
+export const generateMetadata = async ({ params }: { params: Promise<Params> }) => {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
   if (!post) {
     return {
       title: "Post not found",
@@ -50,8 +51,9 @@ const PostHeader = ({ post }: { post: JournalPost }) => (
   </header>
 );
 
-const JournalPostPage = async ({ params }: { params: Params }) => {
-  const post = await getPostBySlug(params.slug);
+const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
   if (!post) return notFound();
 
   return (
