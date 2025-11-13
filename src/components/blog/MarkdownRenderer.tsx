@@ -41,19 +41,22 @@ const MarkdownRenderer = ({ content }: Props) => {
             className={cn("leading-relaxed text-zen-mist/85", props.className)}
           />
         ),
-        code: ({ inline, className, children, ...props }) => (
-          <code
-            {...props}
-            className={cn(
-              inline
-                ? "rounded-md bg-white/10 px-2 py-0.5 text-sm text-zen-gold"
-                : "block rounded-xl bg-black/40 p-4 text-sm",
-              className,
-            )}
-          >
-            {children}
-          </code>
-        ),
+        code: ({ className, children, ...props }: any) => {
+          const isInline = !className || !className.includes("language-");
+          return (
+            <code
+              {...props}
+              className={cn(
+                isInline
+                  ? "rounded-md bg-white/10 px-2 py-0.5 text-sm text-zen-gold"
+                  : "block rounded-xl bg-black/40 p-4 text-sm",
+                className,
+              )}
+            >
+              {children}
+            </code>
+          );
+        },
         blockquote: ({ ...props }) => (
           <blockquote
             {...props}
