@@ -68,52 +68,38 @@ const GuestbookForm = ({ onSubmitted }: Props) => {
   });
 
   return (
-    <div className="zen-card p-8">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <p className="text-xs uppercase tracking-[0.4em] text-zen-gold/60 mb-4">
-            Write a message
-          </p>
-        </div>
-
+    <div className="space-y-6">
+      <p className="text-xs uppercase tracking-[0.4em] text-zen-gold/50">
+        Write a message
+      </p>
+      
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-2">
-          <label
-            htmlFor="name"
-            className="text-xs uppercase tracking-[0.3em] text-zen-mist/70"
-          >
-            Name
-          </label>
           <Input
             id="name"
             placeholder="Your name"
             {...form.register("name")}
             disabled={status === "pending"}
-            className="bg-black/20 border-white/10"
+            className="bg-transparent border-white/10 focus:border-zen-gold/30 rounded-none border-x-0 border-t-0 border-b"
           />
           {form.formState.errors.name && (
-            <p className="text-xs text-red-300/80">
+            <p className="text-xs text-zen-mist/50">
               {form.formState.errors.name.message}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <label
-            htmlFor="message"
-            className="text-xs uppercase tracking-[0.3em] text-zen-mist/70"
-          >
-            Message
-          </label>
           <Textarea
             id="message"
-            rows={6}
+            rows={5}
             placeholder="Leave your message..."
             {...form.register("message")}
             disabled={status === "pending"}
-            className="bg-black/20 border-white/10 resize-none"
+            className="bg-transparent border-white/10 focus:border-zen-gold/30 rounded-none resize-none"
           />
           {form.formState.errors.message && (
-            <p className="text-xs text-red-300/80">
+            <p className="text-xs text-zen-mist/50">
               {form.formState.errors.message.message}
             </p>
           )}
@@ -122,23 +108,19 @@ const GuestbookForm = ({ onSubmitted }: Props) => {
         <Button
           type="submit"
           disabled={status === "pending"}
-          className="w-full rounded-lg border border-zen-gold/30 bg-zen-gold/5 text-zen-gold hover:bg-zen-gold/10 hover:border-zen-gold/40 transition-all"
+          className="w-full rounded-none border border-zen-gold/20 bg-transparent text-zen-gold hover:bg-zen-gold/5 hover:border-zen-gold/30 transition-all"
         >
-          {status === "pending" ? "Sending..." : "Submit message"}
+          {status === "pending" ? "Sending..." : "Submit"}
         </Button>
 
         {status === "success" && (
-          <div className="rounded-lg border border-zen-gold/30 bg-zen-gold/5 px-4 py-3">
-            <p className="text-sm text-zen-gold">
-              Message sent! It will appear after approval.
-            </p>
-          </div>
+          <p className="text-xs text-zen-gold/70">
+            Message sent. It will appear after approval.
+          </p>
         )}
         
         {status === "error" && errorMessage && (
-          <div className="rounded-lg border border-red-300/30 bg-red-300/5 px-4 py-3">
-            <p className="text-sm text-red-300">{errorMessage}</p>
-          </div>
+          <p className="text-xs text-zen-mist/60">{errorMessage}</p>
         )}
       </form>
     </div>

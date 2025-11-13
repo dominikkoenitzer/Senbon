@@ -4,7 +4,6 @@ import { useState } from "react";
 import GuestbookEntryCard from "@/components/guestbook/GuestbookEntry";
 import GuestbookForm from "@/components/guestbook/GuestbookForm";
 import type { GuestbookEntry } from "@/lib/db";
-import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 
 type Props = {
@@ -36,37 +35,35 @@ const GuestbookWall = ({ initialEntries }: Props) => {
   };
 
   return (
-    <div className="grid gap-12 lg:grid-cols-[1.5fr,1fr]">
-      <div className="space-y-8">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+    <div className="grid gap-16 lg:grid-cols-[1.3fr,1fr]">
+      <div className="space-y-12">
+        <div className="flex items-center justify-between border-b border-white/5 pb-4">
           <div>
             <p className="text-xs uppercase tracking-[0.4em] text-zen-gold/50">
               Messages
             </p>
-            <h2 className="mt-2 font-display text-2xl">
+            <p className="mt-2 text-sm text-zen-mist/50">
               {entries.length} {entries.length === 1 ? "entry" : "entries"}
-            </h2>
+            </p>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
             onClick={refreshEntries}
             disabled={refreshing}
-            className="text-zen-mist/60 hover:text-zen-gold"
+            className="text-xs text-zen-mist/40 hover:text-zen-gold/70 transition-colors flex items-center gap-2"
           >
-            <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
-            {refreshing ? "Refreshing..." : "Refresh"}
-          </Button>
+            <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? "animate-spin" : ""}`} />
+            Refresh
+          </button>
         </div>
         
-        <div className="space-y-6">
+        <div className="space-y-0">
           {entries.map((entry) => (
             <GuestbookEntryCard key={entry.id} entry={entry} />
           ))}
           {entries.length === 0 && (
-            <div className="zen-card px-8 py-12 text-center">
-              <p className="text-zen-mist/60">
-                No messages yet. Be the first to leave one!
+            <div className="py-12 text-center">
+              <p className="text-sm text-zen-mist/50">
+                No messages yet. Be the first to leave one.
               </p>
             </div>
           )}
