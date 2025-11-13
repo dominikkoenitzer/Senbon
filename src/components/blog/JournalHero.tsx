@@ -1,7 +1,17 @@
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+
 const JournalHero = () => {
   return (
     <section className="border-b border-white/10 pb-16">
       <div className="space-y-6">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-sm text-zen-mist/60 transition-colors hover:text-zen-gold mb-4"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span>Back to garden</span>
+        </Link>
         <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/50">
           Journal
         </p>
