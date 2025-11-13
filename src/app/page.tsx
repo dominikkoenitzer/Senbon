@@ -59,7 +59,7 @@ const Home = () => {
                 href="/journal"
                 title="Journal"
                 description="Thoughts, notes, and entries"
-                position={{ x: "8%", y: "75%" }}
+                position={{ x: "8%", y: "40%" }}
                 delay={1.3}
                 icon={<BookOpen className="w-7 h-7" />}
               />
@@ -67,7 +67,7 @@ const Home = () => {
                 href="/guestbook"
                 title="Guestbook"
                 description="Leave a message"
-                position={{ x: "82%", y: "15%" }}
+                position={{ x: "82%", y: "5%" }}
                 delay={1.5}
                 icon={<MessageSquare className="w-7 h-7" />}
               />
