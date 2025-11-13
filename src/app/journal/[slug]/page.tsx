@@ -11,7 +11,7 @@ type Params = {
   slug: string;
 };
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 export const generateStaticParams = async () => {
   const slugs = await getAllPostSlugs();
