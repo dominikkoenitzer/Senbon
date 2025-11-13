@@ -3,7 +3,6 @@ import { Playfair_Display, Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import ParticleBackground from "@/components/particles/ParticleBackground";
 import FloatingElements from "@/components/animations/FloatingElements";
-import KonamiPortal from "@/components/easter-eggs/KonamiPortal";
 
 const heading = Playfair_Display({
   subsets: ["latin"],
@@ -67,9 +66,7 @@ export default function RootLayout({
         <div className="noise-overlay" aria-hidden="true" />
         <ParticleBackground />
         <FloatingElements />
-        <KonamiPortal>
-          <main className="relative z-10">{children}</main>
-        </KonamiPortal>
+        <main className="relative z-10">{children}</main>
       </body>
     </html>
   );

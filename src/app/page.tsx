@@ -60,9 +60,6 @@ const Home = async () => {
               • Admin panel uses a token stored in `.env` + Vercel project
               secrets. No OAuth required.
             </p>
-            <p>
-              • Hidden features: Konami code portal and time-based messages.
-            </p>
           </div>
         </div>
       </section>
@@ -137,26 +134,6 @@ const Home = async () => {
         </div>
       </section>
 
-      <section className="grid gap-6 md:grid-cols-2">
-        {[
-          {
-            title: "Konami Portal",
-            detail: "Up Up Down Down Left Right Left Right B A → secret route.",
-          },
-          {
-            title: "Time Windows",
-            detail: "Time-based messages appear at specific hours of the day.",
-          },
-        ].map((secret) => (
-          <article key={secret.title} className="zen-card px-6 py-6">
-            <p className="text-xs uppercase tracking-[0.35em] text-zen-gold/60">
-              Hidden
-            </p>
-            <h3 className="mt-2 font-display text-2xl">{secret.title}</h3>
-            <p className="mt-3 text-sm text-zen-mist/80">{secret.detail}</p>
-          </article>
-        ))}
-      </section>
     </div>
   );
 };
