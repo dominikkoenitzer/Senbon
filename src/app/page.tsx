@@ -79,45 +79,6 @@ const Home = () => {
             />
           </div>
         </motion.div>
-
-        {/* Blueprint Section - Fixed at bottom */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 w-full max-w-2xl px-8"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.8, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div className="zen-card px-8 py-6 backdrop-blur-sm bg-black/15 border-white/5">
-            <div className="space-y-4 text-sm text-zen-mist/50">
-              <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/30">
-                Blueprint
-              </p>
-              <div className="space-y-2 text-xs leading-relaxed">
-                <p>
-                  • Journal entries live in <code className="rounded bg-white/5 px-1.5 py-0.5 text-zen-gold/60">content/journal/*.md</code>. Commit to git → blog updates automatically.
-                </p>
-                <p>
-                  • Guestbook uses Neon serverless PostgreSQL via <code className="rounded bg-white/5 px-1.5 py-0.5 text-zen-gold/60">lib/db.ts</code>, hitting <code className="rounded bg-white/5 px-1.5 py-0.5 text-zen-gold/60">/api/guestbook</code>.
-                </p>
-                <p>
-                  • Admin panel uses a token stored in <code className="rounded bg-white/5 px-1.5 py-0.5 text-zen-gold/60">.env</code> + Vercel project secrets. No OAuth required.
-                </p>
-              </div>
-              <div className="pt-4 border-t border-white/5 mt-4">
-                <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/30 mb-3">
-                  Deploy notes
-                </p>
-                <ol className="space-y-2 list-decimal list-inside text-xs leading-relaxed">
-                  <li>
-                    Duplicate <code className="rounded bg-white/5 px-1.5 py-0.5 text-zen-gold/60">.env.example</code> → <code className="rounded bg-white/5 px-1.5 py-0.5 text-zen-gold/60">.env.local</code> with <code className="rounded bg-white/5 px-1.5 py-0.5 text-zen-gold/60">DATABASE_URL</code>, <code className="rounded bg-white/5 px-1.5 py-0.5 text-zen-gold/60">ADMIN_TOKEN</code>, and <code className="rounded bg-white/5 px-1.5 py-0.5 text-zen-gold/60">NEXT_PUBLIC_SITE_URL</code>.
-                  </li>
-                  <li>Create a Neon project + table (schema provided below).</li>
-                  <li>Add the same env vars inside Vercel project settings before deploying.</li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </div>
   );
