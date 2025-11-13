@@ -45,7 +45,16 @@ const Home = () => {
                 transition={{ delay: 0.7, duration: 0.9 }}
               >
                 Built with Next.js 16, Tailwind, shadcn/ui, and Neon PostgreSQL.
-                A clean, minimal space for thoughts, notes, and guest messages.
+                A clean, minimal space for thoughts, notes, and guest messages.{" "}
+                <a
+                  href="https://github.com/dominikkoenitzer"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-zen-gold/70 hover:text-zen-gold transition-colors underline underline-offset-4"
+                >
+                  Follow me on GitHub
+                </a>
+                .
               </motion.p>
             </motion.div>
           </div>
