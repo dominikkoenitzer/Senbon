@@ -88,13 +88,13 @@ export const fetchGuestbookEntries = async ({
     }
 
     const data = await response.json();
-    const items = (data.items || []).map(normalizeEntry);
+    const items = (data.items || []).map(normalizeEntry) as GuestbookEntry[];
 
     if (includePending) {
       return items;
     }
 
-    return items.filter((entry) => entry.status === "approved");
+    return items.filter((entry: GuestbookEntry) => entry.status === "approved");
   } catch (error) {
     console.warn("Failed to fetch guestbook entries, using fallback:", error);
     return includePending
