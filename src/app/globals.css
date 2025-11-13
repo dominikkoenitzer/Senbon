@@ -1,26 +1,225 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 3px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 1.5rem;
+  --background: #05080f;
+  --foreground: #f3ede2;
+  --card: rgba(9, 14, 23, 0.8);
+  --card-foreground: #f3ede2;
+  --popover: rgba(5, 8, 15, 0.8);
+  --popover-foreground: #f3ede2;
+  --primary: #f7d8a0;
+  --primary-foreground: #070b17;
+  --secondary: rgba(138, 163, 158, 0.35);
+  --secondary-foreground: #f3ede2;
+  --muted: rgba(255, 255, 255, 0.05);
+  --muted-foreground: rgba(243, 237, 226, 0.75);
+  --accent: rgba(132, 168, 199, 0.45);
+  --accent-foreground: #f3ede2;
+  --destructive: #f97171;
+  --destructive-foreground: #05080f;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: rgba(247, 216, 160, 0.55);
+  --sidebar: rgba(5, 8, 15, 0.65);
+  --sidebar-foreground: #f3ede2;
+  --sidebar-primary: #f7d8a0;
+  --sidebar-primary-foreground: #05080f;
+  --sidebar-accent: rgba(132, 168, 199, 0.35);
+  --sidebar-accent-foreground: #f3ede2;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: rgba(247, 216, 160, 0.65);
+}
+
+.dark {
+  --background: #03050a;
+  --foreground: #f9efe1;
+  --card: rgba(7, 11, 23, 0.95);
+  --card-foreground: #f9efe1;
+  --popover: rgba(2, 4, 9, 0.9);
+  --popover-foreground: #f9efe1;
+  --primary: #f7d8a0;
+  --primary-foreground: #05080f;
+  --secondary: rgba(70, 93, 115, 0.65);
+  --secondary-foreground: #f9efe1;
+  --muted: rgba(255, 255, 255, 0.04);
+  --muted-foreground: rgba(245, 233, 209, 0.65);
+  --accent: rgba(226, 179, 192, 0.4);
+  --accent-foreground: #f9efe1;
+  --destructive: #f97171;
+  --destructive-foreground: #05080f;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: rgba(247, 216, 160, 0.45);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background-color: var(--background);
+    color: var(--foreground);
+    min-height: 100vh;
+    background-image: linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0.03) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        60deg,
+        rgba(255, 255, 255, 0.025) 1px,
+        transparent 1px
+      ),
+      radial-gradient(circle at 20% 20%, rgba(226, 179, 192, 0.16), transparent),
+      radial-gradient(circle at 80% 0%, rgba(142, 185, 214, 0.2), transparent);
+    background-size: 120px 120px, 140px 140px, cover, cover;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.zen-shell {
+  position: relative;
+  overflow: hidden;
+}
+
+.zen-shell::before,
+.zen-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--x, 50%) var(--y, 50%),
+    rgba(247, 216, 160, 0.12),
+    transparent 55%
+  );
+  opacity: 0.6;
+  transition: opacity 400ms ease;
+}
+
+.zen-shell::after {
+  background: radial-gradient(
+    circle at calc(100% - var(--x, 50%)) calc(100% - var(--y, 50%)),
+    rgba(142, 185, 214, 0.16),
+    transparent 55%
+  );
+  opacity: 0.35;
+}
+
+.zen-card {
+  border-radius: var(--radius);
+  background: rgba(7, 11, 23, 0.85);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 25px 60px rgba(4, 7, 15, 0.7);
+  position: relative;
+  overflow: hidden;
+}
+
+.zen-card::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: calc(var(--radius) - 2px);
+  border: 1px solid rgba(247, 216, 160, 0.12);
+  pointer-events: none;
+}
+
+.zen-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.zen-particles span {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(247, 216, 160, 0.65);
+  box-shadow: 0 0 8px rgba(247, 216, 160, 0.8);
+  animation: spark calc(4s + var(--delay, 0s)) linear infinite;
+  opacity: 0;
+}
+
+.zen-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(247, 216, 160, 0.4),
+    transparent
+  );
+}
+
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 0;
+}
+
+.petal {
+  position: absolute;
+  width: clamp(10px, 2vw, 18px);
+  height: clamp(16px, 3vw, 26px);
+  background: radial-gradient(
+      circle at 30% 30%,
+      rgba(255, 255, 255, 0.35),
+      transparent 50%
+    ),
+    rgba(226, 179, 192, 0.85);
+  border-radius: 60% 40% 60% 40%;
+  pointer-events: none;
+  opacity: 0.15;
+  filter: blur(0.5px);
+  animation: float calc(12s + var(--float, 0s)) ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

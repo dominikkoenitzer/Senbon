@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Senbon Garden — Zen Journal & Guestbook
 
-## Getting Started
+A zen garden-inspired blog built with Next.js 16, Tailwind CSS, shadcn/ui, and Neon serverless PostgreSQL. Think floating lanterns, particle drift, and subtle easter eggs reminiscent of Genshin Impact promo sites.
 
-First, run the development server:
+## Features
+
+- Markdown-powered journal stored in `content/journal/*.md`
+- Guestbook with Neon PostgreSQL storage + token-protected admin moderation
+- Animated hero with custom canvas particles, floating gradients, and Framer Motion card transitions
+- Easter eggs: Konami unlock, logo tap secret, secret `/constellation/senbon-grove` page, time-based whispers
+- Responsive layout, custom fonts (Playfair Display + Inter), and shadcn/ui components
+
+## Tech Stack
+
+- Next.js 16 (App Router, React 19)
+- TypeScript
+- Tailwind CSS v4 + shadcn/ui
+- Framer Motion
+- Neon PostgreSQL via `@neondatabase/serverless`
+- React Markdown + remark/rehype plugins
+
+## Local Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# open http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Copy `env.example` → `.env.local` and set:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+DATABASE_URL=postgres://...
+ADMIN_TOKEN=super-secret-token
+NEXT_PUBLIC_SITE_URL=https://senbon.ch
+```
 
-## Learn More
+Add the same variables to your Vercel project before deploying.
 
-To learn more about Next.js, take a look at the following resources:
+## Database Schema
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sql
+CREATE TABLE IF NOT EXISTS guestbook_entries (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(255) NOT NULL,
+  message TEXT NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
+  created_at TIMESTAMP DEFAULT NOW(),
+  ip_address VARCHAR(45),
+  user_agent TEXT
+);
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Admin Panel
 
-## Deploy on Vercel
+- Public guestbook lives at `/guestbook`
+- Admin moderation dashboard lives at `/admin` (and hidden `/grove/keeper`)
+- Provide `ADMIN_TOKEN` via header input to approve/reject/delete entries
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Easter Eggs
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Konami code opens a portal to `/constellation/senbon-grove`
+- Click the 千本 wordmark seven times to reveal a secret link
+- Dawn (05:00–06:00) & lantern hour (20:00–22:00) show unique copy
+
+Enjoy the garden 🌸
