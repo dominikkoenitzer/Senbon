@@ -1,12 +1,12 @@
 import Link from "next/link";
 import LogoGlyph from "@/components/home/LogoGlyph";
-import { getFeaturedPosts } from "@/lib/blog";
+import { getAllPosts } from "@/lib/blog";
 import BlogCard from "@/components/blog/BlogCard";
 import { fetchGuestbookEntries } from "@/lib/db";
 import GuestbookEntryCard from "@/components/guestbook/GuestbookEntry";
 
 const Home = async () => {
-  const featuredPosts = await getFeaturedPosts(3);
+  const allPosts = await getAllPosts();
   const guestbookPreview = await fetchGuestbookEntries({
     includePending: false,
     limit: 3,
@@ -73,17 +73,17 @@ const Home = async () => {
             <p className="text-xs uppercase tracking-[0.35em] text-zen-gold/60">
               Journal
             </p>
-            <h2 className="font-display text-3xl">Latest entries</h2>
+            <h2 className="font-display text-3xl">All entries</h2>
           </div>
           <Link
             href="/journal"
             className="text-sm uppercase tracking-[0.3em] text-zen-mist/70"
           >
-            View all
+            View journal
           </Link>
         </header>
-        <div className="grid gap-6 md:grid-cols-3">
-          {featuredPosts.map((post, index) => (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {allPosts.map((post, index) => (
             <BlogCard key={post.slug} post={post} index={index} />
           ))}
         </div>
