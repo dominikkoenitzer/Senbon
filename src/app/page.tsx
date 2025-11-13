@@ -127,8 +127,7 @@ const Home = async () => {
               deploying.
             </li>
             <li>
-              4. Approve guestbook entries at `/admin` (or the secret
-              `/grove/keeper`).
+              4. Approve guestbook entries at `/admin`.
             </li>
           </ul>
         </div>
