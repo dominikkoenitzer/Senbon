@@ -56,12 +56,6 @@ The moderation interface lives at `/admin`, protected by that single token. When
 
 The whole process takes seconds. Like water through bamboo.
 
-### Easter Egg Ledger
-
-- Konami code unlocks a portal to `/constellation/senbon-grove`
-- Time-based messages appear at specific hours (check between 05:00–06:00 for morning dew notes)
-- The particle system responds to mouse movement, creating ripples in the digital pond
-
 ### What I Learned
 
 Listening to water taught me that quiet interactions can still be playful. The blog now has enough soul to invite guests in; next step is teaching the admin dashboard to light up pending entries like stacked river stones.
