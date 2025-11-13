@@ -1,13 +1,12 @@
 # Senbon Garden — Zen Journal & Guestbook
 
-A zen garden-inspired blog built with Next.js 16, Tailwind CSS, shadcn/ui, and Neon serverless PostgreSQL. Think floating lanterns, particle drift, and subtle easter eggs reminiscent of Genshin Impact promo sites.
+A zen garden-inspired blog built with Next.js 16, Tailwind CSS, shadcn/ui, and Neon serverless PostgreSQL. Think floating lanterns, particle drift, and subtle animations.
 
 ## Features
 
 - Markdown-powered journal stored in `content/journal/*.md`
 - Guestbook with Neon PostgreSQL storage + token-protected admin moderation
 - Animated hero with custom canvas particles, floating gradients, and Framer Motion card transitions
-- Easter eggs: Konami unlock, logo tap secret, secret `/constellation/senbon-grove` page, time-based whispers
 - Responsive layout, custom fonts (Playfair Display + Inter), and shadcn/ui components
 
 ## Tech Stack
