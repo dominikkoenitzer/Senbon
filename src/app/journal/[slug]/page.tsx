@@ -8,7 +8,7 @@ import {
   type JournalPost,
 } from "@/lib/blog";
 import { formatJournalDate } from "@/lib/utils";
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type Params = {
   slug: string;
@@ -91,50 +91,57 @@ const PostNavigation = async ({ currentSlug }: { currentSlug: string }) => {
   if (!prevPost && !nextPost) return null;
 
   return (
-    <nav className="flex gap-4">
-      {prevPost ? (
-        <Link
-          href={`/journal/${prevPost.slug}`}
-          className="zen-card group flex-1 overflow-hidden transition-all hover:border-zen-gold/40 hover:bg-zen-gold/5"
-        >
-          <div className="flex items-center gap-4 p-6">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-zen-gold/30 bg-zen-gold/10 text-zen-gold transition group-hover:border-zen-gold/60 group-hover:bg-zen-gold/20">
-              <ChevronLeft className="h-5 w-5" />
+    <nav className="relative">
+      <div className="absolute inset-0 flex items-center">
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      </div>
+      <div className="relative flex gap-6 pt-12">
+        {prevPost ? (
+          <Link
+            href={`/journal/${prevPost.slug}`}
+            className="group flex flex-1 items-center gap-4 rounded-2xl border border-white/10 bg-black/20 p-6 transition-all hover:border-zen-gold/40 hover:bg-zen-gold/5 hover:shadow-glow"
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zen-gold/30 bg-gradient-to-br from-zen-gold/20 to-zen-gold/5 text-zen-gold transition-all group-hover:border-zen-gold/60 group-hover:from-zen-gold/30 group-hover:to-zen-gold/10 group-hover:scale-110">
+              <ArrowLeft className="h-4 w-4" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs uppercase tracking-[0.3em] text-zen-gold/60 mb-1">
-                Previous
+              <p className="text-xs uppercase tracking-[0.35em] text-zen-gold/60 mb-1.5">
+                Previous Entry
               </p>
-              <p className="font-display text-lg leading-tight text-zen-mist group-hover:text-zen-gold transition line-clamp-2">
+              <p className="font-display text-lg leading-tight text-zen-mist transition-colors group-hover:text-zen-gold line-clamp-2">
                 {prevPost.title}
               </p>
-            </div>
-          </div>
-        </Link>
-      ) : (
-        <div className="flex-1" />
-      )}
-      
-      {nextPost ? (
-        <Link
-          href={`/journal/${nextPost.slug}`}
-          className="zen-card group flex-1 overflow-hidden transition-all hover:border-zen-gold/40 hover:bg-zen-gold/5"
-        >
-          <div className="flex items-center gap-4 p-6">
-            <div className="min-w-0 flex-1 text-right">
-              <p className="text-xs uppercase tracking-[0.3em] text-zen-gold/60 mb-1">
-                Next
+              <p className="mt-1.5 text-xs text-zen-mist/60">
+                {formatJournalDate(prevPost.publishedAt)}
               </p>
-              <p className="font-display text-lg leading-tight text-zen-mist group-hover:text-zen-gold transition line-clamp-2">
+            </div>
+          </Link>
+        ) : (
+          <div className="flex-1" />
+        )}
+        
+        {nextPost ? (
+          <Link
+            href={`/journal/${nextPost.slug}`}
+            className="group flex flex-1 items-center gap-4 rounded-2xl border border-white/10 bg-black/20 p-6 transition-all hover:border-zen-gold/40 hover:bg-zen-gold/5 hover:shadow-glow text-right"
+          >
+            <div className="min-w-0 flex-1">
+              <p className="text-xs uppercase tracking-[0.35em] text-zen-gold/60 mb-1.5">
+                Next Entry
+              </p>
+              <p className="font-display text-lg leading-tight text-zen-mist transition-colors group-hover:text-zen-gold line-clamp-2">
                 {nextPost.title}
               </p>
+              <p className="mt-1.5 text-xs text-zen-mist/60">
+                {formatJournalDate(nextPost.publishedAt)}
+              </p>
             </div>
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-zen-gold/30 bg-zen-gold/10 text-zen-gold transition group-hover:border-zen-gold/60 group-hover:bg-zen-gold/20">
-              <ChevronRight className="h-5 w-5" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zen-gold/30 bg-gradient-to-br from-zen-gold/20 to-zen-gold/5 text-zen-gold transition-all group-hover:border-zen-gold/60 group-hover:from-zen-gold/30 group-hover:to-zen-gold/10 group-hover:scale-110">
+              <ArrowRight className="h-4 w-4" />
             </div>
-          </div>
-        </Link>
-      ) : null}
+          </Link>
+        ) : null}
+      </div>
     </nav>
   );
 };
