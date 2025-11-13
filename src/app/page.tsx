@@ -11,74 +11,97 @@ const Home = () => {
     <div className="relative min-h-screen overflow-hidden">
       <ConstellationBackground />
       
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-6 py-24">
-        {/* Main Content */}
-        <motion.div
-          className="flex flex-col items-center gap-16 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        >
-          {/* Title Section */}
-          <div className="space-y-8">
-            <motion.p
-              className="text-xs uppercase tracking-[0.6em] text-zen-gold/40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: 1 }}
-            >
-              senbon (千本) — "a thousand"
-            </motion.p>
-            
-            <motion.h1
-              className="font-display text-6xl leading-[1.1] md:text-7xl lg:text-8xl xl:text-9xl"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            >
-              A zen garden journal
-            </motion.h1>
-            
-            <motion.p
-              className="max-w-2xl mx-auto text-lg leading-relaxed text-zen-mist/55"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.9, duration: 1 }}
-            >
-              Built with Next.js 16, Tailwind, shadcn/ui, and Neon PostgreSQL.
-              A clean, minimal space for thoughts, notes, and guest messages.
-            </motion.p>
-          </div>
+      <div className="relative z-10 min-h-screen flex flex-col">
+        {/* Top Section - Asymmetric Layout */}
+        <div className="flex-1 flex items-start pt-16 md:pt-24 pb-8">
+          <div className="w-full max-w-7xl mx-auto px-6 md:px-12">
+            <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
+              {/* Left Column - Title */}
+              <motion.div
+                className="md:col-span-7 space-y-6"
+                initial={{ opacity: 0, x: -40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <motion.p
+                  className="text-xs uppercase tracking-[0.6em] text-zen-gold/35"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2, duration: 0.8 }}
+                >
+                  senbon (千本) — "a thousand"
+                </motion.p>
+                
+                <motion.h1
+                  className="font-display text-5xl leading-[1.05] md:text-6xl lg:text-7xl xl:text-8xl"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  A zen garden journal
+                </motion.h1>
+                
+                <motion.p
+                  className="text-base md:text-lg leading-relaxed text-zen-mist/45 max-w-2xl"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.7, duration: 0.9 }}
+                >
+                  Built with Next.js 16, Tailwind, shadcn/ui, and Neon PostgreSQL.
+                  A clean, minimal space for thoughts, notes, and guest messages.
+                </motion.p>
+              </motion.div>
 
-          {/* Logo */}
+              {/* Right Column - Logo */}
+              <motion.div
+                className="md:col-span-5 flex justify-end md:justify-start md:pt-12"
+                initial={{ opacity: 0, scale: 0.85, rotate: -3 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={{ delay: 0.9, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <LogoGlyph />
+              </motion.div>
+            </div>
+          </div>
+        </div>
+
+        {/* Center Section - Constellation Nodes with better positioning */}
+        <div className="flex-1 relative">
+          <div className="absolute inset-0 max-w-7xl mx-auto px-6 md:px-12">
+            <div className="relative w-full h-full">
+              <ConstellationNode
+                href="/journal"
+                title="Journal"
+                description="Thoughts, notes, and entries"
+                position={{ x: "8%", y: "15%" }}
+                delay={1.3}
+                icon={<BookOpen className="w-7 h-7" />}
+              />
+              <ConstellationNode
+                href="/guestbook"
+                title="Guestbook"
+                description="Leave a message"
+                position={{ x: "82%", y: "75%" }}
+                delay={1.5}
+                icon={<MessageSquare className="w-7 h-7" />}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Section - Minimal footer */}
+        <div className="pb-8 md:pb-12">
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ delay: 1.1, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-7xl mx-auto px-6 md:px-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.8, duration: 1 }}
           >
-            <LogoGlyph />
+            <p className="text-xs text-zen-mist/15 uppercase tracking-[0.4em] text-center">
+              Navigate the constellation
+            </p>
           </motion.div>
-
-          {/* Constellation Nodes */}
-          <div className="relative w-full max-w-5xl h-[600px] mt-8">
-            <ConstellationNode
-              href="/journal"
-              title="Journal"
-              description="Thoughts, notes, and entries"
-              position={{ x: "15%", y: "25%" }}
-              delay={1.4}
-              icon={<BookOpen className="w-7 h-7" />}
-            />
-            <ConstellationNode
-              href="/guestbook"
-              title="Guestbook"
-              description="Leave a message"
-              position={{ x: "75%", y: "65%" }}
-              delay={1.6}
-              icon={<MessageSquare className="w-7 h-7" />}
-            />
-          </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
