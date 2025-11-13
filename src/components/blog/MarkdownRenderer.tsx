@@ -12,11 +12,11 @@ type Props = {
 
 const MarkdownRenderer = ({ content }: Props) => {
   return (
-    <ReactMarkdown
-      className="prose prose-invert max-w-none prose-headings:font-display prose-headings:text-zen-mist prose-p:text-zen-mist/90 prose-strong:text-zen-gold prose-code:rounded-md prose-code:bg-white/5 prose-code:px-2 prose-code:py-1 prose-blockquote:border-zen-gold/50 prose-blockquote:text-zen-gold/80"
-      remarkPlugins={[remarkGfm]}
-      rehypePlugins={[rehypeHighlight]}
-      components={{
+    <div className="prose prose-invert max-w-none prose-headings:font-display prose-headings:text-zen-mist prose-p:text-zen-mist/90 prose-strong:text-zen-gold prose-code:rounded-md prose-code:bg-white/5 prose-code:px-2 prose-code:py-1 prose-blockquote:border-zen-gold/50 prose-blockquote:text-zen-gold/80">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeHighlight]}
+        components={{
         h2: ({ ...props }) => (
           <h2
             {...props}
@@ -82,9 +82,10 @@ const MarkdownRenderer = ({ content }: Props) => {
           />
         ),
       }}
-    >
-      {content}
-    </ReactMarkdown>
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
   );
 };
 
