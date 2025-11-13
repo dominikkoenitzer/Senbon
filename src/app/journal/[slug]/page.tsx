@@ -4,11 +4,10 @@ import MarkdownRenderer from "@/components/blog/MarkdownRenderer";
 import {
   getAllPostSlugs,
   getPostBySlug,
-  getAllPosts,
   type JournalPost,
 } from "@/lib/blog";
 import { formatJournalDate } from "@/lib/utils";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 type Params = {
   slug: string;
@@ -81,72 +80,6 @@ const PostHeader = ({ post }: { post: JournalPost }) => (
   </header>
 );
 
-const PostNavigation = async ({ currentSlug }: { currentSlug: string }) => {
-  const posts = await getAllPosts();
-  const currentIndex = posts.findIndex((p) => p.slug === currentSlug);
-  const prevPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
-  const nextPost =
-    currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null;
-
-  if (!prevPost && !nextPost) return null;
-
-  return (
-    <nav className="relative">
-      <div className="absolute left-0 right-0 top-0 flex items-center justify-center">
-        <div className="h-px w-24 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      </div>
-      <div className="grid grid-cols-2 gap-6 pt-12">
-        {prevPost ? (
-          <Link
-            href={`/journal/${prevPost.slug}`}
-            className="group flex flex-col gap-4 rounded-lg border border-white/10 bg-black/20 p-6 transition-all hover:border-zen-gold/30 hover:bg-zen-gold/5"
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zen-gold/20 bg-zen-gold/5 text-zen-gold transition-all group-hover:border-zen-gold/40 group-hover:bg-zen-gold/10">
-                <ArrowLeft className="h-4 w-4" />
-              </div>
-              <p className="text-xs uppercase tracking-[0.3em] text-zen-gold/60">
-                Previous
-              </p>
-            </div>
-            <h3 className="font-display text-lg leading-snug text-zen-mist transition-colors group-hover:text-zen-gold">
-              {prevPost.title}
-            </h3>
-            <p className="text-xs text-zen-mist/50">
-              {formatJournalDate(prevPost.publishedAt)}
-            </p>
-          </Link>
-        ) : (
-          <div />
-        )}
-        
-        {nextPost ? (
-          <Link
-            href={`/journal/${nextPost.slug}`}
-            className="group flex flex-col gap-4 rounded-lg border border-white/10 bg-black/20 p-6 transition-all hover:border-zen-gold/30 hover:bg-zen-gold/5"
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zen-gold/20 bg-zen-gold/5 text-zen-gold transition-all group-hover:border-zen-gold/40 group-hover:bg-zen-gold/10">
-                <ArrowRight className="h-4 w-4" />
-              </div>
-              <p className="text-xs uppercase tracking-[0.3em] text-zen-gold/60">
-                Next
-              </p>
-            </div>
-            <h3 className="font-display text-lg leading-snug text-zen-mist transition-colors group-hover:text-zen-gold">
-              {nextPost.title}
-            </h3>
-            <p className="text-xs text-zen-mist/50">
-              {formatJournalDate(nextPost.publishedAt)}
-            </p>
-          </Link>
-        ) : (
-          <div />
-        )}
-      </div>
-    </nav>
-  );
-};
 
 const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
   const { slug } = await params;
@@ -160,8 +93,6 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
       <div className="zen-card px-8 py-12 md:px-12">
         <MarkdownRenderer content={post.content} />
       </div>
-
-      <PostNavigation currentSlug={slug} />
     </article>
   );
 };
