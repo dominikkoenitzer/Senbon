@@ -68,72 +68,81 @@ const GuestbookForm = ({ onSubmitted }: Props) => {
   });
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="zen-card flex flex-col gap-4 bg-black/30 p-6"
-    >
-      <div>
-        <label
-          htmlFor="name"
-          className="text-xs uppercase tracking-[0.35em] text-zen-gold/70"
-        >
-          Name
-        </label>
-        <Input
-          id="name"
-          placeholder="Your name"
-          {...form.register("name")}
-          disabled={status === "pending"}
-          className="mt-2 bg-black/20"
-        />
-        {form.formState.errors.name ? (
-          <p className="mt-1 text-xs text-red-300">
-            {form.formState.errors.name.message}
+    <div className="zen-card p-8">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <p className="text-xs uppercase tracking-[0.4em] text-zen-gold/60 mb-4">
+            Write a message
           </p>
-        ) : null}
-      </div>
+        </div>
 
-      <div>
-        <label
-          htmlFor="message"
-          className="text-xs uppercase tracking-[0.35em] text-zen-gold/70"
-        >
-          Message
-        </label>
-        <Textarea
-          id="message"
-          rows={4}
-          placeholder="Leave your message..."
-          {...form.register("message")}
+        <div className="space-y-2">
+          <label
+            htmlFor="name"
+            className="text-xs uppercase tracking-[0.3em] text-zen-mist/70"
+          >
+            Name
+          </label>
+          <Input
+            id="name"
+            placeholder="Your name"
+            {...form.register("name")}
+            disabled={status === "pending"}
+            className="bg-black/20 border-white/10"
+          />
+          {form.formState.errors.name && (
+            <p className="text-xs text-red-300/80">
+              {form.formState.errors.name.message}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <label
+            htmlFor="message"
+            className="text-xs uppercase tracking-[0.3em] text-zen-mist/70"
+          >
+            Message
+          </label>
+          <Textarea
+            id="message"
+            rows={6}
+            placeholder="Leave your message..."
+            {...form.register("message")}
+            disabled={status === "pending"}
+            className="bg-black/20 border-white/10 resize-none"
+          />
+          {form.formState.errors.message && (
+            <p className="text-xs text-red-300/80">
+              {form.formState.errors.message.message}
+            </p>
+          )}
+        </div>
+
+        <Button
+          type="submit"
           disabled={status === "pending"}
-          className="mt-2 bg-black/20"
-        />
-        {form.formState.errors.message ? (
-          <p className="mt-1 text-xs text-red-300">
-            {form.formState.errors.message.message}
-          </p>
-        ) : null}
-      </div>
+          className="w-full rounded-lg border border-zen-gold/30 bg-zen-gold/5 text-zen-gold hover:bg-zen-gold/10 hover:border-zen-gold/40 transition-all"
+        >
+          {status === "pending" ? "Sending..." : "Submit message"}
+        </Button>
 
-      <Button
-        type="submit"
-        disabled={status === "pending"}
-        className="mt-2 rounded-full border border-zen-gold/40 bg-transparent text-zen-gold hover:bg-zen-gold/10"
-      >
-        {status === "pending" ? "Sending..." : "Submit"}
-      </Button>
-
-      {status === "success" ? (
-        <p className="text-sm text-zen-gold">
-          Entry sent! It will appear after admin approval.
-        </p>
-      ) : null}
-      {status === "error" && errorMessage ? (
-        <p className="text-sm text-red-300">{errorMessage}</p>
-      ) : null}
-    </form>
+        {status === "success" && (
+          <div className="rounded-lg border border-zen-gold/30 bg-zen-gold/5 px-4 py-3">
+            <p className="text-sm text-zen-gold">
+              Message sent! It will appear after approval.
+            </p>
+          </div>
+        )}
+        
+        {status === "error" && errorMessage && (
+          <div className="rounded-lg border border-red-300/30 bg-red-300/5 px-4 py-3">
+            <p className="text-sm text-red-300">{errorMessage}</p>
+          </div>
+        )}
+      </form>
+    </div>
   );
 };
 
 export default GuestbookForm;
-
