@@ -13,23 +13,7 @@ export type GuestbookEntry = {
   rejected?: boolean;
 };
 
-const FALLBACK_ENTRIES: GuestbookEntry[] = [
-  {
-    id: "preview-1",
-    name: "Alex",
-    message:
-      "Beautiful minimal design. The particle effects add a nice touch without being distracting.",
-    createdAt: new Date().toISOString(),
-    status: "approved",
-  },
-  {
-    id: "preview-2",
-    name: "Sam",
-    message: "Clean and elegant. Really enjoying the zen garden aesthetic.",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(),
-    status: "approved",
-  },
-];
+const FALLBACK_ENTRIES: GuestbookEntry[] = [];
 
 // Convert API response to GuestbookEntry format
 function normalizeEntry(item: any): GuestbookEntry {
