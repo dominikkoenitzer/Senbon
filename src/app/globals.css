@@ -149,6 +149,14 @@
   overflow: hidden;
 }
 
+/* Remove shadows from code blocks */
+.zen-card pre,
+.zen-card code,
+pre,
+code {
+  box-shadow: none !important;
+}
+
 .zen-card::before {
   content: "";
   position: absolute;
