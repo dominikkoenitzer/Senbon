@@ -9,7 +9,7 @@ type Props = {
 
 const PostHeader = ({ post }: Props) => {
   return (
-    <header className="space-y-8">
+    <header className="space-y-10 pb-8 border-b border-white/10">
       <div className="flex items-center gap-4">
         <Link
           href="/"
@@ -27,23 +27,23 @@ const PostHeader = ({ post }: Props) => {
         </Link>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-8">
         <div>
-          <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/60">
+          <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/60 mb-4">
             {formatJournalDate(post.publishedAt)}
           </p>
-          <h1 className="mt-4 font-display text-4xl leading-[1.1] md:text-5xl lg:text-6xl">
+          <h1 className="font-display text-5xl leading-[1.1] md:text-6xl lg:text-7xl text-zen-mist mb-6">
             {post.title}
           </h1>
         </div>
 
         {post.excerpt && (
-          <p className="max-w-3xl text-lg leading-relaxed text-zen-mist/75">
+          <p className="max-w-3xl text-xl leading-relaxed text-zen-mist/75 font-light">
             {post.excerpt}
           </p>
         )}
 
-        <div className="flex flex-wrap items-center gap-4 pt-2">
+        <div className="flex flex-wrap items-center gap-6 pt-4">
           <div className="flex items-center gap-2 text-sm text-zen-mist/60">
             <span>{Math.ceil(post.readingTime.minutes)} min read</span>
           </div>
@@ -54,7 +54,7 @@ const PostHeader = ({ post }: Props) => {
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full border border-zen-gold/20 bg-zen-gold/5 px-3 py-1 text-xs uppercase tracking-[0.2em] text-zen-gold/60"
+                    className="rounded-full border border-zen-gold/20 bg-zen-gold/5 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-zen-gold/70 font-medium"
                   >
                     {tag}
                   </span>
@@ -69,4 +69,3 @@ const PostHeader = ({ post }: Props) => {
 };
 
 export default PostHeader;
-
