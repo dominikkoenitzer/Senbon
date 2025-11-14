@@ -42,14 +42,14 @@ const PostContent = async ({ slug }: { slug: string }) => {
   if (!post) return notFound();
 
   return (
-    <div className="zen-card px-8 py-12 md:px-12">
+    <div className="zen-card px-8 py-12 md:px-16 lg:px-20">
       <MarkdownRenderer content={post.content} />
     </div>
   );
 };
 
 const PostContentSkeleton = () => (
-  <div className="zen-card px-8 py-12 md:px-12">
+  <div className="zen-card px-8 py-12 md:px-16 lg:px-20">
     <div className="space-y-4 animate-pulse">
       {Array.from({ length: 8 }).map((_, i) => (
         <div
@@ -68,7 +68,7 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
   if (!post) return notFound();
 
   return (
-    <article className="mx-auto flex max-w-3xl flex-col gap-16 px-6 py-20">
+    <article className="mx-auto flex max-w-4xl flex-col gap-20 px-6 py-24 md:py-32">
       <PostHeader post={post} />
 
       <Suspense fallback={<PostContentSkeleton />}>
