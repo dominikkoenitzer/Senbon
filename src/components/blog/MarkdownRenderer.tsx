@@ -123,23 +123,39 @@ const MarkdownRenderer = ({ content }: Props) => {
                   {...props}
                   className={cn(
                     isInline
-                      ? "rounded-md bg-white/8 px-2 py-1 text-sm font-mono text-zen-gold before:content-none after:content-none backdrop-blur-sm"
-                      : "block rounded-xl bg-black/40 border border-white/5 p-6 text-sm font-mono overflow-x-auto my-6 backdrop-blur-sm shadow-lg shadow-black/20",
+                      ? "rounded-md bg-white/10 px-2 py-1 text-sm font-mono text-zen-gold/90 before:content-none after:content-none backdrop-blur-sm border border-zen-gold/10"
+                      : "block text-sm font-mono my-0",
                     className,
                   )}
                 >
+                  {!isInline && (
+                    <>
+                      {/* Decorative top border */}
+                      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zen-gold/30 to-transparent" />
+                      {/* Subtle inner glow */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-zen-gold/5 via-transparent to-transparent rounded-xl pointer-events-none" />
+                    </>
+                  )}
                   {children}
                 </code>
               );
             },
-            pre: ({ ...props }) => (
+            pre: ({ children, ...props }: any) => (
               <pre
                 {...props}
                 className={cn(
-                  "mb-6 rounded-xl bg-black/40 border border-white/5 p-0 overflow-hidden backdrop-blur-sm shadow-lg shadow-black/20",
+                  "mb-6 rounded-xl bg-gradient-to-br from-black/60 via-black/50 to-black/60 border border-zen-gold/20 p-6 overflow-x-auto backdrop-blur-md shadow-2xl shadow-black/40 relative",
                   props.className,
                 )}
-              />
+              >
+                {/* Decorative top border */}
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zen-gold/30 to-transparent z-10" />
+                {/* Subtle inner glow */}
+                <div className="absolute inset-0 bg-gradient-to-br from-zen-gold/5 via-transparent to-transparent rounded-xl pointer-events-none" />
+                <div className="relative z-10">
+                  {children}
+                </div>
+              </pre>
             ),
             blockquote: ({ ...props }) => (
               <motion.blockquote
