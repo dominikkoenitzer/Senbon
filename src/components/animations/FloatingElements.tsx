@@ -49,6 +49,8 @@ const FloatingElements = () => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // Set mounted state to enable client-only rendering
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     setPetals(
       Array.from({ length: 18 }, (_, idx) => ({

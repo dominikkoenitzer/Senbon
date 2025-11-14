@@ -15,7 +15,17 @@ export type GuestbookEntry = {
 
 const FALLBACK_ENTRIES: GuestbookEntry[] = [];
 
-function normalizeEntry(item: any): GuestbookEntry {
+function normalizeEntry(item: {
+  id: string;
+  name?: string | null;
+  created_at?: string;
+  createdAt?: string;
+  approved?: boolean;
+  rejected?: boolean;
+  message: string;
+  updated_at?: string | null;
+  edited?: boolean;
+}): GuestbookEntry {
   const createdAt = item.created_at || item.createdAt || new Date().toISOString();
   const approved = item.approved !== false;
   const rejected = item.rejected === true;

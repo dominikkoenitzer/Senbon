@@ -26,7 +26,7 @@ const Home = () => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.8 }}
               >
-                senbon (千本) — "a thousand"
+                senbon (千本) — &quot;a thousand&quot;
               </motion.p>
               
               <motion.h1

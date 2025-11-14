@@ -29,7 +29,15 @@ const GuestbookWall = ({ initialEntries }: Props) => {
       }
       
       const data = await res.json();
-      const items = (data.items || []).map((item: any) => ({
+      const items = (data.items || []).map((item: {
+        id: string;
+        name?: string | null;
+        message: string;
+        approved?: boolean;
+        rejected?: boolean;
+        created_at?: string;
+        createdAt?: string;
+      }) => ({
         id: item.id,
         name: item.name || "Anonymous",
         message: item.message,

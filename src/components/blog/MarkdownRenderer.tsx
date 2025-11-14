@@ -116,7 +116,11 @@ const MarkdownRenderer = ({ content }: Props) => {
                 className={cn("italic text-zen-mist/90 not-italic font-light", props.className)}
               />
             ),
-            code: ({ className, children, ...props }: any) => {
+            code: ({ className, children, ...props }: {
+              className?: string;
+              children?: React.ReactNode;
+              [key: string]: unknown;
+            }) => {
               const isInline = !className || !className.includes("language-");
               return (
                 <code
@@ -132,7 +136,11 @@ const MarkdownRenderer = ({ content }: Props) => {
                 </code>
               );
             },
-            pre: ({ children, ...props }: any) => (
+            pre: ({ children, ...props }: {
+              children?: React.ReactNode;
+              className?: string;
+              [key: string]: unknown;
+            }) => (
               <pre
                 {...props}
                 className={cn(

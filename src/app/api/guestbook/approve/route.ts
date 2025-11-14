@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 import { NextResponse, type NextRequest } from "next/server";
 import { sql } from "@vercel/postgres";
 
-function isDb() {
+function isDbConfigured() {
   return Boolean(process.env.POSTGRES_URL || process.env.DATABASE_URL);
 }
 
@@ -64,7 +64,7 @@ function requireAdmin(req: NextRequest): NextResponse | null {
 }
 
 async function ensureTable() {
-  if (!isDb()) return;
+  if (!isDbConfigured()) return;
 
   try {
     await sql`
@@ -98,7 +98,7 @@ export async function GET(req: NextRequest) {
 
   await ensureTable();
 
-  if (!isDb()) {
+  if (!isDbConfigured()) {
     return NextResponse.json({ items: [] });
   }
 
@@ -130,10 +130,10 @@ export async function PATCH(req: NextRequest) {
 
   await ensureTable();
 
-  if (!isDb())
+  if (!isDbConfigured())
     return NextResponse.json({ error: "no_db" }, { status: 400 });
 
-  const body = await req.json().catch(() => ({} as any));
+  const body = await req.json().catch(() => ({} as { id?: string; approved?: boolean; rejected?: boolean }));
 
   const id = (body.id || "").trim();
   const approved = Boolean(body.approved);

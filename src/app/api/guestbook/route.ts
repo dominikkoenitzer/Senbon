@@ -22,7 +22,7 @@ const MAX_LIMIT = 50;
 const MAX_MESSAGE_LENGTH = 280;
 const RATE_LIMIT_WINDOW_MS = 30_000;
 
-function useDb() {
+function isDbConfigured() {
   return Boolean(process.env.POSTGRES_URL || process.env.DATABASE_URL);
 }
 
@@ -70,7 +70,7 @@ function isRateLimitEnabled() {
 }
 
 async function ensureTable() {
-  if (!useDb()) return;
+  if (!isDbConfigured()) return;
 
   try {
     await sql`
@@ -121,7 +121,7 @@ export async function GET(req: NextRequest) {
     0,
   );
 
-  if (!useDb()) {
+  if (!isDbConfigured()) {
     const items = memory
       .slice()
       .filter((a) => a.approved !== false && a.rejected !== true)
@@ -185,7 +185,7 @@ export async function POST(req: NextRequest) {
 
   const safeName = name ? String(name).slice(0, 50).trim() : null;
 
-  if (!useDb()) {
+  if (!isDbConfigured()) {
     if (isRateLimitEnabled()) {
       const lastForIp = memory
         .filter((r) => r.ip_hash === ipHash)
@@ -221,7 +221,8 @@ export async function POST(req: NextRequest) {
     };
 
     memory.push(row);
-    const { ip_hash, ...item } = row as any;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { ip_hash, ...item } = row;
 
     return NextResponse.json(
       { item, approved: row.approved !== false },
@@ -290,7 +291,7 @@ export async function DELETE(req: NextRequest) {
       adminHeader === process.env.GUESTBOOK_ADMIN_TOKEN,
   );
 
-  if (!useDb()) {
+  if (!isDbConfigured()) {
     if (isAdmin) {
       const idx = memory.findIndex((r) => r.id === id);
       if (idx === -1)
@@ -309,7 +310,7 @@ export async function DELETE(req: NextRequest) {
 
   if (isAdmin) {
     const result = await sql`DELETE FROM guestbook WHERE id = ${id}`;
-    if ((result as any).rowCount === 0)
+    if (result.rowCount === 0)
       return NextResponse.json({ error: "not_found" }, { status: 404 });
     return NextResponse.json({ ok: true });
   }

@@ -1,7 +1,7 @@
 import { sql } from "@vercel/postgres";
 import type { GuestbookEntry, GuestbookStatus } from "./db";
 
-function useDb() {
+function isDbConfigured() {
   return Boolean(process.env.POSTGRES_URL || process.env.DATABASE_URL);
 }
 
@@ -38,7 +38,7 @@ function useDb() {
 })();
 
 async function ensureTable() {
-  if (!useDb()) return;
+  if (!isDbConfigured()) return;
 
   try {
     await sql`
@@ -66,7 +66,17 @@ async function ensureTable() {
   }
 }
 
-function normalizeEntry(item: any): GuestbookEntry {
+function normalizeEntry(item: {
+  id: string;
+  name?: string | null;
+  created_at?: string;
+  createdAt?: string;
+  approved?: boolean;
+  rejected?: boolean;
+  message: string;
+  updated_at?: string | null;
+  edited?: boolean;
+}): GuestbookEntry {
   const createdAt = item.created_at || item.createdAt || new Date().toISOString();
   const approved = item.approved !== false;
   const rejected = item.rejected === true;
@@ -100,7 +110,7 @@ export const fetchGuestbookEntriesServer = async ({
 } = {}): Promise<GuestbookEntry[]> => {
   await ensureTable();
 
-  if (!useDb()) {
+  if (!isDbConfigured()) {
     return includePending
       ? FALLBACK_ENTRIES
       : FALLBACK_ENTRIES.slice(0, limit || 3);
@@ -155,7 +165,7 @@ export const fetchGuestbookEntriesServer = async ({
 
     return items;
   } catch (error) {
-    if (!useDb()) {
+    if (!isDbConfigured()) {
       return includePending
         ? FALLBACK_ENTRIES
         : FALLBACK_ENTRIES.slice(0, limit || 3);

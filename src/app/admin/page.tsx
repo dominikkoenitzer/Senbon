@@ -71,7 +71,14 @@ const AdminPage = () => {
         throw new Error("Unable to fetch entries");
       }
       const data = await response.json();
-      const items = (data.items || []).map((item: any) => ({
+      const items = (data.items || []).map((item: {
+        id: string;
+        name?: string | null;
+        message: string;
+        approved?: boolean;
+        rejected?: boolean;
+        created_at?: string;
+      }) => ({
         id: item.id,
         name: item.name || "Anonymous",
         message: item.message,
