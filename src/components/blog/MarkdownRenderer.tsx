@@ -144,9 +144,10 @@ const MarkdownRenderer = ({ content }: Props) => {
               <pre
                 {...props}
                 className={cn(
-                  "mb-6 rounded-xl bg-gradient-to-br from-black/60 via-black/50 to-black/60 border border-zen-gold/20 p-6 overflow-x-auto backdrop-blur-md relative",
+                  "mb-6 rounded-xl bg-gradient-to-br from-black/60 via-black/50 to-black/60 border border-zen-gold/20 p-6 overflow-x-auto backdrop-blur-md relative shadow-none",
                   props.className,
                 )}
+                style={{ boxShadow: 'none' }}
               >
                 {/* Decorative top border */}
                 <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zen-gold/30 to-transparent z-10" />
