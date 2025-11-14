@@ -57,7 +57,7 @@ const PostHeader = ({ post }: Props) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="font-display text-5xl leading-[1.1] md:text-6xl lg:text-7xl text-zen-mist mb-8 bg-gradient-to-r from-zen-mist via-zen-mist/90 to-zen-mist/70 bg-clip-text text-transparent"
+            className="font-display text-5xl leading-[1.1] md:text-6xl lg:text-7xl text-zen-mist mb-8"
           >
             {post.title}
           </motion.h1>
