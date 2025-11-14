@@ -144,7 +144,7 @@ const MarkdownRenderer = ({ content }: Props) => {
               <pre
                 {...props}
                 className={cn(
-                  "mb-6 rounded-xl bg-gradient-to-br from-black/60 via-black/50 to-black/60 border border-zen-gold/20 p-6 overflow-x-auto backdrop-blur-md shadow-2xl shadow-black/40 relative",
+                  "mb-6 rounded-xl bg-gradient-to-br from-black/60 via-black/50 to-black/60 border border-zen-gold/20 p-6 overflow-x-auto backdrop-blur-md relative",
                   props.className,
                 )}
               >
@@ -221,7 +221,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
                 className={cn(
-                  "my-10 rounded-lg border border-white/10 w-full shadow-2xl shadow-black/30 backdrop-blur-sm",
+                  "my-10 rounded-lg border border-white/10 w-full backdrop-blur-sm",
                   props.className,
                 )}
               />
