@@ -317,7 +317,7 @@ export async function DELETE(req: NextRequest) {
 
   const ipHash = getClientIpHash(req);
   const result = await sql`DELETE FROM guestbook WHERE id = ${id} AND ip_hash = ${ipHash}`;
-  if ((result as any).rowCount === 0)
+  if (result.rowCount === 0)
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
 
   return NextResponse.json({ ok: true });
