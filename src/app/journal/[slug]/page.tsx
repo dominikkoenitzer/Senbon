@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { getAllPostSlugs, getPostBySlug } from "@/lib/blog";
 import PostHeader from "@/components/blog/PostHeader";
 import MarkdownRenderer from "@/components/blog/MarkdownRenderer";
+import MysticalBackground from "@/components/blog/MysticalBackground";
 
 type Params = {
   slug: string;
@@ -42,7 +43,9 @@ const PostContent = async ({ slug }: { slug: string }) => {
   if (!post) return notFound();
 
   return (
-    <div className="zen-card px-8 py-12 md:px-16 lg:px-20">
+    <div className="zen-card px-8 py-12 md:px-16 lg:px-20 relative backdrop-blur-sm bg-black/20 border-white/5">
+      {/* Subtle inner glow */}
+      <div className="absolute inset-0 bg-gradient-to-br from-zen-gold/5 via-transparent to-transparent rounded-lg opacity-50 pointer-events-none" />
       <MarkdownRenderer content={post.content} />
     </div>
   );
@@ -68,13 +71,16 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
   if (!post) return notFound();
 
   return (
-    <article className="mx-auto flex max-w-4xl flex-col gap-20 px-6 py-24 md:py-32">
-      <PostHeader post={post} />
+    <>
+      <MysticalBackground />
+      <article className="mx-auto flex max-w-4xl flex-col gap-20 px-6 py-24 md:py-32 relative z-10">
+        <PostHeader post={post} />
 
-      <Suspense fallback={<PostContentSkeleton />}>
-        <PostContent slug={slug} />
-      </Suspense>
-    </article>
+        <Suspense fallback={<PostContentSkeleton />}>
+          <PostContent slug={slug} />
+        </Suspense>
+      </article>
+    </>
   );
 };
 
