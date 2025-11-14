@@ -27,7 +27,7 @@ const MarkdownRenderer = ({ content }: Props) => {
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeHighlight]}
           components={{
-            h1: ({ className, children, ...props }) => (
+            h1: ({ className, children }) => (
               <motion.h1
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -41,7 +41,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 {children}
               </motion.h1>
             ),
-            h2: ({ className, children, ...props }) => (
+            h2: ({ className, children }) => (
               <motion.h2
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -56,7 +56,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 <span className="absolute left-0 bottom-0 h-px w-20 bg-gradient-to-r from-zen-gold/50 to-transparent" />
               </motion.h2>
             ),
-            h3: ({ className, children, ...props }) => (
+            h3: ({ className, children }) => (
               <motion.h3
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
@@ -70,7 +70,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 {children}
               </motion.h3>
             ),
-            h4: ({ className, children, ...props }) => (
+            h4: ({ className, children }) => (
               <motion.h4
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
@@ -84,7 +84,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 {children}
               </motion.h4>
             ),
-            p: ({ className, children, ...props }) => (
+            p: ({ className, children }) => (
               <motion.p
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
@@ -98,7 +98,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 {children}
               </motion.p>
             ),
-            a: ({ className, children, href, ...props }) => (
+            a: ({ className, children, href }) => (
               <motion.a
                 href={href}
                 whileHover={{ scale: 1.02 }}
@@ -110,20 +110,21 @@ const MarkdownRenderer = ({ content }: Props) => {
                 {children}
               </motion.a>
             ),
-            strong: ({ className, children, ...props }) => (
+            strong: ({ className, children }) => (
               <strong
                 className={cn("font-semibold text-zen-gold", className)}
               >
                 {children}
               </strong>
             ),
-            em: ({ className, children, ...props }) => (
+            em: ({ className, children }) => (
               <em
                 className={cn("italic text-zen-mist/90 not-italic font-light", className)}
               >
                 {children}
               </em>
             ),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             code: ({ className, children, ...props }: any) => {
               const isInline = !className || !className.includes("language-");
               return (
@@ -140,6 +141,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 </code>
               );
             },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             pre: ({ children, className, ...props }: any) => (
               <pre
                 {...props}
@@ -152,7 +154,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 {children}
               </pre>
             ),
-            blockquote: ({ className, children, ...props }) => (
+            blockquote: ({ className, children }) => (
               <motion.blockquote
                 initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -167,7 +169,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-zen-gold/60 via-zen-gold/40 to-transparent" />
               </motion.blockquote>
             ),
-            ul: ({ className, children, ...props }) => (
+            ul: ({ className, children }) => (
               <ul
                 className={cn(
                   "my-6 ml-6 space-y-4 list-disc text-zen-mist/95 marker:text-zen-gold/60",
@@ -177,7 +179,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 {children}
               </ul>
             ),
-            ol: ({ className, children, ...props }) => (
+            ol: ({ className, children }) => (
               <ol
                 className={cn(
                   "my-6 ml-6 space-y-4 list-decimal text-zen-mist/95 marker:text-zen-gold/60",
@@ -187,7 +189,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 {children}
               </ol>
             ),
-            li: ({ className, children, ...props }) => (
+            li: ({ className, children }) => (
               <motion.li
                 initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -198,7 +200,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 {children}
               </motion.li>
             ),
-            hr: ({ className, ...props }) => (
+            hr: ({ className }) => (
               <motion.hr
                 initial={{ scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
@@ -210,7 +212,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 )}
               />
             ),
-            img: ({ className, src, alt, ...props }) => (
+            img: ({ className, src, alt }) => (
               <motion.img
                 src={src}
                 alt={alt}
@@ -224,7 +226,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 )}
               />
             ),
-            table: ({ className, children, ...props }) => (
+            table: ({ className, children }) => (
               <div className="my-8 overflow-x-auto">
                 <table
                   className={cn(
@@ -236,14 +238,14 @@ const MarkdownRenderer = ({ content }: Props) => {
                 </table>
               </div>
             ),
-            thead: ({ className, children, ...props }) => (
+            thead: ({ className, children }) => (
               <thead
                 className={cn("bg-white/5", className)}
               >
                 {children}
               </thead>
             ),
-            th: ({ className, children, ...props }) => (
+            th: ({ className, children }) => (
               <th
                 className={cn(
                   "border border-white/5 px-4 py-3 text-left font-semibold text-zen-gold",
@@ -253,7 +255,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 {children}
               </th>
             ),
-            td: ({ className, children, ...props }) => (
+            td: ({ className, children }) => (
               <td
                 className={cn(
                   "border border-white/5 px-4 py-3 text-zen-mist/95",
