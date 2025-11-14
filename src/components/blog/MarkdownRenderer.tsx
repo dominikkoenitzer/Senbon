@@ -123,19 +123,11 @@ const MarkdownRenderer = ({ content }: Props) => {
                   {...props}
                   className={cn(
                     isInline
-                      ? "rounded-md bg-white/10 px-2 py-1 text-sm font-mono text-zen-gold/90 before:content-none after:content-none backdrop-blur-sm border border-zen-gold/10"
+                      ? "rounded bg-white/10 px-2 py-0.5 text-sm font-mono text-zen-gold/90 before:content-none after:content-none"
                       : "block text-sm font-mono my-0",
                     className,
                   )}
                 >
-                  {!isInline && (
-                    <>
-                      {/* Decorative top border */}
-                      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zen-gold/30 to-transparent" />
-                      {/* Subtle inner glow */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-zen-gold/5 via-transparent to-transparent rounded-xl pointer-events-none" />
-                    </>
-                  )}
                   {children}
                 </code>
               );
@@ -144,18 +136,12 @@ const MarkdownRenderer = ({ content }: Props) => {
               <pre
                 {...props}
                 className={cn(
-                  "mb-6 rounded-xl bg-gradient-to-br from-black/60 via-black/50 to-black/60 border border-zen-gold/20 p-6 overflow-x-auto backdrop-blur-md relative shadow-none",
+                  "mb-6 rounded-lg bg-black/30 border border-zen-gold/15 p-6 overflow-x-auto relative",
                   props.className,
                 )}
                 style={{ boxShadow: 'none' }}
               >
-                {/* Decorative top border */}
-                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zen-gold/30 to-transparent z-10" />
-                {/* Subtle inner glow */}
-                <div className="absolute inset-0 bg-gradient-to-br from-zen-gold/5 via-transparent to-transparent rounded-xl pointer-events-none" />
-                <div className="relative z-10">
-                  {children}
-                </div>
+                {children}
               </pre>
             ),
             blockquote: ({ ...props }) => (
