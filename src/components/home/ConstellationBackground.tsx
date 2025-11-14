@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 type Star = {
   x: number;
   y: number;
+  originalX: number;
+  originalY: number;
   radius: number;
   brightness: number;
   twinkle: number;
@@ -51,15 +53,19 @@ const ConstellationBackground = () => {
         const x = centerX + Math.cos(angle) * radius + (Math.random() - 0.5) * 150;
         const y = centerY + Math.sin(angle) * radius + (Math.random() - 0.5) * 150;
         
+        const finalX = Math.max(50, Math.min(window.innerWidth - 50, x));
+        const finalY = Math.max(50, Math.min(window.innerHeight - 50, y));
         stars.push({
-          x: Math.max(50, Math.min(window.innerWidth - 50, x)),
-          y: Math.max(50, Math.min(window.innerHeight - 50, y)),
+          x: finalX,
+          y: finalY,
+          originalX: finalX,
+          originalY: finalY,
           radius: Math.random() * 1.2 + 0.6,
           brightness: Math.random() * 0.5 + 0.5,
           twinkle: Math.random() * Math.PI * 2,
           connections: [],
-          vx: (Math.random() - 0.5) * 0.05,
-          vy: (Math.random() - 0.5) * 0.05,
+          vx: 0,
+          vy: 0,
         });
       }
 
@@ -110,27 +116,43 @@ const ConstellationBackground = () => {
 
       // Draw stars with mouse interaction
       stars.forEach((star) => {
-        // Gentle drift
-        star.x += star.vx;
-        star.y += star.vy;
-        
-        // Mouse interaction
+        // Mouse interaction - push away from cursor
         if (mouseRef.current.active) {
           const dx = mouseRef.current.x - star.x;
           const dy = mouseRef.current.y - star.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < 150) {
             const force = (150 - dist) / 150;
-            star.vx -= (dx / dist) * 0.01 * force;
-            star.vy -= (dy / dist) * 0.01 * force;
+            star.vx -= (dx / dist) * 0.08 * force;
+            star.vy -= (dy / dist) * 0.08 * force;
           }
         }
         
-        // Boundary check
-        if (star.x < 0 || star.x > window.innerWidth) star.vx *= -1;
-        if (star.y < 0 || star.y > window.innerHeight) star.vy *= -1;
-        star.x = Math.max(0, Math.min(window.innerWidth, star.x));
-        star.y = Math.max(0, Math.min(window.innerHeight, star.y));
+        // Spring force - pull back to original position
+        const springForce = 0.02;
+        const springDamping = 0.95;
+        const dx = star.originalX - star.x;
+        const dy = star.originalY - star.y;
+        star.vx += dx * springForce;
+        star.vy += dy * springForce;
+        
+        // Apply damping to velocity (friction)
+        star.vx *= springDamping;
+        star.vy *= springDamping;
+        
+        // Update position
+        star.x += star.vx;
+        star.y += star.vy;
+        
+        // Boundary check with bounce
+        if (star.x < 0 || star.x > window.innerWidth) {
+          star.vx *= -0.5;
+          star.x = Math.max(0, Math.min(window.innerWidth, star.x));
+        }
+        if (star.y < 0 || star.y > window.innerHeight) {
+          star.vy *= -0.5;
+          star.y = Math.max(0, Math.min(window.innerHeight, star.y));
+        }
         
         // Twinkle animation
         star.twinkle += 0.015;
