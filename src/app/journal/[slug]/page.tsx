@@ -51,19 +51,22 @@ const PostContent = async ({ slug }: { slug: string }) => {
   );
 };
 
-const PostContentSkeleton = () => (
-  <div className="zen-card px-8 py-12 md:px-16 lg:px-20">
-    <div className="space-y-4 animate-pulse">
-      {Array.from({ length: 8 }).map((_, i) => (
-        <div
-          key={i}
-          className="h-4 bg-white/5 rounded"
-          style={{ width: `${Math.random() * 40 + 60}%` }}
-        />
-      ))}
+const PostContentSkeleton = () => {
+  const widths = [75, 90, 65, 85, 70, 80, 95, 60];
+  return (
+    <div className="zen-card px-8 py-12 md:px-16 lg:px-20">
+      <div className="space-y-4 animate-pulse">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div
+            key={i}
+            className="h-4 bg-white/5 rounded"
+            style={{ width: `${widths[i % widths.length]}%` }}
+          />
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
   const { slug } = await params;
