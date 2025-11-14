@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { getAllPosts } from "@/lib/blog";
 import JournalHero from "@/components/blog/JournalHero";
 import PostGrid from "@/components/blog/PostGrid";

@@ -21,6 +21,8 @@ const ConstellationBackground = () => {
   const mouseRef = useRef({ x: 0, y: 0, active: false });
 
   useEffect(() => {
+    // Set mounted state to enable client-only rendering
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -94,8 +96,6 @@ const ConstellationBackground = () => {
           const connected = stars[connIndex];
           const dx = connected.x - star.x;
           const dy = connected.y - star.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          
           const gradient = ctx.createLinearGradient(star.x, star.y, connected.x, connected.y);
           gradient.addColorStop(0, "rgba(247, 216, 160, 0.12)");
           gradient.addColorStop(0.5, "rgba(247, 216, 160, 0.08)");
