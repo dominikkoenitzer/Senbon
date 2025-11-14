@@ -7,11 +7,11 @@ type Props = {
 };
 
 const PostGridSkeleton = () => (
-  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+  <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
     {Array.from({ length: 6 }).map((_, i) => (
       <div
         key={i}
-        className="zen-card h-64 animate-pulse bg-black/20"
+        className="zen-card h-80 animate-pulse bg-black/20 rounded-xl"
       />
     ))}
   </div>
@@ -27,7 +27,7 @@ const PostGrid = ({ posts }: Props) => {
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
       {posts.map((post, index) => (
         <BlogCard key={post.slug} post={post} index={index} />
       ))}
@@ -42,4 +42,3 @@ export const PostGridWithSuspense = ({ posts }: Props) => (
 );
 
 export default PostGrid;
-
