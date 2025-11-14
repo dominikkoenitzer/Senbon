@@ -94,8 +94,6 @@ const ConstellationBackground = () => {
       stars.forEach((star) => {
         star.connections.forEach((connIndex) => {
           const connected = stars[connIndex];
-          const dx = connected.x - star.x;
-          const dy = connected.y - star.y;
           const gradient = ctx.createLinearGradient(star.x, star.y, connected.x, connected.y);
           gradient.addColorStop(0, "rgba(247, 216, 160, 0.12)");
           gradient.addColorStop(0.5, "rgba(247, 216, 160, 0.08)");
