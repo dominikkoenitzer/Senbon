@@ -57,17 +57,6 @@ export const getAllPosts = async (): Promise<JournalPost[]> => {
   return posts.sort(sortByDateDesc);
 };
 
-export const getLatestPosts = async (limit = 3) => {
-  const posts = await getAllPosts();
-  return posts.slice(0, limit);
-};
-
-export const getFeaturedPosts = async (limit = 3) => {
-  const posts = await getAllPosts();
-  const featured = posts.filter((post) => post.featured);
-  return (featured.length ? featured : posts).slice(0, limit);
-};
-
 export const getPostBySlug = async (slug: string) => {
   const posts = await getAllPosts();
   return posts.find((post) => post.slug === slug) ?? null;

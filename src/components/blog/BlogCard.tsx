@@ -15,9 +15,8 @@ const BlogCard = ({ post, index = 0 }: Props) => {
     <motion.article
       className="group"
       initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05, duration: 0.5, ease: "easeOut" }}
-      viewport={{ once: true, margin: "-50px" }}
     >
       <Link
         href={`/journal/${post.slug}`}

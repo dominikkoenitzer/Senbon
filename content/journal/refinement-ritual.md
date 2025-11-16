@@ -9,11 +9,11 @@ tags:
   - constellation
 ---
 
-Today was a day of quiet refinement. Like polishing river stones until they reflect light properly, I spent hours smoothing the edges of the garden, fixing shadows that shouldn't exist, and teaching the constellation stars to remember their place.
+Today was a day of quiet refinement. Like polishing river stones until light reflects properly, I spent hours smoothing the edges of the garden, fixing shadows that shouldn't exist, and teaching the constellation stars to remember their place.
 
 ## The Shadow Problem
 
-Code blocks were casting shadows. Not the gentle kind that add depth, but harsh digital shadows that broke the zen aesthetic. I traced the issue through layers of CSS and component props, finding shadows nested in places they shouldn't be.
+Code blocks were casting shadows. Not the gentle kind that add depth, but harsh digital shadows that broke the zen aesthetic. I traced the issue through layers of CSS and component props, finding shadows nested in places where they didn't belong.
 
 The solution was surgical: remove all shadows from code containers, simplify the design to just borders and backgrounds. Clean. Minimal. Like a stone basin that holds code without decoration.
 
@@ -36,13 +36,13 @@ Sometimes the best fix is subtraction. Remove what doesn't belong, let the conte
 
 ## The Constellation Drift
 
-The constellation background had a physics problem. When the cursor approached, stars would push away — but they never came back. Like lanterns caught in a wind with no gravity, they drifted forever into the void.
+The constellation background had a physics problem. When the cursor approached, stars would push away — but they never came back. Like lanterns caught in a wind with no gravity, the stars drifted forever into the void.
 
-I needed to teach them to remember home.
+I needed to teach the stars to remember home.
 
 ### The Solution: Spring Physics
 
-Each star now remembers its original position. When pushed away by the cursor, a spring force pulls them back. Damping slows their movement until they settle. It's like tying each star to its place with an invisible thread — it can stretch, but always returns.
+Each star now remembers its original position. When pushed away by the cursor, a spring force pulls the star back. Damping slows the movement until it settles. It's like tying each star to its place with an invisible thread — it can stretch, but always returns.
 
 ```typescript
 // Spring force - pull back to original position
@@ -58,7 +58,7 @@ star.vx *= springDamping;
 star.vy *= springDamping;
 ```
 
-Now the constellation breathes. Stars move when you approach, but they always return to their constellation pattern. Like meditation — you can drift, but the anchor remains.
+Now the constellation breathes. Stars move when the cursor approaches, but they always return to their constellation pattern. Like meditation — there can be drift, but the anchor remains.
 
 ## TypeScript Refinement
 
@@ -86,7 +86,7 @@ Clean separation. Motion props stay with motion. DOM props stay with DOM. The ga
 
 ## Linting Cleanup
 
-A day of fixing small errors. Renaming `useDb` to `isDbConfigured` because it wasn't a React hook. Removing unused variables. Fixing type annotations. Each fix was tiny, but together they polished the codebase until it shone.
+A day of fixing small errors. Renaming `useDb` to `isDbConfigured` because it wasn't a React hook. Removing unused variables. Fixing type annotations. Each fix was tiny, but together the changes polished the codebase until it shone.
 
 Like raking sand in a zen garden — small movements, but the pattern emerges clearer with each pass.
 

@@ -30,8 +30,7 @@ const MarkdownRenderer = ({ content }: Props) => {
             h1: ({ className, children }) => (
               <motion.h1
                 initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 className={cn(
                   "mb-8 mt-16 scroll-m-20 font-display text-4xl font-bold leading-tight text-zen-mist first:mt-0",
@@ -44,8 +43,7 @@ const MarkdownRenderer = ({ content }: Props) => {
             h2: ({ className, children }) => (
               <motion.h2
                 initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className={cn(
                   "mb-6 mt-12 scroll-m-20 font-display text-3xl font-semibold leading-tight text-zen-mist border-b border-white/5 pb-3 relative",
@@ -59,8 +57,7 @@ const MarkdownRenderer = ({ content }: Props) => {
             h3: ({ className, children }) => (
               <motion.h3
                 initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
                 className={cn(
                   "mb-4 mt-10 scroll-m-20 font-display text-2xl font-semibold leading-tight text-zen-mist",
@@ -73,8 +70,7 @@ const MarkdownRenderer = ({ content }: Props) => {
             h4: ({ className, children }) => (
               <motion.h4
                 initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
                 className={cn(
                   "mb-3 mt-8 scroll-m-20 font-display text-xl font-semibold leading-tight text-zen-mist/95",
@@ -87,8 +83,7 @@ const MarkdownRenderer = ({ content }: Props) => {
             p: ({ className, children }) => (
               <motion.p
                 initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true, margin: "-100px" }}
+                animate={{ opacity: 1 }}
                 transition={{ duration: 0.6 }}
                 className={cn(
                   "mb-8 leading-[1.9] text-zen-mist/95 text-base md:text-lg font-light tracking-wide",
@@ -157,8 +152,7 @@ const MarkdownRenderer = ({ content }: Props) => {
             blockquote: ({ className, children }) => (
               <motion.blockquote
                 initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
                 className={cn(
                   "my-8 border-l-4 border-zen-gold/40 bg-gradient-to-r from-zen-gold/5 to-transparent pl-6 py-5 italic text-zen-gold text-lg leading-relaxed font-light relative overflow-hidden",
@@ -192,8 +186,7 @@ const MarkdownRenderer = ({ content }: Props) => {
             li: ({ className, children }) => (
               <motion.li
                 initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4 }}
                 className={cn("leading-relaxed pl-2 font-light text-zen-mist/95", className)}
               >
@@ -203,8 +196,7 @@ const MarkdownRenderer = ({ content }: Props) => {
             hr: ({ className }) => (
               <motion.hr
                 initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
+                animate={{ scaleX: 1 }}
                 transition={{ duration: 0.8 }}
                 className={cn(
                   "my-16 border-0 h-px bg-gradient-to-r from-transparent via-zen-gold/20 to-transparent",
@@ -217,8 +209,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 src={src}
                 alt={alt}
                 initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6 }}
                 className={cn(
                   "my-10 rounded-lg border border-white/10 w-full backdrop-blur-sm",
