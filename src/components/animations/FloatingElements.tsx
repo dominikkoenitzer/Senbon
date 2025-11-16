@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState, useEffect, type CSSProperties } from "react";
+import { type CSSProperties } from "react";
 
 type Floater = {
   size: number;
@@ -42,28 +42,21 @@ const FLOATERS: Floater[] = [
 ];
 
 const FloatingElements = () => {
-  const [petals, setPetals] = useState<Array<{
-    id: number;
-    style: CSSProperties;
-  }>>([]);
-  const [mounted, setMounted] = useState(false);
+  // Use deterministic positions to avoid hydration mismatch
+  const getPetalPosition = (idx: number) => {
+    const seed = idx * 137.508; // Golden angle approximation
+    return {
+      left: `${(seed * 100) % 100}%`,
+      top: `${(seed * 200) % 100}%`,
+      animationDelay: `${(seed % 8)}s`,
+      "--float": `${(seed % 8)}s`,
+    } as CSSProperties;
+  };
 
-  useEffect(() => {
-    // Set mounted state to enable client-only rendering
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-    setPetals(
-      Array.from({ length: 18 }, (_, idx) => ({
-        id: idx,
-        style: {
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-          animationDelay: `${Math.random() * 8}s`,
-          "--float": `${Math.random() * 8}s`,
-        } as CSSProperties,
-      })),
-    );
-  }, []);
+  const petals = Array.from({ length: 18 }, (_, idx) => ({
+    id: idx,
+    style: getPetalPosition(idx),
+  }));
 
   return (
     <>
@@ -93,18 +86,16 @@ const FloatingElements = () => {
           />
         ))}
       </div>
-      {mounted && (
-        <div className="pointer-events-none fixed inset-0 z-[2]">
-          {petals.map((petal) => (
-            <span
-              key={petal.id}
-              className="petal"
-              style={petal.style}
-              aria-hidden="true"
-            />
-          ))}
-        </div>
-      )}
+      <div className="pointer-events-none fixed inset-0 z-[2]">
+        {petals.map((petal) => (
+          <span
+            key={petal.id}
+            className="petal"
+            style={petal.style}
+            aria-hidden="true"
+          />
+        ))}
+      </div>
     </>
   );
 };

@@ -10,7 +10,7 @@ featured: true
 hero: "/images/journal/lanterns.jpg"
 ---
 
-Senbon means "a thousand" — but not only in the literal sense. In the studio we use it to describe a swarm of quiet moments threaded together like lantern needles. I imagine a visitor stepping into the garden, brushing against light that remembers every conversation.
+Senbon means "a thousand" — but not only in the literal sense. In the studio it describes a swarm of quiet moments threaded together like lantern needles. The garden holds light that remembers every conversation.
 
 ## The Concept
 
@@ -33,7 +33,7 @@ The color palette emerged from observation:
 
 - Base palette starts with _koke_ (moss) and _akari_ (golden glow); overlays add hints of plum and tidewater blue.
 - Every border receives a second inner line, like the double frame around shoji paper, to hint at gentle formality.
-- Guestbook ink dries slower than journal ink. Pending entries pulse softly in the admin view to mimic warm wax.
+- Guestbook ink dries slower than journal ink. Pending entries pulse softly in the moderation view to mimic warm wax.
 
 ### The Technical Layer
 
@@ -79,4 +79,4 @@ The garden is growing. Each entry is a new lantern, casting light on the path ah
 
 ---
 
-*The constellation portal awaits those who know the code.*
+*The constellation portal awaits the right key.*
