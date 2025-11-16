@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 type Star = {
   x: number;
@@ -17,15 +17,11 @@ type Star = {
 
 const ConstellationBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [mounted, setMounted] = useState(false);
   const starsRef = useRef<Star[]>([]);
   const animationFrameRef = useRef<number | undefined>(undefined);
   const mouseRef = useRef({ x: 0, y: 0, active: false });
 
   useEffect(() => {
-    // Set mounted state to enable client-only rendering
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -225,9 +221,7 @@ const ConstellationBackground = () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [mounted]);
-
-  if (!mounted) return null;
+  }, []);
 
   return (
     <canvas

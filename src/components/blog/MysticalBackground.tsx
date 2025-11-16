@@ -1,17 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 const MysticalBackground = () => {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    // Set mounted state to enable client-only rendering
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
-
   // Deterministic positions based on index to avoid hydration mismatch
   const getParticlePosition = (index: number) => {
     const seed = index * 137.508; // Golden angle approximation
@@ -20,10 +11,6 @@ const MysticalBackground = () => {
       top: ((seed * 200) % 100),
     };
   };
-
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
