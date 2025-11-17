@@ -7,14 +7,24 @@ import { neon } from "@neondatabase/serverless";
 
 // Initialize Neon client
 const getSql = () => {
-  const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  // Try unpooled connection first (better for serverless), then pooled, then any DATABASE_URL
+  const connectionString = 
+    process.env.DATABASE_URL_UNPOOLED ||
+    process.env.POSTGRES_URL_NON_POOLING ||
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL;
+    
   if (!connectionString) {
+    console.error("[getSql] No database connection string found. Available env vars:", 
+      Object.keys(process.env).filter(k => k.includes('DATABASE') || k.includes('POSTGRES')).join(', '));
     throw new Error("DATABASE_URL or POSTGRES_URL environment variable is required");
   }
+  
   try {
-    return neon(connectionString);
+    const sql = neon(connectionString);
+    return sql;
   } catch (error) {
-    console.error("Failed to initialize Neon client:", error);
+    console.error("[getSql] Failed to initialize Neon client:", error);
     throw error;
   }
 };
@@ -37,7 +47,18 @@ const MAX_MESSAGE_LENGTH = 480;
 const RATE_LIMIT_WINDOW_MS = 30_000;
 
 function isDbConfigured() {
-  return Boolean(process.env.POSTGRES_URL || process.env.DATABASE_URL);
+  const hasDb = Boolean(
+    process.env.DATABASE_URL_UNPOOLED ||
+    process.env.POSTGRES_URL_NON_POOLING ||
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL
+  );
+  
+  if (!hasDb) {
+    console.warn("[isDbConfigured] Database not configured. Check environment variables.");
+  }
+  
+  return hasDb;
 }
 
 (function hydratePostgresEnv() {
@@ -163,6 +184,7 @@ export async function GET(req: NextRequest) {
       0,
     );
 
+    console.log(`[GET /api/guestbook] Querying database with limit=${limit}, offset=${offset}`);
     const rows = await sql`
       SELECT id, name, message, created_at, updated_at, edited, approved, rejected
       FROM guestbook
@@ -174,7 +196,10 @@ export async function GET(req: NextRequest) {
     console.log(`[GET /api/guestbook] Returning ${rows.length} items`);
     return NextResponse.json({ items: rows });
   } catch (error) {
-    console.error("[GET /api/guestbook] Database error:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    console.error("[GET /api/guestbook] Database error:", errorMessage);
+    if (errorStack) console.error("[GET /api/guestbook] Error stack:", errorStack);
     const { searchParams } = new URL(req.url);
     const parsedLimit = parseInt(searchParams.get("limit") || "10", 10);
     const parsedOffset = parseInt(searchParams.get("offset") || "0", 10);

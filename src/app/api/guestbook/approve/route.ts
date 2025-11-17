@@ -6,15 +6,41 @@ import { neon } from "@neondatabase/serverless";
 
 // Initialize Neon client
 const getSql = () => {
-  const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  // Try unpooled connection first (better for serverless), then pooled, then any DATABASE_URL
+  const connectionString = 
+    process.env.DATABASE_URL_UNPOOLED ||
+    process.env.POSTGRES_URL_NON_POOLING ||
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL;
+    
   if (!connectionString) {
+    console.error("[getSql] No database connection string found. Available env vars:", 
+      Object.keys(process.env).filter(k => k.includes('DATABASE') || k.includes('POSTGRES')).join(', '));
     throw new Error("DATABASE_URL or POSTGRES_URL environment variable is required");
   }
-  return neon(connectionString);
+  
+  try {
+    const sql = neon(connectionString);
+    return sql;
+  } catch (error) {
+    console.error("[getSql] Failed to initialize Neon client:", error);
+    throw error;
+  }
 };
 
 function isDbConfigured() {
-  return Boolean(process.env.POSTGRES_URL || process.env.DATABASE_URL);
+  const hasDb = Boolean(
+    process.env.DATABASE_URL_UNPOOLED ||
+    process.env.POSTGRES_URL_NON_POOLING ||
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL
+  );
+  
+  if (!hasDb) {
+    console.warn("[isDbConfigured] Database not configured. Check environment variables.");
+  }
+  
+  return hasDb;
 }
 
 (function hydratePostgresEnv() {
