@@ -12,8 +12,6 @@ type Particle = {
   glow: number;
 };
 
-const PARTICLE_COUNT = typeof window !== "undefined" && window.innerWidth < 768 ? 20 : 90;
-
 const createParticle = (w: number, h: number, isMobile: boolean = false): Particle => ({
   x: Math.random() * w,
   y: Math.random() * h,
