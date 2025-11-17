@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
+import { generateHeadingId } from "@/lib/toc";
 
 type Props = {
   content: string;
@@ -41,13 +42,19 @@ const MarkdownRenderer = ({ content }: Props) => {
               </motion.h1>
             ),
             h2: ({ className, children }) => {
-              const text = String(children);
-              const id = text
-                .toLowerCase()
-                .replace(/[^\w\s-]/g, "")
-                .replace(/\s+/g, "-")
-                .replace(/-+/g, "-")
-                .trim();
+              // Extract plain text from React children for ID generation
+              const getTextContent = (node: React.ReactNode): string => {
+                if (typeof node === "string") return node;
+                if (typeof node === "number") return String(node);
+                if (Array.isArray(node)) return node.map(getTextContent).join("");
+                if (node && typeof node === "object" && "props" in node) {
+                  const propsNode = node as { props: { children?: React.ReactNode } };
+                  return getTextContent(propsNode.props.children);
+                }
+                return "";
+              };
+              const text = getTextContent(children);
+              const id = generateHeadingId(text);
               return (
                 <motion.h2
                   id={id}
@@ -65,13 +72,19 @@ const MarkdownRenderer = ({ content }: Props) => {
               );
             },
             h3: ({ className, children }) => {
-              const text = String(children);
-              const id = text
-                .toLowerCase()
-                .replace(/[^\w\s-]/g, "")
-                .replace(/\s+/g, "-")
-                .replace(/-+/g, "-")
-                .trim();
+              // Extract plain text from React children for ID generation
+              const getTextContent = (node: React.ReactNode): string => {
+                if (typeof node === "string") return node;
+                if (typeof node === "number") return String(node);
+                if (Array.isArray(node)) return node.map(getTextContent).join("");
+                if (node && typeof node === "object" && "props" in node) {
+                  const propsNode = node as { props: { children?: React.ReactNode } };
+                  return getTextContent(propsNode.props.children);
+                }
+                return "";
+              };
+              const text = getTextContent(children);
+              const id = generateHeadingId(text);
               return (
                 <motion.h3
                   id={id}
@@ -88,13 +101,19 @@ const MarkdownRenderer = ({ content }: Props) => {
               );
             },
             h4: ({ className, children }) => {
-              const text = String(children);
-              const id = text
-                .toLowerCase()
-                .replace(/[^\w\s-]/g, "")
-                .replace(/\s+/g, "-")
-                .replace(/-+/g, "-")
-                .trim();
+              // Extract plain text from React children for ID generation
+              const getTextContent = (node: React.ReactNode): string => {
+                if (typeof node === "string") return node;
+                if (typeof node === "number") return String(node);
+                if (Array.isArray(node)) return node.map(getTextContent).join("");
+                if (node && typeof node === "object" && "props" in node) {
+                  const propsNode = node as { props: { children?: React.ReactNode } };
+                  return getTextContent(propsNode.props.children);
+                }
+                return "";
+              };
+              const text = getTextContent(children);
+              const id = generateHeadingId(text);
               return (
                 <motion.h4
                   id={id}
