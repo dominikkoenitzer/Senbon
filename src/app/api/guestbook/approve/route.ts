@@ -2,7 +2,16 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 import { NextResponse, type NextRequest } from "next/server";
-import { sql } from "@vercel/postgres";
+import { neon } from "@neondatabase/serverless";
+
+// Initialize Neon client
+const getSql = () => {
+  const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  if (!connectionString) {
+    throw new Error("DATABASE_URL or POSTGRES_URL environment variable is required");
+  }
+  return neon(connectionString);
+};
 
 function isDbConfigured() {
   return Boolean(process.env.POSTGRES_URL || process.env.DATABASE_URL);
@@ -67,6 +76,7 @@ async function ensureTable() {
   if (!isDbConfigured()) return;
 
   try {
+    const sql = getSql();
     await sql`
       CREATE TABLE IF NOT EXISTS guestbook (
         id TEXT PRIMARY KEY,
@@ -103,7 +113,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const { rows } =
+    const sql = getSql();
+    const rows =
       status === "approved"
         ? await sql`
             SELECT id, name, message, created_at, updated_at, edited, approved, rejected
@@ -144,6 +155,7 @@ export async function PATCH(req: NextRequest) {
   if (!id) return NextResponse.json({ error: "missing_id" }, { status: 400 });
 
   try {
+    const sql = getSql();
     await sql`UPDATE guestbook SET approved = ${approved}, rejected = ${rejected} WHERE id = ${id}`;
     return NextResponse.json({ ok: true });
   } catch {

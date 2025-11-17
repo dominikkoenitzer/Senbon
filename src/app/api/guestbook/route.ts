@@ -3,7 +3,16 @@ export const dynamic = "force-dynamic";
 
 import crypto from "crypto";
 import { NextResponse, type NextRequest } from "next/server";
-import { sql } from "@vercel/postgres";
+import { neon } from "@neondatabase/serverless";
+
+// Initialize Neon client
+const getSql = () => {
+  const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  if (!connectionString) {
+    throw new Error("DATABASE_URL or POSTGRES_URL environment variable is required");
+  }
+  return neon(connectionString);
+};
 
 type GuestbookRow = {
   id: string;
@@ -73,6 +82,7 @@ async function ensureTable() {
   if (!isDbConfigured()) return;
 
   try {
+    const sql = getSql();
     await sql`
       CREATE TABLE IF NOT EXISTS guestbook (
         id TEXT PRIMARY KEY,
@@ -135,7 +145,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const { rows } = await sql<
+    const sql = getSql();
+    const rows = await sql<
       GuestbookRow & { approved: boolean; rejected: boolean }
     >`
       SELECT id, name, message, created_at, updated_at, edited, approved, rejected
@@ -231,6 +242,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (isRateLimitEnabled()) {
+    const sql = getSql();
     const recent = await sql<{ created_at: string }>`
       SELECT created_at FROM guestbook
       WHERE ip_hash = ${ipHash}
@@ -238,8 +250,8 @@ export async function POST(req: NextRequest) {
       LIMIT 1
     `;
 
-    if (recent.rows.length > 0) {
-      const last = new Date(recent.rows[0].created_at).getTime();
+    if (recent.length > 0) {
+      const last = new Date(recent[0].created_at).getTime();
       const now = Date.now();
 
       if (now - last < RATE_LIMIT_WINDOW_MS) {
@@ -252,6 +264,7 @@ export async function POST(req: NextRequest) {
   const approved = isAutoApprove();
   const rejected = false;
 
+  const sql = getSql();
   const inserted = await sql<GuestbookRow>`
     INSERT INTO guestbook (id, name, message, ip_hash, approved, rejected)
     VALUES (${id}, ${safeName}, ${trimmed}, ${ipHash}, ${approved}, ${rejected})
@@ -259,7 +272,7 @@ export async function POST(req: NextRequest) {
   `;
 
   return NextResponse.json(
-    { item: inserted.rows[0], approved },
+    { item: inserted[0], approved },
     { status: 201 },
   );
 }
@@ -308,17 +321,23 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
+  const sql = getSql();
   if (isAdmin) {
-    const result = await sql`DELETE FROM guestbook WHERE id = ${id}`;
-    if (result.rowCount === 0)
+    // Check if row exists first
+    const existing = await sql`SELECT id FROM guestbook WHERE id = ${id}`;
+    if (!existing || existing.length === 0) {
       return NextResponse.json({ error: "not_found" }, { status: 404 });
+    }
+    await sql`DELETE FROM guestbook WHERE id = ${id}`;
     return NextResponse.json({ ok: true });
   }
 
   const ipHash = getClientIpHash(req);
-  const result = await sql`DELETE FROM guestbook WHERE id = ${id} AND ip_hash = ${ipHash}`;
-  if (result.rowCount === 0)
+  // Check if row exists and belongs to this IP
+  const existing = await sql`SELECT id FROM guestbook WHERE id = ${id} AND ip_hash = ${ipHash}`;
+  if (!existing || existing.length === 0) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
-
+  }
+  await sql`DELETE FROM guestbook WHERE id = ${id} AND ip_hash = ${ipHash}`;
   return NextResponse.json({ ok: true });
 }

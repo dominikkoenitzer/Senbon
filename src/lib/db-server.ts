@@ -1,5 +1,14 @@
-import { sql } from "@vercel/postgres";
+import { neon } from "@neondatabase/serverless";
 import type { GuestbookEntry, GuestbookStatus } from "./db";
+
+// Initialize Neon client
+const getSql = () => {
+  const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  if (!connectionString) {
+    throw new Error("DATABASE_URL or POSTGRES_URL environment variable is required");
+  }
+  return neon(connectionString);
+};
 
 function isDbConfigured() {
   return Boolean(process.env.POSTGRES_URL || process.env.DATABASE_URL);
@@ -41,6 +50,7 @@ async function ensureTable() {
   if (!isDbConfigured()) return;
 
   try {
+    const sql = getSql();
     await sql`
       CREATE TABLE IF NOT EXISTS guestbook (
         id TEXT PRIMARY KEY,
@@ -117,6 +127,7 @@ export const fetchGuestbookEntriesServer = async ({
   }
 
   try {
+    const sql = getSql();
     type Row = {
       id: string;
       name: string | null;
@@ -131,35 +142,35 @@ export const fetchGuestbookEntriesServer = async ({
     let rows: Row[];
 
     if (limit) {
-      const result = await sql<Row>`
+      const result = await sql`
         SELECT id, name, message, created_at, updated_at, edited, approved, rejected
         FROM guestbook
         WHERE approved = TRUE AND rejected = FALSE
         ORDER BY created_at DESC, id DESC
         LIMIT ${limit}
       `;
-      rows = result.rows;
+      rows = result as Row[];
     } else {
-      const result = await sql<Row>`
+      const result = await sql`
         SELECT id, name, message, created_at, updated_at, edited, approved, rejected
         FROM guestbook
         WHERE approved = TRUE AND rejected = FALSE
         ORDER BY created_at DESC, id DESC
       `;
-      rows = result.rows;
+      rows = result as Row[];
     }
 
     const items = rows.map(normalizeEntry);
 
     if (includePending) {
-      const { rows: pendingRows } = await sql<Row>`
+      const pendingRows = await sql`
         SELECT id, name, message, created_at, updated_at, edited, approved, rejected
         FROM guestbook
         WHERE approved = FALSE AND rejected = FALSE
         ORDER BY created_at ASC
       `;
 
-      const pendingItems = pendingRows.map(normalizeEntry);
+      const pendingItems = (pendingRows as Row[]).map(normalizeEntry);
       return [...pendingItems, ...items];
     }
 
