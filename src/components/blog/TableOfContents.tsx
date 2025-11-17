@@ -6,9 +6,10 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   items: TocItem[];
+  mobile?: boolean;
 };
 
-const TableOfContents = ({ items }: Props) => {
+const TableOfContents = ({ items, mobile = false }: Props) => {
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
@@ -82,6 +83,36 @@ const TableOfContents = ({ items }: Props) => {
       }
     }, 50);
   };
+
+  if (mobile) {
+    return (
+      <nav className="w-full">
+        <div className="zen-card px-6 py-6 backdrop-blur-sm bg-black/20 border-white/5 rounded-lg">
+          <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/40 mb-4">
+            Contents
+          </p>
+          <ul className="space-y-2 max-h-64 overflow-y-auto">
+            {items.map((item) => (
+              <li key={item.id}>
+                <button
+                  onClick={(e) => handleClick(e, item.id)}
+                  className={cn(
+                    "text-left text-sm transition-colors hover:text-zen-gold/80 w-full py-1",
+                    item.level === 2 && "pl-0 text-zen-mist/70 font-medium",
+                    item.level === 3 && "pl-3 text-zen-mist/60 text-xs",
+                    item.level === 4 && "pl-6 text-zen-mist/50 text-xs",
+                    activeId === item.id && "text-zen-gold"
+                  )}
+                >
+                  {item.text}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="sticky top-24 self-start">
