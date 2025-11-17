@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Particle = {
   x: number;
@@ -12,7 +12,7 @@ type Particle = {
   glow: number;
 };
 
-const PARTICLE_COUNT = 90;
+const PARTICLE_COUNT = typeof window !== "undefined" && window.innerWidth < 768 ? 20 : 90;
 
 const createParticle = (w: number, h: number): Particle => ({
   x: Math.random() * w,
@@ -26,6 +26,16 @@ const createParticle = (w: number, h: number): Particle => ({
 
 const ParticleBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -46,7 +56,8 @@ const ParticleBackground = () => {
     };
 
     const initParticles = () => {
-      particles = Array.from({ length: PARTICLE_COUNT }, () =>
+      const particleCount = window.innerWidth < 768 ? 20 : 90;
+      particles = Array.from({ length: particleCount }, () =>
         createParticle(window.innerWidth, window.innerHeight),
       );
     };
@@ -92,8 +103,10 @@ const ParticleBackground = () => {
           particle.y,
           18,
         );
-        gradient.addColorStop(0, "rgba(247, 216, 160, 0.8)");
-        gradient.addColorStop(0.6, "rgba(247, 216, 160, 0.12)");
+        const opacity = window.innerWidth < 768 ? 0.3 : 0.8;
+        const midOpacity = window.innerWidth < 768 ? 0.05 : 0.12;
+        gradient.addColorStop(0, `rgba(247, 216, 160, ${opacity})`);
+        gradient.addColorStop(0.6, `rgba(247, 216, 160, ${midOpacity})`);
         gradient.addColorStop(1, "transparent");
         ctx.fillStyle = gradient;
         ctx.arc(particle.x, particle.y, particle.radius * 10, 0, Math.PI * 2);
@@ -132,12 +145,12 @@ const ParticleBackground = () => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerleave", handlePointerLeave);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <canvas
       ref={canvasRef}
-      className="pointer-events-none fixed inset-0 z-0 h-full w-full opacity-60"
+      className={`pointer-events-none fixed inset-0 z-0 h-full w-full ${isMobile ? "opacity-20" : "opacity-60"}`}
       aria-hidden="true"
     />
   );

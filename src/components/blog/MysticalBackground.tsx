@@ -1,8 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const MysticalBackground = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   // Deterministic positions based on index to avoid hydration mismatch
   const getParticlePosition = (index: number) => {
     const seed = index * 137.508; // Golden angle approximation
@@ -12,10 +24,13 @@ const MysticalBackground = () => {
     };
   };
 
+  const particleCount = isMobile ? 5 : 20;
+  const orbCount = isMobile ? 2 : 6;
+
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-      {/* Flowing gradient orbs */}
-      {Array.from({ length: 6 }).map((_, i) => {
+      {/* Flowing gradient orbs - reduced on mobile */}
+      {Array.from({ length: orbCount }).map((_, i) => {
         const positions = [
           [20, 30, 50],
           [60, 40, 80],
@@ -27,11 +42,11 @@ const MysticalBackground = () => {
         return (
           <motion.div
             key={i}
-            className="absolute rounded-full blur-3xl opacity-20"
+            className={`absolute rounded-full blur-3xl ${isMobile ? "opacity-5" : "opacity-20"}`}
             style={{
               width: `${200 + i * 100}px`,
               height: `${200 + i * 100}px`,
-              background: `radial-gradient(circle, rgba(247, 216, 160, ${0.3 - i * 0.05}) 0%, transparent 70%)`,
+              background: `radial-gradient(circle, rgba(247, 216, 160, ${isMobile ? 0.1 : 0.3 - i * 0.05}) 0%, transparent 70%)`,
             }}
             animate={{
               x: positions[i].map(p => `${p}%`),
@@ -48,13 +63,13 @@ const MysticalBackground = () => {
         );
       })}
 
-      {/* Floating particles */}
-      {Array.from({ length: 20 }).map((_, i) => {
+      {/* Floating particles - fewer on mobile */}
+      {Array.from({ length: particleCount }).map((_, i) => {
         const pos = getParticlePosition(i);
         return (
           <motion.div
             key={`particle-${i}`}
-            className="absolute h-1 w-1 rounded-full bg-zen-gold/30"
+            className={`absolute h-1 w-1 rounded-full ${isMobile ? "bg-zen-gold/10" : "bg-zen-gold/30"}`}
             style={{
               left: `${pos.left}%`,
               top: `${pos.top}%`,
@@ -74,8 +89,8 @@ const MysticalBackground = () => {
         );
       })}
 
-      {/* Flowing mist effect */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-zen-gold/5 to-transparent opacity-30" />
+      {/* Flowing mist effect - reduced on mobile */}
+      <div className={`absolute inset-0 bg-gradient-to-b from-transparent via-zen-gold/5 to-transparent ${isMobile ? "opacity-10" : "opacity-30"}`} />
     </div>
   );
 };

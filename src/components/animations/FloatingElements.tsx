@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { type CSSProperties } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 
 type Floater = {
   size: number;
@@ -42,6 +42,17 @@ const FLOATERS: Floater[] = [
 ];
 
 const FloatingElements = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   // Use deterministic positions to avoid hydration mismatch
   const getPetalPosition = (idx: number) => {
     const seed = idx * 137.508; // Golden angle approximation
@@ -53,7 +64,10 @@ const FloatingElements = () => {
     } as CSSProperties;
   };
 
-  const petals = Array.from({ length: 18 }, (_, idx) => ({
+  const petalCount = isMobile ? 5 : 18;
+  const floaters = isMobile ? FLOATERS.slice(0, 1) : FLOATERS;
+
+  const petals = Array.from({ length: petalCount }, (_, idx) => ({
     id: idx,
     style: getPetalPosition(idx),
   }));
@@ -61,10 +75,10 @@ const FloatingElements = () => {
   return (
     <>
       <div className="pointer-events-none fixed inset-0 z-[1]">
-        {FLOATERS.map((floater, idx) => (
+        {floaters.map((floater, idx) => (
           <motion.div
             key={`floater-${idx}`}
-            className="absolute rounded-full blur-3xl"
+            className={`absolute rounded-full blur-3xl ${isMobile ? "opacity-30" : ""}`}
             style={{
               width: floater.size,
               height: floater.size,
