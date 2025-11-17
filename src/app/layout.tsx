@@ -3,6 +3,7 @@ import { Inter, Playfair_Display, Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import FloatingElements from "@/components/animations/FloatingElements";
 import ParticleBackground from "@/components/particles/ParticleBackground";
+import ScrollRestoration from "@/components/ScrollRestoration";
 import "./globals.css";
 
 const heading = Playfair_Display({
@@ -64,6 +65,7 @@ export default function RootLayout({
       <body
         className={`${heading.variable} ${body.variable} ${mono.variable} antialiased`}
       >
+        <ScrollRestoration />
         <div className="noise-overlay" aria-hidden="true" />
         <ParticleBackground />
         <FloatingElements />
