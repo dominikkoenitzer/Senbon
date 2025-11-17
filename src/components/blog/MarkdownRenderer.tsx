@@ -40,46 +40,76 @@ const MarkdownRenderer = ({ content }: Props) => {
                 {children}
               </motion.h1>
             ),
-            h2: ({ className, children }) => (
-              <motion.h2
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className={cn(
-                  "mb-6 mt-12 scroll-m-20 font-display text-3xl font-semibold leading-tight text-zen-mist border-b border-white/5 pb-3 relative",
-                  className,
-                )}
-              >
-                {children}
-                <span className="absolute left-0 bottom-0 h-px w-20 bg-gradient-to-r from-zen-gold/50 to-transparent" />
-              </motion.h2>
-            ),
-            h3: ({ className, children }) => (
-              <motion.h3
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className={cn(
-                  "mb-4 mt-10 scroll-m-20 font-display text-2xl font-semibold leading-tight text-zen-mist",
-                  className,
-                )}
-              >
-                {children}
-              </motion.h3>
-            ),
-            h4: ({ className, children }) => (
-              <motion.h4
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className={cn(
-                  "mb-3 mt-8 scroll-m-20 font-display text-xl font-semibold leading-tight text-zen-mist/95",
-                  className,
-                )}
-              >
-                {children}
-              </motion.h4>
-            ),
+            h2: ({ className, children }) => {
+              const text = String(children);
+              const id = text
+                .toLowerCase()
+                .replace(/[^\w\s-]/g, "")
+                .replace(/\s+/g, "-")
+                .replace(/-+/g, "-")
+                .trim();
+              return (
+                <motion.h2
+                  id={id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                  className={cn(
+                    "mb-6 mt-12 scroll-m-20 font-display text-3xl font-semibold leading-tight text-zen-mist border-b border-white/5 pb-3 relative",
+                    className,
+                  )}
+                >
+                  {children}
+                  <span className="absolute left-0 bottom-0 h-px w-20 bg-gradient-to-r from-zen-gold/50 to-transparent" />
+                </motion.h2>
+              );
+            },
+            h3: ({ className, children }) => {
+              const text = String(children);
+              const id = text
+                .toLowerCase()
+                .replace(/[^\w\s-]/g, "")
+                .replace(/\s+/g, "-")
+                .replace(/-+/g, "-")
+                .trim();
+              return (
+                <motion.h3
+                  id={id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className={cn(
+                    "mb-4 mt-10 scroll-m-20 font-display text-2xl font-semibold leading-tight text-zen-mist",
+                    className,
+                  )}
+                >
+                  {children}
+                </motion.h3>
+              );
+            },
+            h4: ({ className, children }) => {
+              const text = String(children);
+              const id = text
+                .toLowerCase()
+                .replace(/[^\w\s-]/g, "")
+                .replace(/\s+/g, "-")
+                .replace(/-+/g, "-")
+                .trim();
+              return (
+                <motion.h4
+                  id={id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className={cn(
+                    "mb-3 mt-8 scroll-m-20 font-display text-xl font-semibold leading-tight text-zen-mist/95",
+                    className,
+                  )}
+                >
+                  {children}
+                </motion.h4>
+              );
+            },
             p: ({ className, children }) => (
               <motion.p
                 initial={{ opacity: 0 }}
