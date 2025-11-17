@@ -49,9 +49,10 @@ const ParticleBackground = () => {
     let lastFrameTime = 0;
     let isScrolling = false;
     let scrollTimeout: NodeJS.Timeout;
-    const isMobileDevice = window.innerWidth < 768;
-    const targetFPS = isMobileDevice ? 15 : 60; // Lower FPS on mobile
-    const frameInterval = 1000 / targetFPS;
+    
+    const getIsMobile = () => window.innerWidth < 768;
+    const getTargetFPS = () => getIsMobile() ? 15 : 60;
+    const getFrameInterval = () => 1000 / getTargetFPS();
 
     const setCanvasSize = () => {
       const dpr = window.devicePixelRatio || 1;
@@ -68,13 +69,18 @@ const ParticleBackground = () => {
       );
     };
 
-    const draw = (currentTime: number) => {
+    const draw = (currentTime?: number) => {
+      const isMobileDevice = getIsMobile();
+      const frameInterval = getFrameInterval();
+      
       // Throttle frame rate on mobile
-      if (isMobileDevice && currentTime - lastFrameTime < frameInterval) {
+      if (isMobileDevice && currentTime && currentTime - lastFrameTime < frameInterval) {
         animationFrame = requestAnimationFrame(draw);
         return;
       }
-      lastFrameTime = currentTime;
+      if (currentTime) {
+        lastFrameTime = currentTime;
+      }
 
       // Pause animation while scrolling on mobile
       if (isMobileDevice && isScrolling) {
@@ -87,7 +93,7 @@ const ParticleBackground = () => {
       ctx.fillStyle = "rgba(5, 8, 15, 0.45)";
       ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
       ctx.restore();
-
+      
       particles.forEach((particle) => {
         // Slower movement on mobile
         const speedMultiplier = isMobileDevice ? 0.5 : 1;
@@ -151,7 +157,7 @@ const ParticleBackground = () => {
     };
 
     const handleScroll = () => {
-      if (isMobileDevice) {
+      if (getIsMobile()) {
         isScrolling = true;
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
@@ -170,25 +176,17 @@ const ParticleBackground = () => {
     animationFrame = requestAnimationFrame(draw);
 
     window.addEventListener("resize", handleResize);
-    if (!isMobileDevice) {
-      window.addEventListener("pointermove", handlePointerMove);
-      window.addEventListener("pointerleave", handlePointerLeave);
-    }
-    if (isMobileDevice) {
-      window.addEventListener("scroll", handleScroll, { passive: true });
-    }
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerleave", handlePointerLeave);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       cancelAnimationFrame(animationFrame);
       clearTimeout(scrollTimeout);
       window.removeEventListener("resize", handleResize);
-      if (!isMobileDevice) {
-        window.removeEventListener("pointermove", handlePointerMove);
-        window.removeEventListener("pointerleave", handlePointerLeave);
-      }
-      if (isMobileDevice) {
-        window.removeEventListener("scroll", handleScroll);
-      }
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerleave", handlePointerLeave);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [isMobile]);
 
