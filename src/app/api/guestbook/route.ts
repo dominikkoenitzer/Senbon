@@ -90,7 +90,10 @@ function isDbConfigured() {
     const availableKeys = Object.keys(process.env)
       .filter(k => k.includes('DATABASE') || k.includes('POSTGRES'))
       .join(', ');
-    console.warn(`[isDbConfigured] Database not configured. Available env vars: ${availableKeys || 'none'}`);
+    const allEnvKeys = Object.keys(process.env).slice(0, 20).join(', '); // First 20 env vars for debugging
+    console.warn(`[isDbConfigured] Database not configured.`);
+    console.warn(`[isDbConfigured] DB-related env vars: ${availableKeys || 'none'}`);
+    console.warn(`[isDbConfigured] Sample env vars (first 20): ${allEnvKeys}`);
   } else {
     console.log(`[isDbConfigured] Database configured using: ${found}`);
   }
