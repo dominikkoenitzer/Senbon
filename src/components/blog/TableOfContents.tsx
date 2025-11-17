@@ -87,20 +87,20 @@ const TableOfContents = ({ items, mobile = false }: Props) => {
   if (mobile) {
     return (
       <nav className="w-full">
-        <div className="zen-card px-6 py-6 backdrop-blur-sm bg-black/20 border-white/5 rounded-lg">
-          <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/40 mb-4">
+        <div className="zen-card px-4 py-4 md:px-6 md:py-6 backdrop-blur-sm bg-black/20 border-white/5 rounded-lg">
+          <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/40 mb-3 md:mb-4">
             Contents
           </p>
-          <ul className="space-y-2">
+          <ul className="space-y-1.5 md:space-y-2">
             {items.map((item) => (
               <li key={item.id}>
                 <button
                   onClick={(e) => handleClick(e, item.id)}
                   className={cn(
-                    "text-left text-sm transition-colors hover:text-zen-gold/80 w-full py-1",
+                    "text-left text-xs md:text-sm transition-colors hover:text-zen-gold/80 w-full py-0.5 md:py-1",
                     item.level === 2 && "pl-0 text-zen-mist/70 font-medium",
-                    item.level === 3 && "pl-3 text-zen-mist/60 text-xs",
-                    item.level === 4 && "pl-6 text-zen-mist/50 text-xs",
+                    item.level === 3 && "pl-2 md:pl-3 text-zen-mist/60 text-xs",
+                    item.level === 4 && "pl-4 md:pl-6 text-zen-mist/50 text-xs",
                     activeId === item.id && "text-zen-gold"
                   )}
                 >
