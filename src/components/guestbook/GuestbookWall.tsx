@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import GuestbookEntryCard from "@/components/guestbook/GuestbookEntry";
 import GuestbookForm from "@/components/guestbook/GuestbookForm";
 import type { GuestbookEntry } from "@/lib/db";
@@ -14,7 +14,7 @@ const GuestbookWall = ({ initialEntries }: Props) => {
   const [entries, setEntries] = useState(initialEntries);
   const [refreshing, setRefreshing] = useState(false);
 
-  const refreshEntries = async () => {
+  const refreshEntries = useCallback(async () => {
     setRefreshing(true);
     try {
       const res = await fetch("/api/guestbook", {
@@ -52,7 +52,12 @@ const GuestbookWall = ({ initialEntries }: Props) => {
     } finally {
       setRefreshing(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    // Refresh entries on mount to ensure we have the latest data
+    refreshEntries();
+  }, [refreshEntries]);
 
   return (
     <div className="space-y-20">

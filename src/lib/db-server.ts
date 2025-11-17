@@ -183,13 +183,8 @@ export const fetchGuestbookEntriesServer = async ({
     }
 
     const errorMessage = error instanceof Error ? error.message : String(error);
-    if (
-      process.env.NODE_ENV === "development" &&
-      !errorMessage.includes("fetch failed") &&
-      !errorMessage.includes("ECONNREFUSED")
-    ) {
-      console.warn("Database query failed, using fallback entries:", errorMessage);
-    }
+    console.error("Database query failed in fetchGuestbookEntriesServer:", errorMessage);
+    console.error("Full error:", error);
 
     return includePending
       ? FALLBACK_ENTRIES
