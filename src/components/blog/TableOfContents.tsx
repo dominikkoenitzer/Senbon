@@ -47,18 +47,40 @@ const TableOfContents = ({ items }: Props) => {
 
   if (items.length === 0) return null;
 
-  const handleClick = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 100;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+    e.preventDefault();
+    // Wait a bit for any animations to complete
+    setTimeout(() => {
+      const element = document.getElementById(id);
+      if (element) {
+        const offset = 120; // Account for sticky header
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - offset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    }
+        window.scrollTo({
+          top: Math.max(0, offsetPosition),
+          behavior: "smooth",
+        });
+        
+        // Also update URL hash without triggering scroll
+        window.history.pushState(null, "", `#${id}`);
+      } else {
+        // Fallback: try again after a short delay in case element isn't ready
+        setTimeout(() => {
+          const retryElement = document.getElementById(id);
+          if (retryElement) {
+            const offset = 120;
+            const elementPosition = retryElement.getBoundingClientRect().top + window.pageYOffset;
+            const offsetPosition = elementPosition - offset;
+            window.scrollTo({
+              top: Math.max(0, offsetPosition),
+              behavior: "smooth",
+            });
+            window.history.pushState(null, "", `#${id}`);
+          }
+        }, 100);
+      }
+    }, 50);
   };
 
   return (
@@ -71,7 +93,7 @@ const TableOfContents = ({ items }: Props) => {
           {items.map((item) => (
             <li key={item.id}>
               <button
-                onClick={() => handleClick(item.id)}
+                onClick={(e) => handleClick(e, item.id)}
                 className={cn(
                   "text-left text-sm transition-colors hover:text-zen-gold/80 w-full",
                   item.level === 2 && "pl-0 text-zen-mist/70",
