@@ -126,22 +126,22 @@ const ConstellationBackground = () => {
         
         // Spring force - pull back to original position
         const springForce = 0.02;
-        const springDamping = 0.88; // Increased friction to make stars settle
+        const springDamping = 0.7; // Strong friction - 30% velocity loss per frame
         const dx = star.originalX - star.x;
         const dy = star.originalY - star.y;
         star.vx += dx * springForce;
         star.vy += dy * springForce;
         
-        // Apply damping to velocity (friction) - stronger friction
+        // Apply damping to velocity (friction) - very strong friction
         star.vx *= springDamping;
         star.vy *= springDamping;
         
-        // Stop movement when velocity is very small (settled)
-        const velocityThreshold = 0.01;
+        // Stop movement when velocity is very small (settled) - more aggressive
+        const velocityThreshold = 0.05;
         if (Math.abs(star.vx) < velocityThreshold && Math.abs(star.vy) < velocityThreshold) {
           // If very close to original position and low velocity, snap to rest
           const distToOriginal = Math.sqrt(dx * dx + dy * dy);
-          if (distToOriginal < 0.5) {
+          if (distToOriginal < 1.0) {
             star.x = star.originalX;
             star.y = star.originalY;
             star.vx = 0;
