@@ -100,19 +100,6 @@ const connectionString =
 
 Like choosing the right tool for the task — unpooled for serverless, pooled for traditional servers.
 
-## The Final Connection
-
-After adding environment variables in Vercel and redeploying, the logs changed:
-
-```
-[isDbConfigured] Database configured using: DATABASE_URL
-[getSql] Using connection string from: DATABASE_URL
-[POST /api/guestbook] Successfully inserted entry: abc123...
-[GET /api/guestbook] Returning 5 items
-```
-
-The guestbook now works. Messages persist. They survive server restarts. They flow from form to database to display, like water finding its path through the garden.
-
 ## What Was Learned
 
 Migration is about careful translation. Not changing what works, but moving it to a better home. The guestbook schema stayed the same. The queries stayed the same. Only the connection method changed.
