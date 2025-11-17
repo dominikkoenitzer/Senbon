@@ -33,7 +33,7 @@ const memory: Array<
 > = [];
 
 const MAX_LIMIT = 50;
-const MAX_MESSAGE_LENGTH = 280;
+const MAX_MESSAGE_LENGTH = 480;
 const RATE_LIMIT_WINDOW_MS = 30_000;
 
 function isDbConfigured() {

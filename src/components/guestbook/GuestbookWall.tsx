@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import GuestbookEntryCard from "@/components/guestbook/GuestbookEntry";
 import GuestbookForm from "@/components/guestbook/GuestbookForm";
 import type { GuestbookEntry } from "@/lib/db";
@@ -57,12 +57,15 @@ const GuestbookWall = ({ initialEntries }: Props) => {
     <div className="space-y-20">
       <div className="max-w-2xl min-w-0 overflow-hidden">
         <GuestbookForm
-          onSubmitted={(entry) =>
+          onSubmitted={async (entry) => {
+            // Add the new entry to the list immediately
             setEntries((prev) => [
               { ...entry, status: entry.status ?? "approved" },
               ...prev,
-            ])
-          }
+            ]);
+            // Then refresh to get the latest from server
+            await refreshEntries();
+          }}
         />
       </div>
       
