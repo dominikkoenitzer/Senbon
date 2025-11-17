@@ -64,7 +64,8 @@ const FloatingElements = () => {
     } as CSSProperties;
   };
 
-  const petalCount = isMobile ? 3 : 18;
+  // Disable petals completely - they were causing persistent diagonal dots
+  const petalCount = 0;
   const floaters = isMobile ? [] : FLOATERS; // Disable floaters on mobile
 
   const petals = Array.from({ length: petalCount }, (_, idx) => ({
@@ -100,16 +101,19 @@ const FloatingElements = () => {
           />
         ))}
       </div>
-      <div className="pointer-events-none fixed inset-0 z-[2]">
-        {petals.map((petal) => (
-          <span
-            key={petal.id}
-            className="petal"
-            style={petal.style}
-            aria-hidden="true"
-          />
-        ))}
-      </div>
+      {/* Petals disabled - were causing persistent diagonal dots */}
+      {petalCount > 0 && (
+        <div className="pointer-events-none fixed inset-0 z-[2]">
+          {petals.map((petal) => (
+            <span
+              key={petal.id}
+              className="petal"
+              style={petal.style}
+              aria-hidden="true"
+            />
+          ))}
+        </div>
+      )}
     </>
   );
 };
