@@ -40,11 +40,9 @@ export const generateMetadata = async ({ params }: { params: Promise<Params> }) 
   };
 };
 
-const PostContent = async ({ slug }: { slug: string }) => {
+const PostContent = async ({ slug, headings }: { slug: string; headings: ReturnType<typeof extractHeadings> }) => {
   const post = await getPostBySlug(slug);
   if (!post) return notFound();
-
-  const headings = extractHeadings(post.content);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-16">
@@ -84,14 +82,23 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
   const post = await getPostBySlug(slug);
   if (!post) return notFound();
 
+  const headings = extractHeadings(post.content);
+
   return (
     <>
       <MysticalBackground />
       <article className="mx-auto flex max-w-7xl flex-col gap-20 px-6 py-24 md:py-32 relative z-10">
         <PostHeader post={post} />
 
+        {/* Mobile Table of Contents */}
+        {headings.length > 0 && (
+          <div className="lg:hidden">
+            <TableOfContents items={headings} mobile />
+          </div>
+        )}
+
         <Suspense fallback={<PostContentSkeleton />}>
-          <PostContent slug={slug} />
+          <PostContent slug={slug} headings={headings} />
         </Suspense>
       </article>
     </>
