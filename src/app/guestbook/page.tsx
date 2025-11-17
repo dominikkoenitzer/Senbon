@@ -17,10 +17,12 @@ const GuestbookPage = async () => {
   try {
     entries = await fetchGuestbookEntries({
       includePending: false,
-      limit: 20,
+      limit: 50,
     });
+    console.log(`[GuestbookPage] Fetched ${entries.length} entries from server`);
   } catch (error) {
-    console.error("Failed to fetch guestbook entries on server:", error);
+    console.error("[GuestbookPage] Failed to fetch guestbook entries on server:", error);
+    // Return empty array on error - client will handle it
     entries = [];
   }
 
