@@ -6,18 +6,39 @@ import { neon } from "@neondatabase/serverless";
 
 // Initialize Neon client
 const getSql = () => {
-  // Try unpooled connection first (better for serverless), then pooled, then any DATABASE_URL
-  const connectionString = 
-    process.env.DATABASE_URL_UNPOOLED ||
-    process.env.POSTGRES_URL_NON_POOLING ||
-    process.env.DATABASE_URL ||
-    process.env.POSTGRES_URL;
+  // Try all possible environment variable names in order of preference
+  const possibleVars = [
+    'DATABASE_URL_UNPOOLED',
+    'POSTGRES_URL_NON_POOLING',
+    'DATABASE_URL',
+    'POSTGRES_URL',
+    'POSTGRES_POSTGRES_URL',
+    'POSTGRES_DATABASE_URL',
+    'POSTGRES_POSTGRES_URL_NON_POOLING',
+    'POSTGRES_DATABASE_URL_NON_POOLING',
+  ];
+  
+  let connectionString: string | undefined;
+  let foundKey: string | undefined;
+  
+  for (const key of possibleVars) {
+    const value = process.env[key];
+    if (value && value.trim().length > 0) {
+      connectionString = value;
+      foundKey = key;
+      break;
+    }
+  }
     
   if (!connectionString) {
-    console.error("[getSql] No database connection string found. Available env vars:", 
-      Object.keys(process.env).filter(k => k.includes('DATABASE') || k.includes('POSTGRES')).join(', '));
+    const availableKeys = Object.keys(process.env)
+      .filter(k => k.includes('DATABASE') || k.includes('POSTGRES'))
+      .join(', ');
+    console.error(`[getSql] No database connection string found. Available env vars: ${availableKeys || 'none'}`);
     throw new Error("DATABASE_URL or POSTGRES_URL environment variable is required");
   }
+  
+  console.log(`[getSql] Using connection string from: ${foundKey}`);
   
   try {
     const sql = neon(connectionString);
@@ -29,18 +50,34 @@ const getSql = () => {
 };
 
 function isDbConfigured() {
-  const hasDb = Boolean(
-    process.env.DATABASE_URL_UNPOOLED ||
-    process.env.POSTGRES_URL_NON_POOLING ||
-    process.env.DATABASE_URL ||
-    process.env.POSTGRES_URL
-  );
+  // Check all possible environment variable names that Neon/Vercel might use
+  const possibleVars = [
+    'DATABASE_URL_UNPOOLED',
+    'POSTGRES_URL_NON_POOLING',
+    'DATABASE_URL',
+    'POSTGRES_URL',
+    'POSTGRES_POSTGRES_URL',
+    'POSTGRES_DATABASE_URL',
+    'POSTGRES_URL_NON_POOLING',
+    'POSTGRES_POSTGRES_URL_NON_POOLING',
+    'POSTGRES_DATABASE_URL_NON_POOLING',
+  ];
   
-  if (!hasDb) {
-    console.warn("[isDbConfigured] Database not configured. Check environment variables.");
+  const found = possibleVars.find(key => {
+    const value = process.env[key];
+    return value && value.trim().length > 0;
+  });
+  
+  if (!found) {
+    const availableKeys = Object.keys(process.env)
+      .filter(k => k.includes('DATABASE') || k.includes('POSTGRES'))
+      .join(', ');
+    console.warn(`[isDbConfigured] Database not configured. Available env vars: ${availableKeys || 'none'}`);
+  } else {
+    console.log(`[isDbConfigured] Database configured using: ${found}`);
   }
   
-  return hasDb;
+  return Boolean(found);
 }
 
 (function hydratePostgresEnv() {
