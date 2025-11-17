@@ -14,13 +14,14 @@ type Particle = {
 
 const PARTICLE_COUNT = typeof window !== "undefined" && window.innerWidth < 768 ? 20 : 90;
 
-const createParticle = (w: number, h: number): Particle => ({
+const createParticle = (w: number, h: number, isMobile: boolean = false): Particle => ({
   x: Math.random() * w,
   y: Math.random() * h,
   radius: Math.random() * 1.2 + 0.6,
   baseRadius: Math.random() * 1.2 + 0.6,
-  vx: (Math.random() - 0.5) * 0.12,
-  vy: (Math.random() - 0.5) * 0.12,
+  // Much slower, more subtle movement on mobile
+  vx: isMobile ? (Math.random() - 0.5) * 0.04 : (Math.random() - 0.5) * 0.12,
+  vy: isMobile ? (Math.random() - 0.5) * 0.04 : (Math.random() - 0.5) * 0.12,
   glow: Math.random(),
 });
 
@@ -47,8 +48,6 @@ const ParticleBackground = () => {
     let particles: Particle[] = [];
     const pointer = { x: 0, y: 0, active: false };
     let lastFrameTime = 0;
-    let isScrolling = false;
-    let scrollTimeout: NodeJS.Timeout;
     
     const getIsMobile = () => window.innerWidth < 768;
     const getTargetFPS = () => getIsMobile() ? 15 : 60;
@@ -64,8 +63,9 @@ const ParticleBackground = () => {
 
     const initParticles = () => {
       const particleCount = window.innerWidth < 768 ? 8 : 90;
+      const isMobileDevice = getIsMobile();
       particles = Array.from({ length: particleCount }, () =>
-        createParticle(window.innerWidth, window.innerHeight),
+        createParticle(window.innerWidth, window.innerHeight, isMobileDevice),
       );
     };
 
@@ -82,38 +82,49 @@ const ParticleBackground = () => {
         lastFrameTime = currentTime;
       }
 
-      // Pause animation while scrolling on mobile
-      if (isMobileDevice && isScrolling) {
-        animationFrame = requestAnimationFrame(draw);
-        return;
-      }
-
+      // Don't pause on mobile - let particles flow continuously
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
       ctx.save();
       ctx.fillStyle = "rgba(5, 8, 15, 0.45)";
       ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
       ctx.restore();
       
-      particles.forEach((particle) => {
-        // Slower movement on mobile
-        const speedMultiplier = isMobileDevice ? 0.5 : 1;
-        particle.x += particle.vx * speedMultiplier;
-        particle.y += particle.vy * speedMultiplier;
-
-        // Disable pointer interaction on mobile for performance
-        if (!isMobileDevice && pointer.active) {
-          const dx = pointer.x - particle.x;
-          const dy = pointer.y - particle.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            const force = (120 - dist) / 120;
-            particle.vx -= (dx / dist) * 0.02 * force;
-            particle.vy -= (dy / dist) * 0.02 * force;
-            particle.radius = particle.baseRadius + force * 2;
+      // Use current time for smooth sine wave flow on mobile
+      const time = currentTime || performance.now();
+      const flowTime = time * 0.0003; // Slow time multiplier for gentle flow
+      
+      particles.forEach((particle, index) => {
+        if (isMobileDevice) {
+          // On mobile: subtle, slow flowing movement with gentle sine wave
+          const flowX = Math.sin(flowTime + index * 0.5) * 0.3;
+          const flowY = Math.cos(flowTime + index * 0.7) * 0.3;
+          particle.x += particle.vx + flowX;
+          particle.y += particle.vy + flowY;
+        } else {
+          // Desktop: normal movement with pointer interaction
+          particle.x += particle.vx;
+          particle.y += particle.vy;
+          
+          // Pointer interaction only on desktop
+          if (pointer.active) {
+            const dx = pointer.x - particle.x;
+            const dy = pointer.y - particle.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 120) {
+              const force = (120 - dist) / 120;
+              particle.vx -= (dx / dist) * 0.02 * force;
+              particle.vy -= (dy / dist) * 0.02 * force;
+              particle.radius = particle.baseRadius + force * 2;
+            } else {
+              particle.radius += (particle.baseRadius - particle.radius) * 0.05;
+            }
           } else {
             particle.radius += (particle.baseRadius - particle.radius) * 0.05;
           }
-        } else {
+        }
+        
+        // Ensure radius returns to base on mobile
+        if (isMobileDevice) {
           particle.radius += (particle.baseRadius - particle.radius) * 0.05;
         }
 
@@ -133,8 +144,9 @@ const ParticleBackground = () => {
           particle.y,
           isMobileDevice ? 12 : 18, // Smaller radius on mobile
         );
-        const opacity = isMobileDevice ? 0.2 : 0.8;
-        const midOpacity = isMobileDevice ? 0.03 : 0.12;
+        // Even more subtle opacity on mobile for gentle background flow
+        const opacity = isMobileDevice ? 0.12 : 0.8;
+        const midOpacity = isMobileDevice ? 0.02 : 0.12;
         gradient.addColorStop(0, `rgba(247, 216, 160, ${opacity})`);
         gradient.addColorStop(0.6, `rgba(247, 216, 160, ${midOpacity})`);
         gradient.addColorStop(1, "transparent");
@@ -156,16 +168,6 @@ const ParticleBackground = () => {
       pointer.active = false;
     };
 
-    const handleScroll = () => {
-      if (getIsMobile()) {
-        isScrolling = true;
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-          isScrolling = false;
-        }, 150);
-      }
-    };
-
     const handleResize = () => {
       setCanvasSize();
       initParticles();
@@ -176,17 +178,22 @@ const ParticleBackground = () => {
     animationFrame = requestAnimationFrame(draw);
 
     window.addEventListener("resize", handleResize);
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerleave", handlePointerLeave);
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    
+    // Only add pointer events on desktop - mobile particles flow automatically
+    if (!getIsMobile()) {
+      window.addEventListener("pointermove", handlePointerMove);
+      window.addEventListener("pointerleave", handlePointerLeave);
+    }
+    // Remove scroll pause - let particles flow continuously on mobile
+    // window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       cancelAnimationFrame(animationFrame);
-      clearTimeout(scrollTimeout);
       window.removeEventListener("resize", handleResize);
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerleave", handlePointerLeave);
-      window.removeEventListener("scroll", handleScroll);
+      if (!getIsMobile()) {
+        window.removeEventListener("pointermove", handlePointerMove);
+        window.removeEventListener("pointerleave", handlePointerLeave);
+      }
     };
   }, [isMobile]);
 
