@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
 import AdminEntryCard from "@/components/guestbook/AdminEntryCard";
 import type { GuestbookEntry, GuestbookStatus } from "@/lib/db";
 
@@ -12,6 +13,7 @@ const AdminPage = () => {
   const [entries, setEntries] = useState<GuestbookEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
 
   useEffect(() => {
     const stored = window.localStorage.getItem("senbon-admin-token");
@@ -165,102 +167,164 @@ const AdminPage = () => {
 
   const stats = useMemo(() => {
     const pending = entries.filter((entry) => entry.status === "pending");
+    const approved = entries.filter((entry) => entry.status === "approved");
+    const rejected = entries.filter((entry) => entry.status === "rejected");
     return {
       pending: pending.length,
       total: entries.length,
-      approved: entries.filter((entry) => entry.status === "approved").length,
+      approved: approved.length,
+      rejected: rejected.length,
     };
   }, [entries]);
 
+  const filteredEntries = useMemo(() => {
+    if (statusFilter === "all") return entries;
+    return entries.filter((entry) => entry.status === statusFilter);
+  }, [entries, statusFilter]);
+
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-10 px-6 py-16">
-      <header className="zen-card px-8 py-10">
-        <p className="text-xs uppercase tracking-[0.35em] text-zen-gold/60">
-          Admin Gate
-        </p>
-        <h1 className="mt-4 font-display text-4xl">Guestbook Moderation</h1>
-        <p className="mt-2 text-zen-mist/75">
-          Use the token stored in `.env` as ADMIN_TOKEN. This panel only lives
-          client-side; nothing routes through external services.
-        </p>
-        <div className="mt-6 flex flex-col gap-4 md:flex-row">
-          <Input
-            value={token}
-            onChange={(event) => setToken(event.target.value)}
-            placeholder="Admin token..."
-            type="password"
-            className="bg-black/20"
-          />
-          <Button
-            onClick={() => verifyToken()}
-            disabled={loading || !token}
-            className="rounded-full border border-zen-gold/40 bg-transparent text-zen-gold hover:bg-zen-gold/10"
-          >
-            {loading ? "Verifying..." : "Unlock"}
-          </Button>
+    <div className="mx-auto flex max-w-5xl flex-col gap-24 px-6 py-24">
+      <header className="space-y-8">
+        <div className="space-y-6">
+          <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/40">
+            Admin Gate
+          </p>
+          <h1 className="font-display text-4xl leading-[1.1] md:text-5xl lg:text-6xl">
+            Guestbook Moderation
+          </h1>
+          <p className="max-w-xl text-base leading-relaxed text-zen-mist/55">
+            Secure moderation panel for managing guestbook entries. All actions require authentication.
+          </p>
         </div>
-        {message ? (
-          <p className="mt-3 text-sm text-red-300">{message}</p>
-        ) : null}
-        {verified ? (
-          <div className="mt-6 grid gap-4 rounded-2xl border border-white/10 bg-black/30 px-6 py-4 text-sm text-zen-mist/85 md:grid-cols-3">
-            <p>
-              Pending
-              <span className="block text-2xl font-semibold text-zen-gold">
-                {stats.pending}
-              </span>
-            </p>
-            <p>
-              Approved
-              <span className="block text-2xl font-semibold text-zen-gold">
-                {stats.approved}
-              </span>
-            </p>
-            <p>
-              Total
-              <span className="block text-2xl font-semibold text-zen-gold">
-                {stats.total}
-              </span>
-            </p>
+
+        {!verified ? (
+          <div className="space-y-4">
+            <div className="flex flex-col gap-3 md:flex-row">
+              <Input
+                value={token}
+                onChange={(event) => setToken(event.target.value)}
+                placeholder="Enter admin token..."
+                type="password"
+                className="bg-transparent border-0 border-b border-white/10 focus:border-zen-gold/30 rounded-none px-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && token) {
+                    verifyToken();
+                  }
+                }}
+              />
+              <Button
+                onClick={() => verifyToken()}
+                disabled={loading || !token}
+                className="rounded-none border border-zen-gold/15 bg-transparent text-zen-gold/80 hover:bg-zen-gold/5 hover:border-zen-gold/25 transition-all"
+              >
+                {loading ? "Verifying..." : "Unlock"}
+              </Button>
+            </div>
+            {message ? (
+              <p className="text-xs text-zen-mist/50">{message}</p>
+            ) : null}
           </div>
-        ) : null}
+        ) : (
+          <div className="grid gap-6 border-b border-white/5 pb-8 md:grid-cols-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.5em] text-zen-mist/40 mb-2">
+                Pending
+              </p>
+              <p className="text-2xl font-display text-zen-gold">
+                {stats.pending}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-[0.5em] text-zen-mist/40 mb-2">
+                Approved
+              </p>
+              <p className="text-2xl font-display text-zen-gold">
+                {stats.approved}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-[0.5em] text-zen-mist/40 mb-2">
+                Rejected
+              </p>
+              <p className="text-2xl font-display text-zen-gold">
+                {stats.rejected}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-[0.5em] text-zen-mist/40 mb-2">
+                Total
+              </p>
+              <p className="text-2xl font-display text-zen-gold">
+                {stats.total}
+              </p>
+            </div>
+          </div>
+        )}
       </header>
 
       {verified ? (
-        <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-zen-gold">
-              Guestbook Entries ({entries.length})
-            </h2>
-            <Button
-              onClick={() => fetchEntries(token, "all")}
-              disabled={loading}
-              variant="outline"
-              className="rounded-full border border-zen-gold/40 bg-transparent text-zen-gold hover:bg-zen-gold/10"
-            >
-              {loading ? "Loading..." : "Refresh"}
-            </Button>
-          </div>
-          {loading && entries.length === 0 ? (
-            <p className="text-center text-zen-mist/70">Loading entries...</p>
-          ) : entries.length === 0 ? (
-            <p className="text-center text-zen-mist/70">
-              No entries yet. New entries will appear here once submitted.
+        <section className="space-y-12">
+          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+            <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/40">
+              Entries
             </p>
+            <div className="flex items-center gap-3">
+              <div className="flex gap-1 border-b border-white/5">
+                {(["all", "pending", "approved", "rejected"] as const).map((filter) => (
+                  <button
+                    key={filter}
+                    onClick={() => setStatusFilter(filter)}
+                    className={`px-3 py-2 text-xs uppercase tracking-[0.2em] transition-colors border-b-2 -mb-[1px] ${
+                      statusFilter === filter
+                        ? "text-zen-gold border-zen-gold/40"
+                        : "text-zen-mist/40 border-transparent hover:text-zen-mist/60"
+                    }`}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => fetchEntries(token, "all")}
+                disabled={loading}
+                className="text-xs text-zen-mist/30 hover:text-zen-gold/60 transition-colors flex items-center gap-2"
+              >
+                <RefreshCw className={`h-3 w-3 ${loading ? "animate-spin" : ""}`} />
+                Refresh
+              </button>
+            </div>
+          </div>
+
+          {loading && filteredEntries.length === 0 ? (
+            <div className="py-16 text-center">
+              <p className="text-sm text-zen-mist/40">Loading entries...</p>
+            </div>
+          ) : filteredEntries.length === 0 ? (
+            <div className="py-16 text-center">
+              <p className="text-sm text-zen-mist/40">
+                {statusFilter === "all" 
+                  ? "No entries yet. New entries will appear here once submitted."
+                  : `No ${statusFilter} entries found.`}
+              </p>
+            </div>
           ) : (
-            entries.map((entry) => (
-              <AdminEntryCard
-                key={entry.id}
-                entry={entry}
-                onAction={handleAction}
-              />
-            ))
+            <div className="space-y-0">
+              {filteredEntries.map((entry) => (
+                <AdminEntryCard
+                  key={entry.id}
+                  entry={entry}
+                  onAction={handleAction}
+                />
+              ))}
+            </div>
           )}
         </section>
       ) : (
-        <p className="text-center text-zen-mist/70">
-          Enter the admin token to see pending entries.
-        </p>
+        <div className="py-16 text-center">
+          <p className="text-sm text-zen-mist/40">
+            Enter the admin token above to access the moderation panel.
+          </p>
+        </div>
       )}
     </div>
   );
