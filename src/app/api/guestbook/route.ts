@@ -319,7 +319,10 @@ export async function POST(req: NextRequest) {
   const rejected = false;
 
   try {
+    await ensureTable();
     const sql = getSql();
+    console.log(`[POST /api/guestbook] Inserting entry: id=${id}, name=${safeName?.substring(0, 20)}...`);
+    
     const inserted = await sql`
       INSERT INTO guestbook (id, name, message, ip_hash, approved, rejected)
       VALUES (${id}, ${safeName}, ${trimmed}, ${ipHash}, ${approved}, ${rejected})
@@ -327,15 +330,20 @@ export async function POST(req: NextRequest) {
     ` as GuestbookRow[];
 
     if (!inserted || inserted.length === 0) {
+      console.error("[POST /api/guestbook] Insert returned no rows");
       throw new Error("Failed to insert entry");
     }
 
+    console.log(`[POST /api/guestbook] Successfully inserted entry: ${inserted[0].id}`);
     return NextResponse.json(
       { item: inserted[0], approved },
       { status: 201 },
     );
   } catch (error) {
-    console.error("Database error:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    console.error("[POST /api/guestbook] Database error:", errorMessage);
+    if (errorStack) console.error("[POST /api/guestbook] Error stack:", errorStack);
     return NextResponse.json(
       { error: "database_error" },
       { status: 500 },

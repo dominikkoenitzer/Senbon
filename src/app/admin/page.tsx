@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
 import AdminEntryCard from "@/components/guestbook/AdminEntryCard";
 import type { GuestbookEntry, GuestbookStatus } from "@/lib/db";
 
@@ -29,6 +28,14 @@ const AdminPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
+
+  // Auto-refresh entries when verified state changes (browser refresh will trigger this)
+  useEffect(() => {
+    if (verified && token) {
+      fetchEntries(token);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [verified]);
 
   const verifyToken = async (override?: string) => {
     const candidate = override ?? token;
@@ -143,8 +150,8 @@ const AdminPage = () => {
           }),
         });
         if (!response.ok) throw new Error("Action failed.");
-        // Refresh entries after update
-        await fetchEntries(token);
+        // Update local state after action
+        setEntries((prev) => prev.filter((entry) => entry.id !== id));
       }
     } catch (error) {
       setMessage(
@@ -219,18 +226,10 @@ const AdminPage = () => {
 
       {verified ? (
         <section className="space-y-12">
-          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+          <div className="border-b border-white/5 pb-3">
             <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/40">
               Entries
             </p>
-            <button
-              onClick={() => fetchEntries(token)}
-              disabled={loading}
-              className="text-xs text-zen-mist/30 hover:text-zen-gold/60 transition-colors flex items-center gap-2"
-            >
-              <RefreshCw className={`h-3 w-3 ${loading ? "animate-spin" : ""}`} />
-              Refresh
-            </button>
           </div>
 
           {loading && entries.length === 0 ? (
