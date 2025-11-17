@@ -46,7 +46,17 @@ const GuestbookForm = ({ onSubmitted }: Props) => {
       });
 
       if (!response.ok) {
-        throw new Error("Unable to leave a message right now.");
+        const errorData = await response.json().catch(() => ({}));
+        const errorMsg = errorData.error || "Unable to leave a message right now.";
+        throw new Error(
+          errorMsg === "rate_limited"
+            ? "Please wait a moment before submitting again."
+            : errorMsg === "invalid_message"
+            ? "Message is too short or too long."
+            : errorMsg === "database_error"
+            ? "Database connection error. Please try again."
+            : "Unable to leave a message right now."
+        );
       }
 
       const data = await response.json();
@@ -68,11 +78,7 @@ const GuestbookForm = ({ onSubmitted }: Props) => {
   });
 
   return (
-    <div className="space-y-8">
-      <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/40">
-        Write a message
-      </p>
-
+    <div className="space-y-6">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-3">
           <Input
@@ -80,7 +86,7 @@ const GuestbookForm = ({ onSubmitted }: Props) => {
             placeholder="Your name"
             {...form.register("name")}
             disabled={status === "pending"}
-            className="bg-transparent border-0 border-b border-white/10 focus:border-zen-gold/30 rounded-none px-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="bg-transparent border-0 border-b border-white/10 focus:border-zen-gold/30 rounded-none px-0 focus-visible:ring-0 focus-visible:ring-offset-0 w-full"
           />
           {form.formState.errors.name && (
             <p className="text-xs text-zen-mist/40">
@@ -96,7 +102,8 @@ const GuestbookForm = ({ onSubmitted }: Props) => {
             placeholder="Leave your message..."
             {...form.register("message")}
             disabled={status === "pending"}
-            className="bg-transparent border-0 border-b border-white/10 focus:border-zen-gold/30 rounded-none px-0 resize-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="bg-transparent border-0 border-b border-white/10 focus:border-zen-gold/30 rounded-none px-0 resize-none focus-visible:ring-0 focus-visible:ring-offset-0 w-full"
+            style={{ wordBreak: "break-word", overflowWrap: "anywhere" }}
           />
           {form.formState.errors.message && (
             <p className="text-xs text-zen-mist/40">
@@ -117,7 +124,7 @@ const GuestbookForm = ({ onSubmitted }: Props) => {
 
         {status === "success" && (
           <p className="text-xs text-zen-gold/60">
-            Message sent. It will appear after approval.
+            Message sent. It will appear below.
           </p>
         )}
 

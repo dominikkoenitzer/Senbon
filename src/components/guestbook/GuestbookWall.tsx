@@ -55,7 +55,18 @@ const GuestbookWall = ({ initialEntries }: Props) => {
   };
 
   return (
-    <div className="grid gap-20 lg:grid-cols-[1.2fr,1fr]">
+    <div className="space-y-20">
+      <div className="max-w-2xl min-w-0 overflow-hidden">
+        <GuestbookForm
+          onSubmitted={(entry) =>
+            setEntries((prev) => [
+              { ...entry, status: entry.status ?? "approved" },
+              ...prev,
+            ])
+          }
+        />
+      </div>
+      
       <div className="space-y-12">
         <div className="flex items-center justify-between border-b border-white/5 pb-3">
           <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/40">
@@ -83,17 +94,6 @@ const GuestbookWall = ({ initialEntries }: Props) => {
             </div>
           )}
         </div>
-      </div>
-      
-      <div className="lg:sticky lg:top-24 lg:h-fit">
-        <GuestbookForm
-          onSubmitted={(entry) =>
-            setEntries((prev) => [
-              { ...entry, status: entry.status ?? "pending" },
-              ...prev,
-            ])
-          }
-        />
       </div>
     </div>
   );

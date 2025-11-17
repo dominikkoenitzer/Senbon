@@ -13,7 +13,6 @@ const AdminPage = () => {
   const [entries, setEntries] = useState<GuestbookEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
 
   useEffect(() => {
     const stored = window.localStorage.getItem("senbon-admin-token");
@@ -47,7 +46,7 @@ const AdminPage = () => {
         setVerified(true);
         window.localStorage.setItem("senbon-admin-token", candidate);
         setToken(candidate);
-        await fetchEntries(candidate, "all");
+        await fetchEntries(candidate);
       } else {
         setVerified(false);
         setMessage("That token doesn't match the env value.");
@@ -63,43 +62,34 @@ const AdminPage = () => {
     }
   };
 
-  const fetchEntries = async (currentToken = token, statusFilter: "pending" | "approved" | "all" = "all") => {
+  const fetchEntries = async (currentToken = token) => {
     if (!currentToken) return;
     setLoading(true);
     setMessage(null);
     try {
-      // Fetch pending entries
-      const pendingResponse = await fetch("/api/guestbook/approve?status=pending", {
-        headers: { "x-admin-token": currentToken },
-      });
-      
-      // Fetch approved entries
-      const approvedResponse = await fetch("/api/guestbook/approve?status=approved", {
+      // Fetch all approved entries
+      const response = await fetch("/api/guestbook/approve?status=approved", {
         headers: { "x-admin-token": currentToken },
       });
 
-      if (!pendingResponse.ok || !approvedResponse.ok) {
+      if (!response.ok) {
         throw new Error("Unable to fetch entries");
       }
 
-      const pendingData = await pendingResponse.json();
-      const approvedData = await approvedResponse.json();
+      const data = await response.json();
       
-      const allItems = [
-        ...(pendingData.items || []),
-        ...(approvedData.items || [])
-      ].map((item: {
+      const allItems: GuestbookEntry[] = (data.items || []).map((item: {
         id: string;
         name?: string | null;
         message: string;
         approved?: boolean;
         rejected?: boolean;
         created_at?: string;
-      }) => ({
+      }): GuestbookEntry => ({
         id: item.id,
         name: item.name || "Anonymous",
         message: item.message,
-        status: item.approved === false ? "pending" : item.rejected === true ? "rejected" : "approved",
+        status: "approved" as GuestbookStatus,
         createdAt: item.created_at || new Date().toISOString(),
       }));
 
@@ -154,7 +144,7 @@ const AdminPage = () => {
         });
         if (!response.ok) throw new Error("Action failed.");
         // Refresh entries after update
-        await fetchEntries(token, "all");
+        await fetchEntries(token);
       }
     } catch (error) {
       setMessage(
@@ -166,21 +156,10 @@ const AdminPage = () => {
   };
 
   const stats = useMemo(() => {
-    const pending = entries.filter((entry) => entry.status === "pending");
-    const approved = entries.filter((entry) => entry.status === "approved");
-    const rejected = entries.filter((entry) => entry.status === "rejected");
     return {
-      pending: pending.length,
       total: entries.length,
-      approved: approved.length,
-      rejected: rejected.length,
     };
   }, [entries]);
-
-  const filteredEntries = useMemo(() => {
-    if (statusFilter === "all") return entries;
-    return entries.filter((entry) => entry.status === statusFilter);
-  }, [entries, statusFilter]);
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-24 px-6 py-24">
@@ -225,34 +204,10 @@ const AdminPage = () => {
             ) : null}
           </div>
         ) : (
-          <div className="grid gap-6 border-b border-white/5 pb-8 md:grid-cols-4">
+          <div className="border-b border-white/5 pb-8">
             <div>
               <p className="text-xs uppercase tracking-[0.5em] text-zen-mist/40 mb-2">
-                Pending
-              </p>
-              <p className="text-2xl font-display text-zen-gold">
-                {stats.pending}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-[0.5em] text-zen-mist/40 mb-2">
-                Approved
-              </p>
-              <p className="text-2xl font-display text-zen-gold">
-                {stats.approved}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-[0.5em] text-zen-mist/40 mb-2">
-                Rejected
-              </p>
-              <p className="text-2xl font-display text-zen-gold">
-                {stats.rejected}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-[0.5em] text-zen-mist/40 mb-2">
-                Total
+                Total Entries
               </p>
               <p className="text-2xl font-display text-zen-gold">
                 {stats.total}
@@ -268,48 +223,29 @@ const AdminPage = () => {
             <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/40">
               Entries
             </p>
-            <div className="flex items-center gap-3">
-              <div className="flex gap-1 border-b border-white/5">
-                {(["all", "pending", "approved", "rejected"] as const).map((filter) => (
-                  <button
-                    key={filter}
-                    onClick={() => setStatusFilter(filter)}
-                    className={`px-3 py-2 text-xs uppercase tracking-[0.2em] transition-colors border-b-2 -mb-[1px] ${
-                      statusFilter === filter
-                        ? "text-zen-gold border-zen-gold/40"
-                        : "text-zen-mist/40 border-transparent hover:text-zen-mist/60"
-                    }`}
-                  >
-                    {filter}
-                  </button>
-                ))}
-              </div>
-              <button
-                onClick={() => fetchEntries(token, "all")}
-                disabled={loading}
-                className="text-xs text-zen-mist/30 hover:text-zen-gold/60 transition-colors flex items-center gap-2"
-              >
-                <RefreshCw className={`h-3 w-3 ${loading ? "animate-spin" : ""}`} />
-                Refresh
-              </button>
-            </div>
+            <button
+              onClick={() => fetchEntries(token)}
+              disabled={loading}
+              className="text-xs text-zen-mist/30 hover:text-zen-gold/60 transition-colors flex items-center gap-2"
+            >
+              <RefreshCw className={`h-3 w-3 ${loading ? "animate-spin" : ""}`} />
+              Refresh
+            </button>
           </div>
 
-          {loading && filteredEntries.length === 0 ? (
+          {loading && entries.length === 0 ? (
             <div className="py-16 text-center">
               <p className="text-sm text-zen-mist/40">Loading entries...</p>
             </div>
-          ) : filteredEntries.length === 0 ? (
+          ) : entries.length === 0 ? (
             <div className="py-16 text-center">
               <p className="text-sm text-zen-mist/40">
-                {statusFilter === "all" 
-                  ? "No entries yet. New entries will appear here once submitted."
-                  : `No ${statusFilter} entries found.`}
+                No entries yet. New entries will appear here once submitted.
               </p>
             </div>
           ) : (
             <div className="space-y-0">
-              {filteredEntries.map((entry) => (
+              {entries.map((entry) => (
                 <AdminEntryCard
                   key={entry.id}
                   entry={entry}

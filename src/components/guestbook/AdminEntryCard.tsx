@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { GuestbookEntry, GuestbookStatus } from "@/lib/db";
 import { Button } from "@/components/ui/button";
-import { formatJournalDate } from "@/lib/utils";
+import dayjs from "dayjs";
 
 type Props = {
   entry: GuestbookEntry;
@@ -23,7 +23,7 @@ const AdminEntryCard = ({ entry, onAction }: Props) => {
   };
 
   return (
-    <article className="border-b border-white/5 pb-10 last:border-0 last:pb-0">
+    <article className="border-b border-white/5 pb-10 last:border-0 last:pb-0 overflow-hidden">
       <div className="space-y-4">
         <div className="flex items-baseline justify-between gap-6">
           <div>
@@ -31,48 +31,16 @@ const AdminEntryCard = ({ entry, onAction }: Props) => {
               {entry.name}
             </p>
             <p className="text-xs text-zen-mist/35 mt-1">
-              {formatJournalDate(entry.createdAt)}
+              {dayjs(entry.createdAt).format("MM/DD/YYYY HH:mm")}
             </p>
           </div>
-          <span className="text-xs uppercase tracking-[0.35em] text-zen-mist/50 whitespace-nowrap">
-            {entry.status}
-          </span>
         </div>
         
-        <p className="text-sm leading-relaxed text-zen-mist/65">
+        <p className="text-sm leading-relaxed text-zen-mist/65 break-words">
           {entry.message}
         </p>
         
         <footer className="flex flex-wrap gap-3 pt-2">
-          {entry.status === "pending" ? (
-            <>
-              <Button
-                size="sm"
-                className="rounded-none border border-zen-gold/15 bg-transparent text-zen-gold/80 hover:bg-zen-gold/5 hover:border-zen-gold/25 transition-all"
-                disabled={busy !== null}
-                onClick={() => handleAction("approved")}
-              >
-                {busy === "approved" ? "Approving..." : "Approve"}
-              </Button>
-              <Button
-                size="sm"
-                className="rounded-none border border-white/10 bg-transparent text-zen-mist/60 hover:bg-white/5 hover:border-white/20 transition-all"
-                disabled={busy !== null}
-                onClick={() => handleAction("rejected")}
-              >
-                {busy === "rejected" ? "Rejecting..." : "Reject"}
-              </Button>
-            </>
-          ) : entry.status === "rejected" ? (
-            <Button
-              size="sm"
-              className="rounded-none border border-zen-gold/15 bg-transparent text-zen-gold/80 hover:bg-zen-gold/5 hover:border-zen-gold/25 transition-all"
-              disabled={busy !== null}
-              onClick={() => handleAction("approved")}
-            >
-              {busy === "approved" ? "Approving..." : "Approve"}
-            </Button>
-          ) : null}
           <Button
             size="sm"
             className="rounded-none border border-white/10 bg-transparent text-zen-mist/50 hover:bg-white/5 hover:border-white/20 transition-all"

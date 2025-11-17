@@ -11,7 +11,12 @@ const getSql = () => {
   if (!connectionString) {
     throw new Error("DATABASE_URL or POSTGRES_URL environment variable is required");
   }
-  return neon(connectionString);
+  try {
+    return neon(connectionString);
+  } catch (error) {
+    console.error("Failed to initialize Neon client:", error);
+    throw error;
+  }
 };
 
 type GuestbookRow = {
@@ -68,7 +73,7 @@ function isDbConfigured() {
 })();
 
 function isAutoApprove() {
-  const v = (process.env.GUESTBOOK_AUTO_APPROVE || "false").toLowerCase();
+  const v = (process.env.GUESTBOOK_AUTO_APPROVE || "true").toLowerCase();
   return v === "1" || v === "true" || v === "yes";
 }
 
@@ -91,7 +96,7 @@ async function ensureTable() {
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ,
         edited BOOLEAN NOT NULL DEFAULT FALSE,
-        approved BOOLEAN NOT NULL DEFAULT FALSE,
+        approved BOOLEAN NOT NULL DEFAULT TRUE,
         ip_hash TEXT,
         rejected BOOLEAN NOT NULL DEFAULT FALSE
       )
@@ -146,15 +151,13 @@ export async function GET(req: NextRequest) {
 
   try {
     const sql = getSql();
-    const rows = await sql<
-      GuestbookRow & { approved: boolean; rejected: boolean }
-    >`
+    const rows = await sql`
       SELECT id, name, message, created_at, updated_at, edited, approved, rejected
       FROM guestbook
       WHERE approved = TRUE AND rejected = FALSE
       ORDER BY created_at DESC, id DESC
       LIMIT ${limit} OFFSET ${offset}
-    `;
+    ` as (GuestbookRow & { approved: boolean; rejected: boolean })[];
 
     return NextResponse.json({ items: rows });
   } catch {
@@ -243,12 +246,12 @@ export async function POST(req: NextRequest) {
 
   if (isRateLimitEnabled()) {
     const sql = getSql();
-    const recent = await sql<{ created_at: string }>`
+    const recent = await sql`
       SELECT created_at FROM guestbook
       WHERE ip_hash = ${ipHash}
       ORDER BY created_at DESC
       LIMIT 1
-    `;
+    ` as { created_at: string }[];
 
     if (recent.length > 0) {
       const last = new Date(recent[0].created_at).getTime();
@@ -264,17 +267,29 @@ export async function POST(req: NextRequest) {
   const approved = isAutoApprove();
   const rejected = false;
 
-  const sql = getSql();
-  const inserted = await sql<GuestbookRow>`
-    INSERT INTO guestbook (id, name, message, ip_hash, approved, rejected)
-    VALUES (${id}, ${safeName}, ${trimmed}, ${ipHash}, ${approved}, ${rejected})
-    RETURNING id, name, message, created_at, updated_at, edited
-  `;
+  try {
+    const sql = getSql();
+    const inserted = await sql`
+      INSERT INTO guestbook (id, name, message, ip_hash, approved, rejected)
+      VALUES (${id}, ${safeName}, ${trimmed}, ${ipHash}, ${approved}, ${rejected})
+      RETURNING id, name, message, created_at, updated_at, edited
+    ` as GuestbookRow[];
 
-  return NextResponse.json(
-    { item: inserted[0], approved },
-    { status: 201 },
-  );
+    if (!inserted || inserted.length === 0) {
+      throw new Error("Failed to insert entry");
+    }
+
+    return NextResponse.json(
+      { item: inserted[0], approved },
+      { status: 201 },
+    );
+  } catch (error) {
+    console.error("Database error:", error);
+    return NextResponse.json(
+      { error: "database_error" },
+      { status: 500 },
+    );
+  }
 }
 
 export async function PATCH() {
