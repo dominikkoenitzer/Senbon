@@ -29,37 +29,41 @@ const ConstellationNode = ({ href, title, description, position, delay, icon, mo
           whileHover={{ scale: mobile ? 1.05 : 1.15 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
         >
-          {/* Outer glow rings - reduced effect on mobile */}
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            animate={{
-              scale: mobile ? [1, 1.1, 1] : [1, 1.3, 1],
-              opacity: mobile ? [0.15, 0.25, 0.15] : [0.3, 0.6, 0.3],
-            }}
-            transition={{
-              duration: mobile ? 5 : 3,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            <div className="w-full h-full rounded-full border border-zen-gold/20" />
-          </motion.div>
-          
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            animate={{
-              scale: mobile ? [1, 1.15, 1] : [1, 1.5, 1],
-              opacity: mobile ? [0.1, 0.2, 0.1] : [0.2, 0.4, 0.2],
-            }}
-            transition={{
-              duration: mobile ? 6 : 4,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 0.5,
-            }}
-          >
-            <div className="w-full h-full rounded-full border border-zen-gold/15" />
-          </motion.div>
+          {/* Outer glow rings - completely disabled on mobile */}
+          {!mobile && (
+            <>
+              <motion.div
+                className="absolute inset-0 rounded-full"
+                animate={{
+                  scale: [1, 1.3, 1],
+                  opacity: [0.3, 0.6, 0.3],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <div className="w-full h-full rounded-full border border-zen-gold/20" />
+              </motion.div>
+              
+              <motion.div
+                className="absolute inset-0 rounded-full"
+                animate={{
+                  scale: [1, 1.5, 1],
+                  opacity: [0.2, 0.4, 0.2],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.5,
+                }}
+              >
+                <div className="w-full h-full rounded-full border border-zen-gold/15" />
+              </motion.div>
+            </>
+          )}
 
           {/* Glow effect on hover */}
           <div className="absolute inset-0 rounded-full bg-zen-gold/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
