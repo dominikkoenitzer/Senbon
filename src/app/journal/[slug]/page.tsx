@@ -47,7 +47,7 @@ const PostContent = async ({ slug }: { slug: string }) => {
   const headings = extractHeadings(post.content);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1fr_250px] gap-12">
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-16">
       <div className="zen-card px-8 py-12 md:px-16 lg:px-20 relative backdrop-blur-sm bg-black/20 border-white/5">
         {/* Subtle inner glow */}
         <div className="absolute inset-0 bg-gradient-to-br from-zen-gold/5 via-transparent to-transparent rounded-lg opacity-50 pointer-events-none" />
@@ -87,7 +87,7 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
   return (
     <>
       <MysticalBackground />
-      <article className="mx-auto flex max-w-4xl flex-col gap-20 px-6 py-24 md:py-32 relative z-10">
+      <article className="mx-auto flex max-w-7xl flex-col gap-20 px-6 py-24 md:py-32 relative z-10">
         <PostHeader post={post} />
 
         <Suspense fallback={<PostContentSkeleton />}>
