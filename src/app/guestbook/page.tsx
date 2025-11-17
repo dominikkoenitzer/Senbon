@@ -8,11 +8,21 @@ export const metadata = {
   description: "Leave a message in the Senbon guestbook.",
 };
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const GuestbookPage = async () => {
-  const entries = await fetchGuestbookEntries({
-    includePending: false,
-    limit: 20,
-  });
+  let entries: Awaited<ReturnType<typeof fetchGuestbookEntries>> = [];
+  
+  try {
+    entries = await fetchGuestbookEntries({
+      includePending: false,
+      limit: 20,
+    });
+  } catch (error) {
+    console.error("Failed to fetch guestbook entries on server:", error);
+    entries = [];
+  }
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-16 px-6 py-16">
