@@ -61,9 +61,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-background">
+    <html lang="en" className="bg-background" suppressHydrationWarning>
       <body
         className={`${heading.variable} ${body.variable} ${mono.variable} antialiased`}
+        suppressHydrationWarning
       >
         <ScrollRestoration />
         <div className="noise-overlay" aria-hidden="true" />
