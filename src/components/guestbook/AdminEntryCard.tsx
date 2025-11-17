@@ -39,17 +39,27 @@ const AdminEntryCard = ({ entry, onAction }: Props) => {
         {entry.message}
       </p>
       <footer className="mt-4 flex flex-wrap gap-3">
-        {entry.status !== "approved" ? (
-          <Button
-            size="sm"
-            className="rounded-full border border-zen-gold/40 bg-transparent text-zen-gold hover:bg-zen-gold/10"
-            disabled={busy !== null}
-            onClick={() => handleAction("approved")}
-          >
-            {busy === "approved" ? "Approving..." : "Approve"}
-          </Button>
-        ) : null}
-        {entry.status !== "rejected" ? (
+        {entry.status === "pending" ? (
+          <>
+            <Button
+              size="sm"
+              className="rounded-full border border-zen-gold/40 bg-transparent text-zen-gold hover:bg-zen-gold/10"
+              disabled={busy !== null}
+              onClick={() => handleAction("approved")}
+            >
+              {busy === "approved" ? "Approving..." : "Approve"}
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="rounded-full border border-red-200/40 text-red-200 hover:bg-red-200/10"
+              disabled={busy !== null}
+              onClick={() => handleAction("rejected")}
+            >
+              {busy === "rejected" ? "Rejecting..." : "Reject"}
+            </Button>
+          </>
+        ) : entry.status === "approved" ? (
           <Button
             size="sm"
             variant="outline"
@@ -58,6 +68,15 @@ const AdminEntryCard = ({ entry, onAction }: Props) => {
             onClick={() => handleAction("rejected")}
           >
             {busy === "rejected" ? "Rejecting..." : "Reject"}
+          </Button>
+        ) : entry.status === "rejected" ? (
+          <Button
+            size="sm"
+            className="rounded-full border border-zen-gold/40 bg-transparent text-zen-gold hover:bg-zen-gold/10"
+            disabled={busy !== null}
+            onClick={() => handleAction("approved")}
+          >
+            {busy === "approved" ? "Approving..." : "Approve"}
           </Button>
         ) : null}
         <Button

@@ -68,7 +68,7 @@ function isDbConfigured() {
 })();
 
 function isAutoApprove() {
-  const v = (process.env.GUESTBOOK_AUTO_APPROVE || "true").toLowerCase();
+  const v = (process.env.GUESTBOOK_AUTO_APPROVE || "false").toLowerCase();
   return v === "1" || v === "true" || v === "yes";
 }
 
@@ -91,7 +91,7 @@ async function ensureTable() {
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ,
         edited BOOLEAN NOT NULL DEFAULT FALSE,
-        approved BOOLEAN NOT NULL DEFAULT TRUE,
+        approved BOOLEAN NOT NULL DEFAULT FALSE,
         ip_hash TEXT,
         rejected BOOLEAN NOT NULL DEFAULT FALSE
       )

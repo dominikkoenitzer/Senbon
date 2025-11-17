@@ -85,7 +85,7 @@ async function ensureTable() {
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ,
         edited BOOLEAN NOT NULL DEFAULT FALSE,
-        approved BOOLEAN NOT NULL DEFAULT TRUE,
+        approved BOOLEAN NOT NULL DEFAULT FALSE,
         ip_hash TEXT,
         rejected BOOLEAN NOT NULL DEFAULT FALSE
       )

@@ -44,7 +44,8 @@ const AdminPage = () => {
       if (data.valid) {
         setVerified(true);
         window.localStorage.setItem("senbon-admin-token", candidate);
-        await fetchEntries(candidate);
+        setToken(candidate);
+        await fetchEntries(candidate, "all");
       } else {
         setVerified(false);
         setMessage("That token doesn't match the env value.");
@@ -60,18 +61,32 @@ const AdminPage = () => {
     }
   };
 
-  const fetchEntries = async (currentToken = token) => {
+  const fetchEntries = async (currentToken = token, statusFilter: "pending" | "approved" | "all" = "all") => {
     if (!currentToken) return;
     setLoading(true);
+    setMessage(null);
     try {
-      const response = await fetch("/api/guestbook/approve?status=pending", {
+      // Fetch pending entries
+      const pendingResponse = await fetch("/api/guestbook/approve?status=pending", {
         headers: { "x-admin-token": currentToken },
       });
-      if (!response.ok) {
+      
+      // Fetch approved entries
+      const approvedResponse = await fetch("/api/guestbook/approve?status=approved", {
+        headers: { "x-admin-token": currentToken },
+      });
+
+      if (!pendingResponse.ok || !approvedResponse.ok) {
         throw new Error("Unable to fetch entries");
       }
-      const data = await response.json();
-      const items = (data.items || []).map((item: {
+
+      const pendingData = await pendingResponse.json();
+      const approvedData = await approvedResponse.json();
+      
+      const allItems = [
+        ...(pendingData.items || []),
+        ...(approvedData.items || [])
+      ].map((item: {
         id: string;
         name?: string | null;
         message: string;
@@ -85,11 +100,18 @@ const AdminPage = () => {
         status: item.approved === false ? "pending" : item.rejected === true ? "rejected" : "approved",
         createdAt: item.created_at || new Date().toISOString(),
       }));
-      setEntries(items);
+
+      // Sort by created_at, newest first
+      allItems.sort((a, b) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+
+      setEntries(allItems);
     } catch (error) {
       setMessage(
         error instanceof Error ? error.message : "Could not fetch entries.",
       );
+      setEntries([]);
     } finally {
       setLoading(false);
     }
@@ -130,7 +152,7 @@ const AdminPage = () => {
         });
         if (!response.ok) throw new Error("Action failed.");
         // Refresh entries after update
-        await fetchEntries(token);
+        await fetchEntries(token, "all");
       }
     } catch (error) {
       setMessage(
@@ -206,18 +228,34 @@ const AdminPage = () => {
 
       {verified ? (
         <section className="space-y-4">
-          {entries.map((entry) => (
-            <AdminEntryCard
-              key={entry.id}
-              entry={entry}
-              onAction={handleAction}
-            />
-          ))}
-          {entries.length === 0 ? (
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-zen-gold">
+              Guestbook Entries ({entries.length})
+            </h2>
+            <Button
+              onClick={() => fetchEntries(token, "all")}
+              disabled={loading}
+              variant="outline"
+              className="rounded-full border border-zen-gold/40 bg-transparent text-zen-gold hover:bg-zen-gold/10"
+            >
+              {loading ? "Loading..." : "Refresh"}
+            </Button>
+          </div>
+          {loading && entries.length === 0 ? (
+            <p className="text-center text-zen-mist/70">Loading entries...</p>
+          ) : entries.length === 0 ? (
             <p className="text-center text-zen-mist/70">
-              No entries yet. Refresh once someone writes in.
+              No entries yet. New entries will appear here once submitted.
             </p>
-          ) : null}
+          ) : (
+            entries.map((entry) => (
+              <AdminEntryCard
+                key={entry.id}
+                entry={entry}
+                onAction={handleAction}
+              />
+            ))
+          )}
         </section>
       ) : (
         <p className="text-center text-zen-mist/70">
