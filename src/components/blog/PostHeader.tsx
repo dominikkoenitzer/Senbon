@@ -16,7 +16,7 @@ const PostHeader = ({ post }: Props) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="space-y-10 pb-12 border-b border-white/5 relative"
+      className="space-y-6 md:space-y-10 pb-8 md:pb-12 border-b border-white/5 relative"
     >
       {/* Mystical glow behind header */}
       <div className="absolute -inset-8 bg-gradient-to-br from-zen-gold/10 via-transparent to-zen-gold/5 blur-3xl opacity-40 -z-10" />
@@ -43,13 +43,13 @@ const PostHeader = ({ post }: Props) => {
         </Link>
       </div>
 
-      <div className="space-y-8 relative z-10">
+      <div className="space-y-6 md:space-y-8 relative z-10">
         <div>
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-xs uppercase tracking-[0.5em] text-zen-gold/50 mb-6 font-light"
+            className="text-xs uppercase tracking-[0.5em] text-zen-gold/50 mb-4 md:mb-6 font-light"
           >
             {formatJournalDate(post.publishedAt)}
           </motion.p>
@@ -57,7 +57,7 @@ const PostHeader = ({ post }: Props) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="font-display text-5xl leading-[1.1] md:text-6xl lg:text-7xl text-zen-mist mb-8"
+            className="font-display text-3xl leading-[1.1] md:text-5xl lg:text-6xl xl:text-7xl text-zen-mist mb-6 md:mb-8"
           >
             {post.title}
           </motion.h1>
@@ -68,7 +68,7 @@ const PostHeader = ({ post }: Props) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="max-w-3xl text-xl leading-relaxed text-zen-mist/70 font-light tracking-wide"
+            className="max-w-3xl text-base md:text-lg lg:text-xl leading-relaxed text-zen-mist/70 font-light tracking-wide"
           >
             {post.excerpt}
           </motion.p>
@@ -78,7 +78,7 @@ const PostHeader = ({ post }: Props) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
-          className="flex flex-wrap items-center gap-6 pt-4"
+          className="flex flex-wrap items-center gap-4 md:gap-6 pt-2 md:pt-4"
         >
           <div className="flex items-center gap-2 text-sm text-zen-mist/50 font-light">
             <span>{Math.ceil(post.readingTime.minutes)} min read</span>
