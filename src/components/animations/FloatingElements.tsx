@@ -64,8 +64,8 @@ const FloatingElements = () => {
     } as CSSProperties;
   };
 
-  const petalCount = isMobile ? 5 : 18;
-  const floaters = isMobile ? FLOATERS.slice(0, 1) : FLOATERS;
+  const petalCount = isMobile ? 3 : 18;
+  const floaters = isMobile ? [] : FLOATERS; // Disable floaters on mobile
 
   const petals = Array.from({ length: petalCount }, (_, idx) => ({
     id: idx,
@@ -87,11 +87,11 @@ const FloatingElements = () => {
               background: `radial-gradient(circle at 30% 30%, ${floater.colors[0]}, ${floater.colors[1]})`,
               filter: floater.blur ? `blur(${floater.blur}px)` : undefined,
             }}
-            animate={{
+            animate={isMobile ? {} : {
               y: ["0%", "-8%", "0%"],
               x: ["0%", "4%", "0%"],
             }}
-            transition={{
+            transition={isMobile ? {} : {
               duration: floater.duration,
               repeat: Infinity,
               ease: "easeInOut",

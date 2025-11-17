@@ -46,6 +46,12 @@ const ParticleBackground = () => {
     let animationFrame: number;
     let particles: Particle[] = [];
     const pointer = { x: 0, y: 0, active: false };
+    let lastFrameTime = 0;
+    let isScrolling = false;
+    let scrollTimeout: NodeJS.Timeout;
+    const isMobileDevice = window.innerWidth < 768;
+    const targetFPS = isMobileDevice ? 15 : 60; // Lower FPS on mobile
+    const frameInterval = 1000 / targetFPS;
 
     const setCanvasSize = () => {
       const dpr = window.devicePixelRatio || 1;
@@ -56,13 +62,26 @@ const ParticleBackground = () => {
     };
 
     const initParticles = () => {
-      const particleCount = window.innerWidth < 768 ? 20 : 90;
+      const particleCount = window.innerWidth < 768 ? 8 : 90;
       particles = Array.from({ length: particleCount }, () =>
         createParticle(window.innerWidth, window.innerHeight),
       );
     };
 
-    const draw = () => {
+    const draw = (currentTime: number) => {
+      // Throttle frame rate on mobile
+      if (isMobileDevice && currentTime - lastFrameTime < frameInterval) {
+        animationFrame = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrameTime = currentTime;
+
+      // Pause animation while scrolling on mobile
+      if (isMobileDevice && isScrolling) {
+        animationFrame = requestAnimationFrame(draw);
+        return;
+      }
+
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
       ctx.save();
       ctx.fillStyle = "rgba(5, 8, 15, 0.45)";
@@ -70,10 +89,13 @@ const ParticleBackground = () => {
       ctx.restore();
 
       particles.forEach((particle) => {
-        particle.x += particle.vx;
-        particle.y += particle.vy;
+        // Slower movement on mobile
+        const speedMultiplier = isMobileDevice ? 0.5 : 1;
+        particle.x += particle.vx * speedMultiplier;
+        particle.y += particle.vy * speedMultiplier;
 
-        if (pointer.active) {
+        // Disable pointer interaction on mobile for performance
+        if (!isMobileDevice && pointer.active) {
           const dx = pointer.x - particle.x;
           const dy = pointer.y - particle.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
@@ -85,6 +107,8 @@ const ParticleBackground = () => {
           } else {
             particle.radius += (particle.baseRadius - particle.radius) * 0.05;
           }
+        } else {
+          particle.radius += (particle.baseRadius - particle.radius) * 0.05;
         }
 
         if (particle.x < -32 || particle.x > window.innerWidth + 32) {
@@ -101,15 +125,15 @@ const ParticleBackground = () => {
           0,
           particle.x,
           particle.y,
-          18,
+          isMobileDevice ? 12 : 18, // Smaller radius on mobile
         );
-        const opacity = window.innerWidth < 768 ? 0.3 : 0.8;
-        const midOpacity = window.innerWidth < 768 ? 0.05 : 0.12;
+        const opacity = isMobileDevice ? 0.2 : 0.8;
+        const midOpacity = isMobileDevice ? 0.03 : 0.12;
         gradient.addColorStop(0, `rgba(247, 216, 160, ${opacity})`);
         gradient.addColorStop(0.6, `rgba(247, 216, 160, ${midOpacity})`);
         gradient.addColorStop(1, "transparent");
         ctx.fillStyle = gradient;
-        ctx.arc(particle.x, particle.y, particle.radius * 10, 0, Math.PI * 2);
+        ctx.arc(particle.x, particle.y, particle.radius * (isMobileDevice ? 6 : 10), 0, Math.PI * 2);
         ctx.fill();
       });
 
@@ -126,6 +150,16 @@ const ParticleBackground = () => {
       pointer.active = false;
     };
 
+    const handleScroll = () => {
+      if (isMobileDevice) {
+        isScrolling = true;
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          isScrolling = false;
+        }, 150);
+      }
+    };
+
     const handleResize = () => {
       setCanvasSize();
       initParticles();
@@ -133,17 +167,28 @@ const ParticleBackground = () => {
 
     setCanvasSize();
     initParticles();
-    draw();
+    animationFrame = requestAnimationFrame(draw);
 
     window.addEventListener("resize", handleResize);
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerleave", handlePointerLeave);
+    if (!isMobileDevice) {
+      window.addEventListener("pointermove", handlePointerMove);
+      window.addEventListener("pointerleave", handlePointerLeave);
+    }
+    if (isMobileDevice) {
+      window.addEventListener("scroll", handleScroll, { passive: true });
+    }
 
     return () => {
       cancelAnimationFrame(animationFrame);
+      clearTimeout(scrollTimeout);
       window.removeEventListener("resize", handleResize);
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerleave", handlePointerLeave);
+      if (!isMobileDevice) {
+        window.removeEventListener("pointermove", handlePointerMove);
+        window.removeEventListener("pointerleave", handlePointerLeave);
+      }
+      if (isMobileDevice) {
+        window.removeEventListener("scroll", handleScroll);
+      }
     };
   }, [isMobile]);
 
