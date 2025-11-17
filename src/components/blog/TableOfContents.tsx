@@ -91,7 +91,7 @@ const TableOfContents = ({ items, mobile = false }: Props) => {
           <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/40 mb-4">
             Contents
           </p>
-          <ul className="space-y-2 max-h-64 overflow-y-auto">
+          <ul className="space-y-2">
             {items.map((item) => (
               <li key={item.id}>
                 <button
