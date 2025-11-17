@@ -17,7 +17,7 @@ const GuestbookWall = ({ initialEntries }: Props) => {
   const refreshEntries = useCallback(async () => {
     setRefreshing(true);
     try {
-      const res = await fetch("/api/guestbook", {
+      const res = await fetch("/api/guestbook?limit=50", {
         cache: "no-store",
         headers: {
           "Cache-Control": "no-cache",
@@ -46,18 +46,12 @@ const GuestbookWall = ({ initialEntries }: Props) => {
       }));
       setEntries(items);
     } catch (error) {
-      if (process.env.NODE_ENV === "development") {
-        console.error("Failed to refresh guestbook entries:", error);
-      }
+      console.error("Failed to refresh guestbook entries:", error);
+      // Don't clear entries on error, keep what we have
     } finally {
       setRefreshing(false);
     }
   }, []);
-
-  useEffect(() => {
-    // Refresh entries on mount to ensure we have the latest data
-    refreshEntries();
-  }, [refreshEntries]);
 
   return (
     <div className="space-y-20">

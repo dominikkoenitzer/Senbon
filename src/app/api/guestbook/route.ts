@@ -122,21 +122,20 @@ function getClientIpHash(req: NextRequest): string {
 }
 
 export async function GET(req: NextRequest) {
-  await ensureTable();
-
-  const { searchParams } = new URL(req.url);
-  const parsedLimit = parseInt(searchParams.get("limit") || "10", 10);
-  const parsedOffset = parseInt(searchParams.get("offset") || "0", 10);
-  const limit = Math.min(
-    Math.max(Number.isFinite(parsedLimit) ? parsedLimit : 10, 1),
-    MAX_LIMIT,
-  );
-  const offset = Math.max(
-    Number.isFinite(parsedOffset) ? parsedOffset : 0,
-    0,
-  );
-
   if (!isDbConfigured()) {
+    console.warn("[GET /api/guestbook] Database not configured, using memory");
+    const { searchParams } = new URL(req.url);
+    const parsedLimit = parseInt(searchParams.get("limit") || "10", 10);
+    const parsedOffset = parseInt(searchParams.get("offset") || "0", 10);
+    const limit = Math.min(
+      Math.max(Number.isFinite(parsedLimit) ? parsedLimit : 10, 1),
+      MAX_LIMIT,
+    );
+    const offset = Math.max(
+      Number.isFinite(parsedOffset) ? parsedOffset : 0,
+      0,
+    );
+
     const items = memory
       .slice()
       .filter((a) => a.approved !== false && a.rejected !== true)
@@ -150,7 +149,20 @@ export async function GET(req: NextRequest) {
   }
 
   try {
+    await ensureTable();
     const sql = getSql();
+    const { searchParams } = new URL(req.url);
+    const parsedLimit = parseInt(searchParams.get("limit") || "10", 10);
+    const parsedOffset = parseInt(searchParams.get("offset") || "0", 10);
+    const limit = Math.min(
+      Math.max(Number.isFinite(parsedLimit) ? parsedLimit : 10, 1),
+      MAX_LIMIT,
+    );
+    const offset = Math.max(
+      Number.isFinite(parsedOffset) ? parsedOffset : 0,
+      0,
+    );
+
     const rows = await sql`
       SELECT id, name, message, created_at, updated_at, edited, approved, rejected
       FROM guestbook
@@ -159,8 +171,22 @@ export async function GET(req: NextRequest) {
       LIMIT ${limit} OFFSET ${offset}
     ` as (GuestbookRow & { approved: boolean; rejected: boolean })[];
 
+    console.log(`[GET /api/guestbook] Returning ${rows.length} items`);
     return NextResponse.json({ items: rows });
-  } catch {
+  } catch (error) {
+    console.error("[GET /api/guestbook] Database error:", error);
+    const { searchParams } = new URL(req.url);
+    const parsedLimit = parseInt(searchParams.get("limit") || "10", 10);
+    const parsedOffset = parseInt(searchParams.get("offset") || "0", 10);
+    const limit = Math.min(
+      Math.max(Number.isFinite(parsedLimit) ? parsedLimit : 10, 1),
+      MAX_LIMIT,
+    );
+    const offset = Math.max(
+      Number.isFinite(parsedOffset) ? parsedOffset : 0,
+      0,
+    );
+
     const items = memory
       .slice()
       .sort(

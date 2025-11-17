@@ -118,15 +118,15 @@ export const fetchGuestbookEntriesServer = async ({
   includePending?: boolean;
   limit?: number;
 } = {}): Promise<GuestbookEntry[]> => {
-  await ensureTable();
-
   if (!isDbConfigured()) {
+    console.warn("[fetchGuestbookEntriesServer] Database not configured");
     return includePending
       ? FALLBACK_ENTRIES
       : FALLBACK_ENTRIES.slice(0, limit || 3);
   }
 
   try {
+    await ensureTable();
     const sql = getSql();
     type Row = {
       id: string;
@@ -160,6 +160,7 @@ export const fetchGuestbookEntriesServer = async ({
       rows = result as Row[];
     }
 
+    console.log(`[fetchGuestbookEntriesServer] Fetched ${rows.length} rows from database`);
     const items = rows.map(normalizeEntry);
 
     if (includePending) {
@@ -176,15 +177,9 @@ export const fetchGuestbookEntriesServer = async ({
 
     return items;
   } catch (error) {
-    if (!isDbConfigured()) {
-      return includePending
-        ? FALLBACK_ENTRIES
-        : FALLBACK_ENTRIES.slice(0, limit || 3);
-    }
-
     const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("Database query failed in fetchGuestbookEntriesServer:", errorMessage);
-    console.error("Full error:", error);
+    console.error("[fetchGuestbookEntriesServer] Database query failed:", errorMessage);
+    console.error("[fetchGuestbookEntriesServer] Full error:", error);
 
     return includePending
       ? FALLBACK_ENTRIES
