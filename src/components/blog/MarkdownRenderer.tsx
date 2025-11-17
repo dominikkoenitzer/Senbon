@@ -34,7 +34,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 className={cn(
-                  "mb-8 mt-16 scroll-m-20 font-display text-4xl font-bold leading-tight text-zen-mist first:mt-0",
+                  "mb-6 md:mb-8 mt-12 md:mt-16 scroll-m-20 font-display text-2xl md:text-3xl lg:text-4xl font-bold leading-tight text-zen-mist first:mt-0",
                   className,
                 )}
               >
@@ -62,7 +62,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.1 }}
                   className={cn(
-                    "mb-6 mt-12 scroll-m-20 font-display text-3xl font-semibold leading-tight text-zen-mist border-b border-white/5 pb-3 relative",
+                    "mb-4 md:mb-6 mt-8 md:mt-12 scroll-m-20 font-display text-2xl md:text-2xl lg:text-3xl font-semibold leading-tight text-zen-mist border-b border-white/5 pb-2 md:pb-3 relative",
                     className,
                   )}
                 >
@@ -92,7 +92,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
                   className={cn(
-                    "mb-4 mt-10 scroll-m-20 font-display text-2xl font-semibold leading-tight text-zen-mist",
+                    "mb-3 md:mb-4 mt-6 md:mt-10 scroll-m-20 font-display text-xl md:text-xl lg:text-2xl font-semibold leading-tight text-zen-mist",
                     className,
                   )}
                 >
@@ -135,7 +135,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6 }}
                 className={cn(
-                  "mb-8 leading-[1.9] text-zen-mist/95 text-base md:text-lg font-light tracking-wide",
+                  "mb-6 md:mb-8 leading-[1.8] md:leading-[1.9] text-zen-mist/95 text-sm md:text-base lg:text-lg font-light tracking-wide",
                   className,
                 )}
               >
