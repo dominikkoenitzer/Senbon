@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { getAllPostSlugs, getPostBySlug } from "@/lib/blog";
+import { extractHeadings } from "@/lib/toc";
 import PostHeader from "@/components/blog/PostHeader";
 import MarkdownRenderer from "@/components/blog/MarkdownRenderer";
+import TableOfContents from "@/components/blog/TableOfContents";
 import MysticalBackground from "@/components/blog/MysticalBackground";
 
 type Params = {
@@ -42,11 +44,20 @@ const PostContent = async ({ slug }: { slug: string }) => {
   const post = await getPostBySlug(slug);
   if (!post) return notFound();
 
+  const headings = extractHeadings(post.content);
+
   return (
-    <div className="zen-card px-8 py-12 md:px-16 lg:px-20 relative backdrop-blur-sm bg-black/20 border-white/5">
-      {/* Subtle inner glow */}
-      <div className="absolute inset-0 bg-gradient-to-br from-zen-gold/5 via-transparent to-transparent rounded-lg opacity-50 pointer-events-none" />
-      <MarkdownRenderer content={post.content} />
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_250px] gap-12">
+      <div className="zen-card px-8 py-12 md:px-16 lg:px-20 relative backdrop-blur-sm bg-black/20 border-white/5">
+        {/* Subtle inner glow */}
+        <div className="absolute inset-0 bg-gradient-to-br from-zen-gold/5 via-transparent to-transparent rounded-lg opacity-50 pointer-events-none" />
+        <MarkdownRenderer content={post.content} />
+      </div>
+      {headings.length > 0 && (
+        <div className="hidden lg:block">
+          <TableOfContents items={headings} />
+        </div>
+      )}
     </div>
   );
 };
