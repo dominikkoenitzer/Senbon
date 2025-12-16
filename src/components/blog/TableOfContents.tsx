@@ -87,20 +87,20 @@ const TableOfContents = ({ items, mobile = false }: Props) => {
   if (mobile) {
     return (
       <nav className="w-full">
-        <div className="zen-card px-4 py-4 md:px-6 md:py-6 backdrop-blur-sm bg-black/20 border-white/5 rounded-lg">
-          <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/40 mb-3 md:mb-4">
+        <div className="zen-card px-4 py-3 sm:px-5 sm:py-4 md:px-6 md:py-5 backdrop-blur-sm bg-black/20 border-white/5 rounded-lg">
+          <p className="text-[0.65rem] md:text-xs uppercase tracking-[0.3em] md:tracking-[0.5em] text-zen-gold/40 mb-2.5 md:mb-3 font-light">
             Contents
           </p>
-          <ul className="space-y-1.5 md:space-y-2">
+          <ul className="space-y-1 md:space-y-1.5">
             {items.map((item) => (
               <li key={item.id}>
                 <button
                   onClick={(e) => handleClick(e, item.id)}
                   className={cn(
-                    "text-left text-xs md:text-sm transition-colors hover:text-zen-gold/80 w-full py-0.5 md:py-1",
+                    "text-left text-xs md:text-sm transition-colors hover:text-zen-gold/80 w-full py-0.5 leading-relaxed",
                     item.level === 2 && "pl-0 text-zen-mist/70 font-medium",
-                    item.level === 3 && "pl-2 md:pl-3 text-zen-mist/60 text-xs",
-                    item.level === 4 && "pl-4 md:pl-6 text-zen-mist/50 text-xs",
+                    item.level === 3 && "pl-2 md:pl-3 text-zen-mist/60 text-[0.7rem] md:text-xs",
+                    item.level === 4 && "pl-4 md:pl-6 text-zen-mist/50 text-[0.65rem] md:text-xs",
                     activeId === item.id && "text-zen-gold"
                   )}
                 >

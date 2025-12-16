@@ -45,8 +45,8 @@ const PostContent = async ({ slug, headings }: { slug: string; headings: ReturnT
   if (!post) return notFound();
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8 md:gap-12 lg:gap-16">
-      <div className="zen-card px-4 py-8 md:px-8 md:py-12 lg:px-16 lg:py-16 xl:px-20 relative backdrop-blur-sm bg-black/20 border-white/5 -mx-4 md:mx-0">
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6 md:gap-8 lg:gap-12 xl:gap-16">
+      <div className="zen-card px-5 py-6 sm:px-6 sm:py-8 md:px-10 md:py-12 lg:px-12 lg:py-14 xl:px-16 xl:py-16 relative backdrop-blur-sm bg-black/20 border-white/5">
         {/* Subtle inner glow */}
         <div className="absolute inset-0 bg-gradient-to-br from-zen-gold/5 via-transparent to-transparent rounded-lg opacity-50 pointer-events-none" />
         <MarkdownRenderer content={post.content} />
@@ -63,7 +63,7 @@ const PostContent = async ({ slug, headings }: { slug: string; headings: ReturnT
 const PostContentSkeleton = () => {
   const widths = [75, 90, 65, 85, 70, 80, 95, 60];
   return (
-    <div className="zen-card px-8 py-12 md:px-16 lg:px-20">
+    <div className="zen-card px-5 py-6 sm:px-6 sm:py-8 md:px-10 md:py-12 lg:px-16 lg:py-16">
       <div className="space-y-4 animate-pulse">
         {Array.from({ length: 8 }).map((_, i) => (
           <div
@@ -87,12 +87,12 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
   return (
     <>
       <MysticalBackground />
-      <article className="mx-auto flex max-w-7xl flex-col gap-12 md:gap-20 px-4 md:px-6 py-12 md:py-24 lg:py-32 relative z-10">
+      <article className="mx-auto flex max-w-7xl flex-col gap-8 md:gap-12 lg:gap-16 px-4 md:px-6 py-8 md:py-16 lg:py-24 relative z-10">
         <PostHeader post={post} />
 
         {/* Mobile Table of Contents */}
         {headings.length > 0 && (
-          <div className="lg:hidden -mx-4 md:mx-0">
+          <div className="lg:hidden">
             <TableOfContents items={headings} mobile />
           </div>
         )}

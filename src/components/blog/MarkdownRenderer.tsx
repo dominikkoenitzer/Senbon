@@ -14,7 +14,7 @@ type Props = {
 
 const MarkdownRenderer = ({ content }: Props) => {
   return (
-    <article className="prose prose-invert prose-lg max-w-none relative">
+    <article className="prose prose-invert prose-sm md:prose-base lg:prose-lg max-w-none relative">
       {/* Mystical glow effect */}
       <div className="absolute -inset-4 bg-gradient-to-r from-zen-gold/5 via-transparent to-zen-gold/5 blur-3xl opacity-50 pointer-events-none" />
       
@@ -34,7 +34,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 className={cn(
-                  "mb-6 md:mb-8 mt-12 md:mt-16 scroll-m-20 font-display text-2xl md:text-3xl lg:text-4xl font-bold leading-tight text-zen-mist first:mt-0",
+                  "mb-4 md:mb-6 lg:mb-8 mt-8 md:mt-12 lg:mt-16 scroll-m-20 font-display text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight text-zen-mist first:mt-0",
                   className,
                 )}
               >
@@ -62,12 +62,12 @@ const MarkdownRenderer = ({ content }: Props) => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.1 }}
                   className={cn(
-                    "mb-4 md:mb-6 mt-8 md:mt-12 scroll-m-20 font-display text-2xl md:text-2xl lg:text-3xl font-semibold leading-tight text-zen-mist border-b border-white/5 pb-2 md:pb-3 relative",
+                    "mb-3 md:mb-4 lg:mb-6 mt-6 md:mt-8 lg:mt-12 scroll-m-20 font-display text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold leading-tight text-zen-mist border-b border-white/5 pb-2 md:pb-3 relative",
                     className,
                   )}
                 >
                   {children}
-                  <span className="absolute left-0 bottom-0 h-px w-20 bg-gradient-to-r from-zen-gold/50 to-transparent" />
+                  <span className="absolute left-0 bottom-0 h-px w-12 md:w-20 bg-gradient-to-r from-zen-gold/50 to-transparent" />
                 </motion.h2>
               );
             },
@@ -92,7 +92,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
                   className={cn(
-                    "mb-3 md:mb-4 mt-6 md:mt-10 scroll-m-20 font-display text-xl md:text-xl lg:text-2xl font-semibold leading-tight text-zen-mist",
+                    "mb-2 md:mb-3 lg:mb-4 mt-5 md:mt-6 lg:mt-10 scroll-m-20 font-display text-base md:text-lg lg:text-xl xl:text-2xl font-semibold leading-tight text-zen-mist",
                     className,
                   )}
                 >
@@ -121,7 +121,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
                   className={cn(
-                    "mb-3 mt-8 scroll-m-20 font-display text-xl font-semibold leading-tight text-zen-mist/95",
+                    "mb-2 md:mb-3 mt-4 md:mt-6 lg:mt-8 scroll-m-20 font-display text-base md:text-lg lg:text-xl font-semibold leading-tight text-zen-mist/95",
                     className,
                   )}
                 >
@@ -135,7 +135,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6 }}
                 className={cn(
-                  "mb-6 md:mb-8 leading-[1.8] md:leading-[1.9] text-zen-mist/95 text-sm md:text-base lg:text-lg font-light tracking-wide",
+                  "mb-4 md:mb-6 lg:mb-8 leading-[1.7] md:leading-[1.8] lg:leading-[1.9] text-zen-mist/95 text-sm md:text-base lg:text-lg font-light tracking-normal md:tracking-wide",
                   className,
                 )}
               >
@@ -176,8 +176,8 @@ const MarkdownRenderer = ({ content }: Props) => {
                   {...props}
                   className={cn(
                     isInline
-                      ? "rounded bg-white/10 px-2 py-0.5 text-sm font-mono text-zen-gold/90 before:content-none after:content-none"
-                      : "block text-sm font-mono my-0",
+                      ? "rounded bg-white/10 px-1.5 md:px-2 py-0.5 text-xs md:text-sm font-mono text-zen-gold/90 before:content-none after:content-none"
+                      : "block text-xs md:text-sm font-mono my-0",
                     className,
                   )}
                 >
@@ -190,7 +190,7 @@ const MarkdownRenderer = ({ content }: Props) => {
               <pre
                 {...props}
                 className={cn(
-                  "mb-6 rounded-lg bg-black/30 border border-zen-gold/15 p-6 overflow-x-auto relative",
+                  "mb-4 md:mb-6 rounded-lg bg-black/30 border border-zen-gold/15 p-3 md:p-4 lg:p-6 overflow-x-auto relative text-xs md:text-sm",
                   className,
                 )}
                 style={{ boxShadow: 'none' }}
@@ -204,18 +204,18 @@ const MarkdownRenderer = ({ content }: Props) => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
                 className={cn(
-                  "my-8 border-l-4 border-zen-gold/40 bg-gradient-to-r from-zen-gold/5 to-transparent pl-6 py-5 italic text-zen-gold text-lg leading-relaxed font-light relative overflow-hidden",
+                  "my-4 md:my-6 lg:my-8 border-l-2 md:border-l-4 border-zen-gold/40 bg-gradient-to-r from-zen-gold/5 to-transparent pl-3 md:pl-4 lg:pl-6 py-3 md:py-4 lg:py-5 italic text-zen-gold text-sm md:text-base lg:text-lg leading-relaxed font-light relative overflow-hidden",
                   className,
                 )}
               >
                 {children}
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-zen-gold/60 via-zen-gold/40 to-transparent" />
+                <div className="absolute left-0 top-0 bottom-0 w-0.5 md:w-1 bg-gradient-to-b from-zen-gold/60 via-zen-gold/40 to-transparent" />
               </motion.blockquote>
             ),
             ul: ({ className, children }) => (
               <ul
                 className={cn(
-                  "my-6 ml-6 space-y-4 list-disc text-zen-mist/95 marker:text-zen-gold/60",
+                  "my-4 md:my-6 ml-4 md:ml-6 space-y-2 md:space-y-3 lg:space-y-4 list-disc text-zen-mist/95 marker:text-zen-gold/60 text-sm md:text-base lg:text-lg",
                   className,
                 )}
               >
@@ -225,7 +225,7 @@ const MarkdownRenderer = ({ content }: Props) => {
             ol: ({ className, children }) => (
               <ol
                 className={cn(
-                  "my-6 ml-6 space-y-4 list-decimal text-zen-mist/95 marker:text-zen-gold/60",
+                  "my-4 md:my-6 ml-4 md:ml-6 space-y-2 md:space-y-3 lg:space-y-4 list-decimal text-zen-mist/95 marker:text-zen-gold/60 text-sm md:text-base lg:text-lg",
                   className,
                 )}
               >
@@ -237,7 +237,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4 }}
-                className={cn("leading-relaxed pl-2 font-light text-zen-mist/95", className)}
+                className={cn("leading-relaxed pl-1 md:pl-2 font-light text-zen-mist/95", className)}
               >
                 {children}
               </motion.li>
@@ -248,7 +248,7 @@ const MarkdownRenderer = ({ content }: Props) => {
                 animate={{ scaleX: 1 }}
                 transition={{ duration: 0.8 }}
                 className={cn(
-                  "my-16 border-0 h-px bg-gradient-to-r from-transparent via-zen-gold/20 to-transparent",
+                  "my-8 md:my-12 lg:my-16 border-0 h-px bg-gradient-to-r from-transparent via-zen-gold/20 to-transparent",
                   className,
                 )}
               />
@@ -261,16 +261,16 @@ const MarkdownRenderer = ({ content }: Props) => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6 }}
                 className={cn(
-                  "my-10 rounded-lg border border-white/10 w-full backdrop-blur-sm",
+                  "my-6 md:my-8 lg:my-10 rounded-lg border border-white/10 w-full backdrop-blur-sm",
                   className,
                 )}
               />
             ),
             table: ({ className, children }) => (
-              <div className="my-8 overflow-x-auto">
+              <div className="my-4 md:my-6 lg:my-8 overflow-x-auto -mx-2 md:mx-0">
                 <table
                   className={cn(
-                    "w-full border-collapse border border-white/5 rounded-lg overflow-hidden backdrop-blur-sm",
+                    "w-full border-collapse border border-white/5 rounded-lg overflow-hidden backdrop-blur-sm text-xs md:text-sm lg:text-base",
                     className,
                   )}
                 >
@@ -288,7 +288,7 @@ const MarkdownRenderer = ({ content }: Props) => {
             th: ({ className, children }) => (
               <th
                 className={cn(
-                  "border border-white/5 px-4 py-3 text-left font-semibold text-zen-gold",
+                  "border border-white/5 px-2 md:px-3 lg:px-4 py-2 md:py-3 text-left font-semibold text-zen-gold",
                   className,
                 )}
               >
@@ -298,7 +298,7 @@ const MarkdownRenderer = ({ content }: Props) => {
             td: ({ className, children }) => (
               <td
                 className={cn(
-                  "border border-white/5 px-4 py-3 text-zen-mist/95",
+                  "border border-white/5 px-2 md:px-3 lg:px-4 py-2 md:py-3 text-zen-mist/95",
                   className,
                 )}
               >
