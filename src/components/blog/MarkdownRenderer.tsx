@@ -1,18 +1,39 @@
 "use client";
 
 import { motion } from "framer-motion";
-import "highlight.js/styles/atom-one-dark.css";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
-import { cn } from "@/lib/utils";
-import { generateHeadingId } from "@/lib/toc";
+import "highlight.js/styles/atom-one-dark.css";
+import type { MarkdownRendererProps } from "@/types/blog";
+import {
+  H1,
+  H2,
+  H3,
+  H4,
+  Code,
+  Pre,
+  Paragraph,
+  Link,
+  Strong,
+  Em,
+  Blockquote,
+  Hr,
+  Ul,
+  Ol,
+  Li,
+  TableWrapper,
+  Thead,
+  Th,
+  Td,
+  Image,
+} from "./markdown";
 
-type Props = {
-  content: string;
-};
-
-const MarkdownRenderer = ({ content }: Props) => {
+/**
+ * Markdown renderer with custom styled components
+ * Supports syntax highlighting, GFM, and animations
+ */
+const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
   return (
     <article className="prose prose-invert prose-sm md:prose-base lg:prose-lg max-w-none relative">
       {/* Mystical glow effect */}
@@ -28,283 +49,26 @@ const MarkdownRenderer = ({ content }: Props) => {
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeHighlight]}
           components={{
-            h1: ({ className, children }) => (
-              <motion.h1
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className={cn(
-                  "mb-4 md:mb-6 lg:mb-8 mt-8 md:mt-12 lg:mt-16 scroll-m-20 font-display text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight text-zen-mist first:mt-0",
-                  className,
-                )}
-              >
-                {children}
-              </motion.h1>
-            ),
-            h2: ({ className, children }) => {
-              // Extract plain text from React children for ID generation
-              const getTextContent = (node: React.ReactNode): string => {
-                if (typeof node === "string") return node;
-                if (typeof node === "number") return String(node);
-                if (Array.isArray(node)) return node.map(getTextContent).join("");
-                if (node && typeof node === "object" && "props" in node) {
-                  const propsNode = node as { props: { children?: React.ReactNode } };
-                  return getTextContent(propsNode.props.children);
-                }
-                return "";
-              };
-              const text = getTextContent(children);
-              const id = generateHeadingId(text);
-              return (
-                <motion.h2
-                  id={id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
-                  className={cn(
-                    "mb-3 md:mb-4 lg:mb-6 mt-6 md:mt-8 lg:mt-12 scroll-m-20 font-display text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold leading-tight text-zen-mist border-b border-white/5 pb-2 md:pb-3 relative",
-                    className,
-                  )}
-                >
-                  {children}
-                  <span className="absolute left-0 bottom-0 h-px w-12 md:w-20 bg-gradient-to-r from-zen-gold/50 to-transparent" />
-                </motion.h2>
-              );
-            },
-            h3: ({ className, children }) => {
-              // Extract plain text from React children for ID generation
-              const getTextContent = (node: React.ReactNode): string => {
-                if (typeof node === "string") return node;
-                if (typeof node === "number") return String(node);
-                if (Array.isArray(node)) return node.map(getTextContent).join("");
-                if (node && typeof node === "object" && "props" in node) {
-                  const propsNode = node as { props: { children?: React.ReactNode } };
-                  return getTextContent(propsNode.props.children);
-                }
-                return "";
-              };
-              const text = getTextContent(children);
-              const id = generateHeadingId(text);
-              return (
-                <motion.h3
-                  id={id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                  className={cn(
-                    "mb-2 md:mb-3 lg:mb-4 mt-5 md:mt-6 lg:mt-10 scroll-m-20 font-display text-base md:text-lg lg:text-xl xl:text-2xl font-semibold leading-tight text-zen-mist",
-                    className,
-                  )}
-                >
-                  {children}
-                </motion.h3>
-              );
-            },
-            h4: ({ className, children }) => {
-              // Extract plain text from React children for ID generation
-              const getTextContent = (node: React.ReactNode): string => {
-                if (typeof node === "string") return node;
-                if (typeof node === "number") return String(node);
-                if (Array.isArray(node)) return node.map(getTextContent).join("");
-                if (node && typeof node === "object" && "props" in node) {
-                  const propsNode = node as { props: { children?: React.ReactNode } };
-                  return getTextContent(propsNode.props.children);
-                }
-                return "";
-              };
-              const text = getTextContent(children);
-              const id = generateHeadingId(text);
-              return (
-                <motion.h4
-                  id={id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                  className={cn(
-                    "mb-2 md:mb-3 mt-4 md:mt-6 lg:mt-8 scroll-m-20 font-display text-base md:text-lg lg:text-xl font-semibold leading-tight text-zen-mist/95",
-                    className,
-                  )}
-                >
-                  {children}
-                </motion.h4>
-              );
-            },
-            p: ({ className, children }) => (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6 }}
-                className={cn(
-                  "mb-4 md:mb-6 lg:mb-8 leading-[1.7] md:leading-[1.8] lg:leading-[1.9] text-zen-mist/95 text-sm md:text-base lg:text-lg font-light tracking-normal md:tracking-wide",
-                  className,
-                )}
-              >
-                {children}
-              </motion.p>
-            ),
-            a: ({ className, children, href }) => (
-              <motion.a
-                href={href}
-                whileHover={{ scale: 1.02 }}
-                className={cn(
-                  "text-zen-gold underline decoration-zen-gold/40 underline-offset-4 transition-all hover:text-zen-gold hover:decoration-zen-gold/60",
-                  className,
-                )}
-              >
-                {children}
-              </motion.a>
-            ),
-            strong: ({ className, children }) => (
-              <strong
-                className={cn("font-semibold text-zen-gold", className)}
-              >
-                {children}
-              </strong>
-            ),
-            em: ({ className, children }) => (
-              <em
-                className={cn("italic text-zen-mist/90 not-italic font-light", className)}
-              >
-                {children}
-              </em>
-            ),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            code: ({ className, children, ...props }: any) => {
-              const isInline = !className || !className.includes("language-");
-              return (
-                <code
-                  {...props}
-                  className={cn(
-                    isInline
-                      ? "rounded bg-white/10 px-1.5 md:px-2 py-0.5 text-xs md:text-sm font-mono text-zen-gold/90 before:content-none after:content-none"
-                      : "block text-xs md:text-sm font-mono my-0",
-                    className,
-                  )}
-                >
-                  {children}
-                </code>
-              );
-            },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            pre: ({ children, className, ...props }: any) => (
-              <pre
-                {...props}
-                className={cn(
-                  "mb-4 md:mb-6 rounded-lg bg-black/30 border border-zen-gold/15 p-3 md:p-4 lg:p-6 overflow-x-auto relative text-xs md:text-sm",
-                  className,
-                )}
-                style={{ boxShadow: 'none' }}
-              >
-                {children}
-              </pre>
-            ),
-            blockquote: ({ className, children }) => (
-              <motion.blockquote
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                className={cn(
-                  "my-4 md:my-6 lg:my-8 border-l-2 md:border-l-4 border-zen-gold/40 bg-gradient-to-r from-zen-gold/5 to-transparent pl-3 md:pl-4 lg:pl-6 py-3 md:py-4 lg:py-5 italic text-zen-gold text-sm md:text-base lg:text-lg leading-relaxed font-light relative overflow-hidden",
-                  className,
-                )}
-              >
-                {children}
-                <div className="absolute left-0 top-0 bottom-0 w-0.5 md:w-1 bg-gradient-to-b from-zen-gold/60 via-zen-gold/40 to-transparent" />
-              </motion.blockquote>
-            ),
-            ul: ({ className, children }) => (
-              <ul
-                className={cn(
-                  "my-4 md:my-6 ml-4 md:ml-6 space-y-2 md:space-y-3 lg:space-y-4 list-disc text-zen-mist/95 marker:text-zen-gold/60 text-sm md:text-base lg:text-lg",
-                  className,
-                )}
-              >
-                {children}
-              </ul>
-            ),
-            ol: ({ className, children }) => (
-              <ol
-                className={cn(
-                  "my-4 md:my-6 ml-4 md:ml-6 space-y-2 md:space-y-3 lg:space-y-4 list-decimal text-zen-mist/95 marker:text-zen-gold/60 text-sm md:text-base lg:text-lg",
-                  className,
-                )}
-              >
-                {children}
-              </ol>
-            ),
-            li: ({ className, children }) => (
-              <motion.li
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4 }}
-                className={cn("leading-relaxed pl-1 md:pl-2 font-light text-zen-mist/95", className)}
-              >
-                {children}
-              </motion.li>
-            ),
-            hr: ({ className }) => (
-              <motion.hr
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ duration: 0.8 }}
-                className={cn(
-                  "my-8 md:my-12 lg:my-16 border-0 h-px bg-gradient-to-r from-transparent via-zen-gold/20 to-transparent",
-                  className,
-                )}
-              />
-            ),
-            img: ({ className, src, alt }) => (
-              <motion.img
-                src={src}
-                alt={alt}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6 }}
-                className={cn(
-                  "my-6 md:my-8 lg:my-10 rounded-lg border border-white/10 w-full backdrop-blur-sm",
-                  className,
-                )}
-              />
-            ),
-            table: ({ className, children }) => (
-              <div className="my-4 md:my-6 lg:my-8 overflow-x-auto -mx-2 md:mx-0">
-                <table
-                  className={cn(
-                    "w-full border-collapse border border-white/5 rounded-lg overflow-hidden backdrop-blur-sm text-xs md:text-sm lg:text-base",
-                    className,
-                  )}
-                >
-                  {children}
-                </table>
-              </div>
-            ),
-            thead: ({ className, children }) => (
-              <thead
-                className={cn("bg-white/5", className)}
-              >
-                {children}
-              </thead>
-            ),
-            th: ({ className, children }) => (
-              <th
-                className={cn(
-                  "border border-white/5 px-2 md:px-3 lg:px-4 py-2 md:py-3 text-left font-semibold text-zen-gold",
-                  className,
-                )}
-              >
-                {children}
-              </th>
-            ),
-            td: ({ className, children }) => (
-              <td
-                className={cn(
-                  "border border-white/5 px-2 md:px-3 lg:px-4 py-2 md:py-3 text-zen-mist/95",
-                  className,
-                )}
-              >
-                {children}
-              </td>
-            ),
+            h1: H1,
+            h2: H2,
+            h3: H3,
+            h4: H4,
+            p: Paragraph,
+            a: Link,
+            strong: Strong,
+            em: Em,
+            code: Code,
+            pre: Pre,
+            blockquote: Blockquote,
+            ul: Ul,
+            ol: Ol,
+            li: Li,
+            hr: Hr,
+            img: Image,
+            table: TableWrapper,
+            thead: Thead,
+            th: Th,
+            td: Td,
           }}
         >
           {content}

@@ -2,25 +2,21 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import matter from "gray-matter";
 import readingTime from "reading-time";
+import type { JournalPost, PostFrontmatter } from "@/types/blog";
+import { BLOG_CONFIG } from "@/constants/blog";
 
-const contentDir = path.join(process.cwd(), "content", "journal");
+const contentDir = path.join(process.cwd(), BLOG_CONFIG.CONTENT_DIR);
 
-export type JournalPost = {
-  slug: string;
-  title: string;
-  excerpt: string;
-  publishedAt: string;
-  tags: string[];
-  hero?: string;
-  featured?: boolean;
-  readingTime: ReturnType<typeof readingTime>;
-  content: string;
-};
-
-const sortByDateDesc = (a: JournalPost, b: JournalPost) =>
+/**
+ * Sort posts by publication date (newest first)
+ */
+const sortByDateDesc = (a: JournalPost, b: JournalPost): number =>
   new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
 
-const ensureDirectory = async () => {
+/**
+ * Ensure content directory exists
+ */
+const ensureDirectory = async (): Promise<void> => {
   try {
     await fs.access(contentDir);
   } catch {
@@ -28,41 +24,63 @@ const ensureDirectory = async () => {
   }
 };
 
+/**
+ * Check if file is a markdown file
+ */
+const isMarkdownFile = (filename: string): boolean =>
+  BLOG_CONFIG.FILE_EXTENSIONS.some((ext) => filename.endsWith(ext));
+
+/**
+ * Parse a single post file
+ */
+const parsePostFile = async (file: string): Promise<JournalPost> => {
+  const slug = file.replace(/\.mdx?$/, "");
+  const filePath = path.join(contentDir, file);
+  const source = await fs.readFile(filePath, "utf8");
+  const { data, content } = matter(source);
+  const frontmatter = data as PostFrontmatter;
+
+  return {
+    slug,
+    title: frontmatter.title ?? slug,
+    excerpt: frontmatter.excerpt ?? "",
+    publishedAt: frontmatter.publishedAt ?? new Date().toISOString(),
+    tags: frontmatter.tags ?? [],
+    hero: frontmatter.hero,
+    featured: frontmatter.featured ?? false,
+    readingTime: readingTime(content),
+    content,
+  };
+};
+
+/**
+ * Get all blog posts sorted by date
+ */
 export const getAllPosts = async (): Promise<JournalPost[]> => {
   await ensureDirectory();
   const files = await fs.readdir(contentDir);
+  
   const posts = await Promise.all(
-    files
-      .filter((file) => file.endsWith(".md") || file.endsWith(".mdx"))
-      .map(async (file) => {
-        const slug = file.replace(/\.mdx?$/, "");
-        const filePath = path.join(contentDir, file);
-        const source = await fs.readFile(filePath, "utf8");
-        const { data, content } = matter(source);
-
-        return {
-          slug,
-          title: data.title ?? slug,
-          excerpt: data.excerpt ?? "",
-          publishedAt: data.publishedAt ?? new Date().toISOString(),
-          tags: data.tags ?? [],
-          hero: data.hero,
-          featured: data.featured ?? false,
-          readingTime: readingTime(content),
-          content,
-        } satisfies JournalPost;
-      }),
+    files.filter(isMarkdownFile).map(parsePostFile)
   );
 
   return posts.sort(sortByDateDesc);
 };
 
-export const getPostBySlug = async (slug: string) => {
+/**
+ * Get a single post by slug
+ */
+export const getPostBySlug = async (
+  slug: string
+): Promise<JournalPost | null> => {
   const posts = await getAllPosts();
   return posts.find((post) => post.slug === slug) ?? null;
 };
 
-export const getAllPostSlugs = async () => {
+/**
+ * Get all post slugs for static generation
+ */
+export const getAllPostSlugs = async (): Promise<string[]> => {
   const posts = await getAllPosts();
   return posts.map((post) => post.slug);
 };
