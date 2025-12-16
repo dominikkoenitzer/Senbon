@@ -1,23 +1,13 @@
-import { Suspense } from "react";
+import { memo, Suspense } from "react";
 import BlogCard from "./BlogCard";
-import type { JournalPost } from "@/lib/blog";
+import type { PostGridProps } from "@/types/blog";
+import { PostGridSkeleton } from "./LoadingStates";
 
-type Props = {
-  posts: JournalPost[];
-};
+/**
+ * Grid of blog post cards
+ */
 
-const PostGridSkeleton = () => (
-  <div className="grid gap-4 sm:gap-6 md:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-    {Array.from({ length: 6 }).map((_, i) => (
-      <div
-        key={i}
-        className="zen-card h-80 animate-pulse bg-black/20 rounded-xl"
-      />
-    ))}
-  </div>
-);
-
-const PostGrid = ({ posts }: Props) => {
+const PostGrid = memo<PostGridProps>(({ posts }) => {
   if (posts.length === 0) {
     return (
       <div className="zen-card px-6 md:px-10 py-12 md:py-20 text-center">
@@ -33,9 +23,11 @@ const PostGrid = ({ posts }: Props) => {
       ))}
     </div>
   );
-};
+});
 
-export const PostGridWithSuspense = ({ posts }: Props) => (
+PostGrid.displayName = "PostGrid";
+
+export const PostGridWithSuspense = ({ posts }: PostGridProps) => (
   <Suspense fallback={<PostGridSkeleton />}>
     <PostGrid posts={posts} />
   </Suspense>

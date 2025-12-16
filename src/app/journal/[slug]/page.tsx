@@ -6,6 +6,8 @@ import PostHeader from "@/components/blog/PostHeader";
 import MarkdownRenderer from "@/components/blog/MarkdownRenderer";
 import TableOfContents from "@/components/blog/TableOfContents";
 import MysticalBackground from "@/components/blog/MysticalBackground";
+import { PostContentSkeleton } from "@/components/blog/LoadingStates";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 type Params = {
   slug: string;
@@ -60,22 +62,6 @@ const PostContent = async ({ slug, headings }: { slug: string; headings: ReturnT
   );
 };
 
-const PostContentSkeleton = () => {
-  const widths = [75, 90, 65, 85, 70, 80, 95, 60];
-  return (
-    <div className="zen-card px-5 py-6 sm:px-6 sm:py-8 md:px-10 md:py-12 lg:px-16 lg:py-16">
-      <div className="space-y-4 animate-pulse">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div
-            key={i}
-            className="h-4 bg-white/5 rounded"
-            style={{ width: `${widths[i % widths.length]}%` }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
 
 const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
   const { slug } = await params;
@@ -87,20 +73,22 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
   return (
     <>
       <MysticalBackground />
-      <article className="mx-auto flex max-w-7xl flex-col gap-8 md:gap-12 lg:gap-16 px-4 md:px-6 py-8 md:py-16 lg:py-24 relative z-10">
-        <PostHeader post={post} />
+      <ErrorBoundary>
+        <article className="mx-auto flex max-w-7xl flex-col gap-8 md:gap-12 lg:gap-16 px-4 md:px-6 py-8 md:py-16 lg:py-24 relative z-10">
+          <PostHeader post={post} />
 
-        {/* Mobile Table of Contents */}
-        {headings.length > 0 && (
-          <div className="lg:hidden">
-            <TableOfContents items={headings} mobile />
-          </div>
-        )}
+          {/* Mobile Table of Contents */}
+          {headings.length > 0 && (
+            <div className="lg:hidden">
+              <TableOfContents items={headings} mobile />
+            </div>
+          )}
 
-        <Suspense fallback={<PostContentSkeleton />}>
-          <PostContent slug={slug} headings={headings} />
-        </Suspense>
-      </article>
+          <Suspense fallback={<PostContentSkeleton />}>
+            <PostContent slug={slug} headings={headings} />
+          </Suspense>
+        </article>
+      </ErrorBoundary>
     </>
   );
 };
