@@ -1,87 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import type { TocItem } from "@/lib/toc";
+import { useMemo } from "react";
+import type { TableOfContentsProps } from "@/types/blog";
+import { useIntersectionObserver, useSmoothScroll } from "@/hooks";
+import { TOC_CONFIG } from "@/constants/blog";
 import { cn } from "@/lib/utils";
 
-type Props = {
-  items: TocItem[];
-  mobile?: boolean;
-};
+/**
+ * Table of Contents component with auto-highlighting and smooth scroll
+ * Supports both desktop (sticky) and mobile (inline) modes
+ */
+const TableOfContents = ({ items, mobile = false }: TableOfContentsProps) => {
+  // Extract all IDs for intersection observer
+  const elementIds = useMemo(() => items.map((item) => item.id), [items]);
+  
+  // Track active section
+  const activeId = useIntersectionObserver(elementIds, {
+    rootMargin: TOC_CONFIG.ROOT_MARGIN,
+    threshold: TOC_CONFIG.THRESHOLD,
+    enabled: items.length > 0,
+  });
 
-const TableOfContents = ({ items, mobile = false }: Props) => {
-  const [activeId, setActiveId] = useState<string>("");
+  // Smooth scroll handler
+  const scrollToElement = useSmoothScroll({
+    offset: TOC_CONFIG.SCROLL_OFFSET,
+    delay: TOC_CONFIG.SCROLL_DELAY,
+    retryDelay: TOC_CONFIG.RETRY_DELAY,
+  });
 
-  useEffect(() => {
-    if (items.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
-      },
-      {
-        rootMargin: "-20% 0% -35% 0%",
-        threshold: 0,
-      }
-    );
-
-    items.forEach((item) => {
-      const element = document.getElementById(item.id);
-      if (element) {
-        observer.observe(element);
-      }
-    });
-
-    return () => {
-      items.forEach((item) => {
-        const element = document.getElementById(item.id);
-        if (element) {
-          observer.unobserve(element);
-        }
-      });
-    };
-  }, [items]);
-
+  // Don't render if no items
   if (items.length === 0) return null;
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
     e.preventDefault();
-    // Wait a bit for any animations to complete
-    setTimeout(() => {
-      const element = document.getElementById(id);
-      if (element) {
-        const offset = 120; // Account for sticky header
-        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-        const offsetPosition = elementPosition - offset;
-
-        window.scrollTo({
-          top: Math.max(0, offsetPosition),
-          behavior: "smooth",
-        });
-        
-        // Also update URL hash without triggering scroll
-        window.history.pushState(null, "", `#${id}`);
-      } else {
-        // Fallback: try again after a short delay in case element isn't ready
-        setTimeout(() => {
-          const retryElement = document.getElementById(id);
-          if (retryElement) {
-            const offset = 120;
-            const elementPosition = retryElement.getBoundingClientRect().top + window.pageYOffset;
-            const offsetPosition = elementPosition - offset;
-            window.scrollTo({
-              top: Math.max(0, offsetPosition),
-              behavior: "smooth",
-            });
-            window.history.pushState(null, "", `#${id}`);
-          }
-        }, 100);
-      }
-    }, 50);
+    scrollToElement(id);
   };
 
   if (mobile) {
