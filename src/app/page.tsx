@@ -37,9 +37,6 @@ export default function Home() {
           className="flex items-center justify-between"
         >
           <span className="kicker">千本 · Senbon</span>
-          <span className="hidden text-[11px] uppercase tracking-[0.35em] text-foreground/40 sm:inline">
-            est. 2025
-          </span>
         </motion.header>
 
         {/* Hero */}

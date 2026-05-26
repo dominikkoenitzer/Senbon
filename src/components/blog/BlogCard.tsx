@@ -4,7 +4,7 @@ import { memo, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Sparkles } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import type { BlogCardProps } from "@/types/blog";
 import { formatJournalDate, formatRelativeDate } from "@/lib/utils";
 import { ANIMATION_CONFIG } from "@/constants/blog";
@@ -78,16 +78,9 @@ const BlogCard = memo<BlogCardProps>(({ post, index = 0, featured = false }) => 
             >
               {relativeDate}
             </time>
-            {featured ? (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.2em] text-primary">
-                <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
-                Featured
-              </span>
-            ) : (
-              <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/40">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-            )}
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/40">
+              {String(index + 1).padStart(2, "0")}
+            </span>
           </div>
 
           {/* Title */}
