@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display, Space_Grotesk } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import AtmosphereBackground from "@/components/AtmosphereBackground";
 import ScrollRestoration from "@/components/ScrollRestoration";
 import CommandPalette from "@/components/CommandPalette";
@@ -101,6 +102,7 @@ export default function RootLayout({
         </main>
         <CommandPalette />
         <BackToTop />
+        <Analytics />
       </body>
     </html>
   );
