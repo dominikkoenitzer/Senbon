@@ -174,9 +174,15 @@
   opacity: 1;
 }
 
+/* Element is anchored at left: 0 with width: 200%, so the visible window
+   (0..100% of wrapper) always falls *inside* the path region of the SVG.
+   At 0% the visible window shows cycle 1 (viewBox 0..300).
+   At 100% (translate -50% of element width) it shows cycle 2 (viewBox
+   300..600). The two cycles are geometrically identical, so the keyframe
+   snap from 100% → 0% is invisible — no clipping, no jolt. */
 .atmosphere-ribbon {
   position: absolute;
-  left: -50%;
+  left: 0;
   width: 200%;
   height: 60vh;
   will-change: transform;
@@ -213,7 +219,7 @@
 .atmosphere-wave {
   position: absolute;
   bottom: 0;
-  left: -50%;
+  left: 0;
   width: 200%;
   height: 100%;
   will-change: transform;
