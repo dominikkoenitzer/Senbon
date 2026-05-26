@@ -9,16 +9,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { useRouter } from "next/navigation";
-import {
-  ArrowUp,
-  BookOpen,
-  Github,
-  Home,
-  MessageSquare,
-  Moon,
-  Search,
-  SunMedium,
-} from "lucide-react";
+import { BookOpen, Github, Home, MessageSquare, Search } from "lucide-react";
 
 type Action = {
   id: string;
@@ -37,18 +28,6 @@ const subscribeMounted = () => () => {};
 const getMountedSnapshot = () => true;
 const getMountedServerSnapshot = () => false;
 
-const subscribeDark = (cb: () => void) => {
-  const obs = new MutationObserver(cb);
-  obs.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
-  return () => obs.disconnect();
-};
-const getDarkSnapshot = () =>
-  document.documentElement.classList.contains("dark");
-const getDarkServerSnapshot = () => true;
-
 export default function CommandPalette() {
   const router = useRouter();
   const mounted = useSyncExternalStore(
@@ -56,27 +35,11 @@ export default function CommandPalette() {
     getMountedSnapshot,
     getMountedServerSnapshot
   );
-  const isDark = useSyncExternalStore(
-    subscribeDark,
-    getDarkSnapshot,
-    getDarkServerSnapshot
-  );
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
-
-  const toggleTheme = useCallback(() => {
-    const root = document.documentElement;
-    root.classList.toggle("dark");
-    try {
-      localStorage.setItem(
-        "senbon-theme",
-        root.classList.contains("dark") ? "dark" : "light"
-      );
-    } catch {}
-  }, []);
 
   const openPalette = useCallback(() => {
     setQuery("");
@@ -126,33 +89,8 @@ export default function CommandPalette() {
             "noopener,noreferrer"
           ),
       },
-      {
-        id: "theme",
-        label: "Toggle dark / light",
-        keywords: "theme dark light mode",
-        icon: isDark ? (
-          <SunMedium className="h-4 w-4" />
-        ) : (
-          <Moon className="h-4 w-4" />
-        ),
-        perform: toggleTheme,
-      },
-      {
-        id: "top",
-        label: "Scroll to top",
-        keywords: "back top scroll",
-        icon: <ArrowUp className="h-4 w-4" />,
-        perform: () =>
-          window.scrollTo({
-            top: 0,
-            behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
-              .matches
-              ? "auto"
-              : "smooth",
-          }),
-      },
     ],
-    [router, toggleTheme, isDark]
+    [router]
   );
 
   const filtered = useMemo(() => {
