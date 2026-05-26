@@ -24,8 +24,6 @@ const TableOfContents = ({ items, mobile = false }: TableOfContentsProps) => {
   // Smooth scroll handler
   const scrollToElement = useSmoothScroll({
     offset: TOC_CONFIG.SCROLL_OFFSET,
-    delay: TOC_CONFIG.SCROLL_DELAY,
-    retryDelay: TOC_CONFIG.RETRY_DELAY,
   });
 
   // Don't render if no items
@@ -43,7 +41,7 @@ const TableOfContents = ({ items, mobile = false }: TableOfContentsProps) => {
           <p className="text-[0.65rem] md:text-xs uppercase tracking-[0.3em] md:tracking-[0.5em] text-zen-gold/40 mb-2.5 md:mb-3 font-light">
             Contents
           </p>
-          <ul className="space-y-1 md:space-y-1.5">
+          <ul className="flex flex-col gap-1 md:gap-1.5">
             {items.map((item) => (
               <li key={item.id}>
                 <button
@@ -68,11 +66,11 @@ const TableOfContents = ({ items, mobile = false }: TableOfContentsProps) => {
 
   return (
     <nav className="sticky top-24 self-start">
-      <div className="border-l border-white/5 pl-6 space-y-2">
-        <p className="text-xs uppercase tracking-[0.5em] text-zen-gold/40 mb-4">
+      <div className="flex flex-col gap-2 border-l border-white/5 pl-6">
+        <p className="mb-4 text-xs uppercase tracking-[0.5em] text-primary/50">
           Contents
         </p>
-        <ul className="space-y-2">
+        <ul className="flex flex-col gap-2">
           {items.map((item) => (
             <li key={item.id}>
               <button

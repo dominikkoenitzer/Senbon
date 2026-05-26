@@ -42,6 +42,8 @@ export interface TocItem {
 export interface BlogCardProps {
   post: JournalPost;
   index?: number;
+  /** Render with a "Featured" indicator. */
+  featured?: boolean;
 }
 
 export interface PostGridProps {
