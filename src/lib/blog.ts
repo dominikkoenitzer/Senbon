@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { cache } from "react";
 import matter from "gray-matter";
 import readingTime from "reading-time";
 import type { JournalPost, PostFrontmatter } from "@/types/blog";
@@ -54,34 +55,30 @@ const parsePostFile = async (file: string): Promise<JournalPost> => {
 };
 
 /**
- * Get all blog posts sorted by date
+ * Get all blog posts sorted by date.
+ * Wrapped in React.cache so repeated calls per request are deduped (see
+ * vercel-react-best-practices: server-cache-react).
  */
-export const getAllPosts = async (): Promise<JournalPost[]> => {
+export const getAllPosts = cache(async (): Promise<JournalPost[]> => {
   await ensureDirectory();
   const files = await fs.readdir(contentDir);
-  
+
   const posts = await Promise.all(
     files.filter(isMarkdownFile).map(parsePostFile)
   );
 
   return posts.sort(sortByDateDesc);
-};
+});
 
-/**
- * Get a single post by slug
- */
-export const getPostBySlug = async (
-  slug: string
-): Promise<JournalPost | null> => {
-  const posts = await getAllPosts();
-  return posts.find((post) => post.slug === slug) ?? null;
-};
+export const getPostBySlug = cache(
+  async (slug: string): Promise<JournalPost | null> => {
+    const posts = await getAllPosts();
+    return posts.find((post) => post.slug === slug) ?? null;
+  }
+);
 
-/**
- * Get all post slugs for static generation
- */
-export const getAllPostSlugs = async (): Promise<string[]> => {
+export const getAllPostSlugs = cache(async (): Promise<string[]> => {
   const posts = await getAllPosts();
   return posts.map((post) => post.slug);
-};
+});
 
