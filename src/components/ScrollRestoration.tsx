@@ -3,103 +3,59 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
+const KEY_PREFIX = "scroll:";
+
+/**
+ * Restore scroll position per pathname using sessionStorage.
+ *
+ * Browsers already restore scroll on a real back/forward navigation. This is
+ * for Next.js client-side route changes where the framework defaults to
+ * scroll-to-top. We save on scroll/unload, restore on mount, once. No
+ * setTimeout chain — if the page is still measuring (long article), the
+ * browser's own restoration will take over via popstate.
+ */
 export default function ScrollRestoration() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Save scroll position continuously
-    const handleScroll = () => {
-      if (typeof window !== "undefined") {
-        sessionStorage.setItem(`scroll-${pathname}`, window.scrollY.toString());
+    if (typeof window === "undefined") return;
+    const key = `${KEY_PREFIX}${pathname}`;
+
+    // Restore once after the layout has had a frame to settle.
+    const restore = () => {
+      const stored = sessionStorage.getItem(key);
+      if (!stored) return;
+      const position = Number.parseInt(stored, 10);
+      if (Number.isFinite(position) && position > 0) {
+        window.scrollTo({ top: position, behavior: "auto" });
       }
     };
+    requestAnimationFrame(restore);
 
-    // Throttle scroll events
-    let ticking = false;
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
+    let rafId = 0;
+    const save = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        sessionStorage.setItem(key, String(window.scrollY));
+        rafId = 0;
+      });
     };
 
-    // Save on page visibility change and before unload
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden") {
-        handleScroll();
-      }
+    const onHide = () => {
+      sessionStorage.setItem(key, String(window.scrollY));
     };
 
-    const handleBeforeUnload = () => {
-      handleScroll();
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    window.addEventListener("pagehide", handleBeforeUnload);
+    window.addEventListener("scroll", save, { passive: true });
+    window.addEventListener("pagehide", onHide);
+    document.addEventListener("visibilitychange", onHide);
 
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      window.removeEventListener("pagehide", handleBeforeUnload);
-    };
-  }, [pathname]);
-
-  useEffect(() => {
-    // Restore scroll position after content loads
-    const restoreScroll = () => {
-      if (typeof window !== "undefined") {
-        const savedPosition = sessionStorage.getItem(`scroll-${pathname}`);
-        if (savedPosition) {
-          const position = parseInt(savedPosition, 10);
-          if (position > 0) {
-            // Use requestAnimationFrame to ensure DOM is ready
-            requestAnimationFrame(() => {
-              window.scrollTo({
-                top: position,
-                behavior: "auto" as ScrollBehavior,
-              });
-            });
-          }
-        }
-      }
-    };
-
-    // Restore immediately
-    restoreScroll();
-    
-    // Also restore after a short delay and when page fully loads
-    const timeout1 = setTimeout(restoreScroll, 0);
-    const timeout2 = setTimeout(restoreScroll, 100);
-    const timeout3 = setTimeout(restoreScroll, 300);
-    
-    if (document.readyState === "complete") {
-      restoreScroll();
-    } else {
-      window.addEventListener("load", restoreScroll, { once: true });
-    }
-
-    // Also restore when DOM content is loaded
-    if (document.readyState === "interactive" || document.readyState === "complete") {
-      restoreScroll();
-    } else {
-      document.addEventListener("DOMContentLoaded", restoreScroll, { once: true });
-    }
-
-    return () => {
-      clearTimeout(timeout1);
-      clearTimeout(timeout2);
-      clearTimeout(timeout3);
-      window.removeEventListener("load", restoreScroll);
-      document.removeEventListener("DOMContentLoaded", restoreScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", save);
+      window.removeEventListener("pagehide", onHide);
+      document.removeEventListener("visibilitychange", onHide);
     };
   }, [pathname]);
 
   return null;
 }
-
