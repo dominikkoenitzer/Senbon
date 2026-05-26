@@ -11,33 +11,23 @@ const JournalPage = async () => {
   const posts = await getAllPosts();
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-16 md:gap-24 lg:gap-32 px-4 md:px-6 py-16 md:py-24 lg:py-32">
-      <JournalHero />
+    <div className="mx-auto flex max-w-6xl flex-col gap-16 px-6 py-12 md:gap-24 md:px-10 md:py-20 lg:py-24">
+      <JournalHero count={posts.length} />
 
-      {posts.length > 0 && (
-        <section className="space-y-8 md:space-y-12">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-zen-mist mb-2">
-                All entries
-              </h2>
-              <p className="text-xs md:text-sm text-zen-mist/50 font-light">
-                {posts.length} {posts.length === 1 ? "entry" : "entries"} in the garden
-              </p>
-            </div>
-          </div>
+      {posts.length > 0 ? (
+        <section className="flex flex-col gap-8 md:gap-12">
           <PostGrid posts={posts} />
         </section>
-      )}
-
-      {posts.length === 0 && (
-        <div className="zen-card px-6 md:px-10 py-12 md:py-20 text-center">
-          <p className="text-base md:text-lg text-zen-mist/60">No journal entries yet.</p>
-          <p className="mt-2 text-xs md:text-sm text-zen-mist/50">
+      ) : (
+        <div className="zen-card flex flex-col items-center gap-3 px-8 py-16 text-center md:px-12 md:py-24">
+          <p className="kicker">Empty plot</p>
+          <p className="text-lg text-foreground/70">No entries yet.</p>
+          <p className="max-w-sm text-sm text-foreground/50">
             Add markdown files to{" "}
-            <code className="rounded bg-white/5 px-2 py-1 text-zen-gold/70 text-xs">
+            <code className="rounded bg-foreground/5 px-2 py-1 font-mono text-xs text-primary/80">
               content/journal/
-            </code>
+            </code>{" "}
+            and the garden will fill itself.
           </p>
         </div>
       )}

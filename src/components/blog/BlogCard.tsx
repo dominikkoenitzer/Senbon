@@ -3,38 +3,31 @@
 import { memo, useMemo } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import type { BlogCardProps } from "@/types/blog";
 import { formatJournalDate } from "@/lib/utils";
 import { ANIMATION_CONFIG } from "@/constants/blog";
 
-/**
- * Blog card component with animation
- * Displays post preview with title, excerpt, tags, and metadata
- */
 const BlogCard = memo<BlogCardProps>(({ post, index = 0 }) => {
   const formattedDate = useMemo(
     () => formatJournalDate(post.publishedAt),
     [post.publishedAt]
   );
 
-  const displayTags = useMemo(
-    () => post.tags.slice(0, 2),
-    [post.tags]
-  );
-
+  const displayTags = useMemo(() => post.tags.slice(0, 2), [post.tags]);
   const remainingTagsCount = useMemo(
     () => Math.max(0, post.tags.length - 2),
     [post.tags.length]
   );
-
   const readingMinutes = useMemo(
     () => Math.ceil(post.readingTime.minutes),
     [post.readingTime.minutes]
   );
+
   return (
     <motion.article
       className="group"
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
         delay: index * ANIMATION_CONFIG.CARD_DELAY_INCREMENT,
@@ -44,60 +37,77 @@ const BlogCard = memo<BlogCardProps>(({ post, index = 0 }) => {
     >
       <Link
         href={`/journal/${post.slug}`}
-        className="zen-card block h-full transition-all duration-300 hover:border-zen-gold/30 hover:scale-[1.01]"
+        className="zen-card relative flex h-full flex-col overflow-hidden transition-transform duration-300 hover:-translate-y-0.5"
       >
-        <div className="flex flex-col gap-4 md:gap-6 p-5 md:p-8">
-          {/* Date */}
-          <div className="flex items-center gap-2 md:gap-3">
+        {/* Hover glow */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          style={{
+            background:
+              "radial-gradient(circle at 30% 0%, rgba(230,194,129,0.10), transparent 60%)",
+          }}
+        />
+
+        <div className="relative flex h-full flex-col gap-6 p-7 md:p-8">
+          {/* Meta line */}
+          <div className="flex items-center justify-between gap-3">
             <time
               dateTime={post.publishedAt}
-              className="text-[0.65rem] md:text-xs uppercase tracking-[0.3em] md:tracking-[0.4em] text-zen-gold/60 font-light"
+              className="kicker"
             >
               {formattedDate}
             </time>
-            <span className="h-px w-8 md:w-12 bg-gradient-to-r from-zen-gold/30 to-transparent" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/40">
+              {String(index + 1).padStart(2, "0")}
+            </span>
           </div>
 
           {/* Title */}
-          <h3 className="font-display text-lg md:text-xl lg:text-2xl leading-tight text-zen-mist transition-colors group-hover:text-zen-gold">
+          <h3 className="font-display text-2xl leading-[1.15] tracking-tight text-foreground transition-colors group-hover:text-primary md:text-[1.65rem] display-balance">
             {post.title}
           </h3>
 
           {/* Excerpt */}
-          <p className="text-xs md:text-sm leading-relaxed text-zen-mist/75 line-clamp-3 font-light flex-grow">
-            {post.excerpt}
-          </p>
+          {post.excerpt && (
+            <p className="line-clamp-3 text-sm leading-relaxed text-foreground/70 read-prose md:text-[0.95rem]">
+              {post.excerpt}
+            </p>
+          )}
 
           {/* Footer */}
-          <div className="mt-auto flex items-center justify-between gap-3 md:gap-4 pt-4 md:pt-6 border-t border-white/5">
-            <div className="flex flex-wrap gap-1.5 md:gap-2" role="list" aria-label="Tags">
+          <div className="mt-auto flex items-center justify-between gap-3 pt-6">
+            <div
+              className="flex flex-wrap items-center gap-1.5"
+              role="list"
+              aria-label="Tags"
+            >
               {displayTags.map((tag) => (
                 <span
                   key={tag}
                   role="listitem"
-                  className="rounded-full border border-zen-gold/20 bg-zen-gold/5 px-2 md:px-3 py-0.5 md:py-1 text-[0.65rem] md:text-xs uppercase tracking-[0.1em] md:tracking-[0.15em] text-zen-gold/70 font-light"
+                  className="rounded-full border border-foreground/10 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.15em] text-foreground/55"
                 >
                   {tag}
                 </span>
               ))}
               {remainingTagsCount > 0 && (
                 <span
-                  className="text-[0.65rem] md:text-xs text-zen-mist/40 font-light self-center"
+                  className="text-[10px] uppercase tracking-[0.15em] text-foreground/35"
                   aria-label={`${remainingTagsCount} more tags`}
                 >
                   +{remainingTagsCount}
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-2 text-[0.65rem] md:text-xs text-zen-mist/50 whitespace-nowrap">
-              <span aria-label={`${readingMinutes} minute read`}>{readingMinutes}m</span>
-              <motion.span
-                className="opacity-0 group-hover:opacity-100 transition-opacity"
-                initial={{ x: -5 }}
-                whileHover={{ x: 0 }}
-              >
-                →
-              </motion.span>
+            <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-foreground/45">
+              <span aria-label={`${readingMinutes} minute read`}>
+                {readingMinutes} min
+              </span>
+              <ArrowUpRight
+                className="h-3.5 w-3.5 text-primary/0 transition-all duration-300 group-hover:text-primary/80 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
             </div>
           </div>
         </div>
