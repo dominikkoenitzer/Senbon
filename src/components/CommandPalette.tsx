@@ -213,26 +213,38 @@ export default function CommandPalette() {
                 closePalette();
                 a.perform();
               }}
-              className={`flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-sm transition-colors ${
+              className={`relative flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-sm transition-colors ${
                 i === active
-                  ? "bg-zen-gold/10 text-zen-gold"
+                  ? "bg-zen-gold/15 text-zen-gold"
                   : "text-zen-mist/80 hover:bg-white/[0.03]"
               }`}
             >
+              <span
+                aria-hidden="true"
+                className={`absolute inset-y-1 left-0 w-[3px] rounded-r-full bg-zen-gold transition-opacity ${
+                  i === active ? "opacity-100" : "opacity-0"
+                }`}
+              />
               <span className="flex items-center gap-3">
                 <span
-                  className={`grid h-7 w-7 place-items-center rounded-md border ${
+                  className={`grid h-7 w-7 place-items-center rounded-md border transition-colors ${
                     i === active
-                      ? "border-zen-gold/40 text-zen-gold"
+                      ? "border-zen-gold/60 bg-zen-gold/15 text-zen-gold"
                       : "border-white/10 text-zen-mist/60"
                   }`}
                 >
                   {a.icon}
                 </span>
-                <span>{a.label}</span>
+                <span className={i === active ? "font-medium" : ""}>
+                  {a.label}
+                </span>
               </span>
               {a.hint && (
-                <span className="text-[10px] uppercase tracking-[0.25em] text-zen-mist/35">
+                <span
+                  className={`text-[10px] uppercase tracking-[0.25em] ${
+                    i === active ? "text-zen-gold/70" : "text-zen-mist/35"
+                  }`}
+                >
                   {a.hint}
                 </span>
               )}
