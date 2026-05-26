@@ -1,131 +1,177 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
-import ConstellationBackground from "@/components/home/ConstellationBackground";
-import ConstellationNode from "@/components/home/ConstellationNode";
-import { BookOpen, MessageSquare } from "lucide-react";
+import { ArrowUpRight, BookOpen, MessageSquare, Github } from "lucide-react";
 
-const Home = () => {
+const navItems = [
+  {
+    href: "/journal",
+    kicker: "01 — Journal",
+    title: "Field notes",
+    description:
+      "Slow, written entries on building, breaking, and reassembling things.",
+    icon: BookOpen,
+  },
+  {
+    href: "/guestbook",
+    kicker: "02 — Guestbook",
+    title: "Leave a mark",
+    description:
+      "A quiet wall. Sign your name, leave a sentence, see who passed through.",
+    icon: MessageSquare,
+  },
+];
+
+const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
+export default function Home() {
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <ConstellationBackground />
-      
-      <div className="relative z-10 min-h-screen flex flex-col">
-        {/* Top Section - Asymmetric Layout */}
-        <div className="flex-1 flex items-start pt-12 pb-6 md:pt-24 md:pb-8">
-          <div className="w-full max-w-7xl mx-auto px-4 md:px-12">
-            <motion.div
-              className="space-y-4 md:space-y-6 max-w-4xl"
-              initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <motion.p
-                className="text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] text-zen-gold/35"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.8 }}
-              >
-                senbon (千本) — &quot;a thousand&quot;
-              </motion.p>
-              
-              <motion.h1
-                className="font-display text-4xl leading-[1.1] md:text-6xl lg:text-7xl xl:text-8xl"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              >
-                A zen garden journal
-              </motion.h1>
-              
-              <motion.p
-                className="text-sm md:text-base lg:text-lg leading-relaxed text-zen-mist/45 max-w-2xl"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.7, duration: 0.9 }}
-              >
-                Built with Next.js 16, Tailwind, shadcn/ui, and  .
-                A clean, minimal space for thoughts, notes, and guest messages.{" "}
-                Follow me on{" "}
+    <div className="relative min-h-screen">
+      <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-10 md:px-10 md:py-16 lg:py-20">
+        {/* Top meta row */}
+        <motion.header
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease }}
+          className="flex items-center justify-between"
+        >
+          <span className="kicker">千本 · Senbon</span>
+          <span className="hidden text-[11px] uppercase tracking-[0.35em] text-foreground/40 sm:inline">
+            est. 2025
+          </span>
+        </motion.header>
+
+        {/* Hero */}
+        <section className="flex flex-1 flex-col justify-center py-16 md:py-24">
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.7, ease }}
+            className="kicker mb-6"
+          >
+            A digital garden · one thousand entries
+          </motion.p>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 1, ease }}
+            className="font-display text-5xl leading-[0.95] tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl xl:text-[9rem] display-balance"
+          >
+            <span className="block">A journal,</span>
+            <span className="mt-2 block italic text-foreground/85">
+              kept slowly.
+            </span>
+          </motion.h1>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.55, duration: 0.8 }}
+            className="mt-10 grid gap-10 md:mt-14 md:grid-cols-[1.2fr_1fr] md:gap-16 lg:gap-24"
+          >
+            <p className="max-w-xl text-base leading-relaxed text-foreground/75 read-prose md:text-lg">
+              A quiet, hand-tended space for thinking, writing, and watching
+              ideas grow. No tracking, no audience, no algorithm — just{" "}
+              <span className="text-foreground">words on a stone</span>.
+            </p>
+
+            <ul className="flex flex-col gap-2 text-sm text-foreground/55 md:items-end md:text-right">
+              <li>
+                <span className="text-foreground/40">Stack —</span> Next.js · Tailwind · 
+              </li>
+              <li>
+                <span className="text-foreground/40">Shortcut —</span>{" "}
+                <kbd className="rounded border border-foreground/15 px-1.5 py-0.5 text-[10px] tracking-widest">
+                  ⌘K
+                </kbd>{" "}
+                to navigate
+              </li>
+              <li>
                 <a
                   href="https://github.com/dominikkoenitzer"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-zen-gold/70 hover:text-zen-gold transition-colors underline underline-offset-4"
+                  className="inline-flex items-center gap-1.5 text-foreground/70 transition-colors hover:text-primary"
                 >
-                  GitHub
+                  <Github className="h-3.5 w-3.5" /> dominikkoenitzer
                 </a>
-                .
-              </motion.p>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Center Section - Constellation Nodes with mobile-friendly positioning */}
-        <div className="flex-1 relative min-h-[400px] md:min-h-[500px]">
-          <div className="absolute inset-0 max-w-7xl mx-auto px-4 md:px-12">
-            <div className="relative w-full h-full">
-              {/* Mobile: Stack nodes vertically, Desktop: Use absolute positioning */}
-              <div className="md:hidden flex flex-col items-center gap-12 pt-8">
-                <ConstellationNode
-                  href="/guestbook"
-                  title="Guestbook"
-                  description="Leave a message"
-                  position={{ x: "50%", y: "0%" }}
-                  delay={1.3}
-                  icon={<MessageSquare className="w-7 h-7" />}
-                  mobile
-                />
-                <ConstellationNode
-                  href="/journal"
-                  title="Journal"
-                  description="Thoughts, notes, and entries"
-                  position={{ x: "50%", y: "0%" }}
-                  delay={1.5}
-                  icon={<BookOpen className="w-7 h-7" />}
-                  mobile
-                />
-              </div>
-              
-              {/* Desktop: Absolute positioning */}
-              <div className="hidden md:block relative w-full h-full">
-                <ConstellationNode
-                  href="/journal"
-                  title="Journal"
-                  description="Thoughts, notes, and entries"
-                  position={{ x: "8%", y: "10%" }}
-                  delay={1.3}
-                  icon={<BookOpen className="w-7 h-7" />}
-                />
-                <ConstellationNode
-                  href="/guestbook"
-                  title="Guestbook"
-                  description="Leave a message"
-                  position={{ x: "82%", y: "-30%" }}
-                  delay={1.5}
-                  icon={<MessageSquare className="w-7 h-7" />}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Section - Minimal footer */}
-        <div className="pb-6 md:pb-12">
-          <motion.div
-            className="max-w-7xl mx-auto px-4 md:px-12"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.8, duration: 1 }}
-          >
-            <p className="text-[10px] md:text-xs text-zen-mist/15 uppercase tracking-[0.3em] md:tracking-[0.4em] text-center">
-              Navigate the constellation
-            </p>
+              </li>
+            </ul>
           </motion.div>
-        </div>
+        </section>
+
+        {/* Nav cards */}
+        <motion.nav
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.75, duration: 0.9, ease }}
+          aria-label="Primary"
+          className="grid gap-4 md:grid-cols-2 md:gap-6"
+        >
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="zen-card group relative flex flex-col gap-6 overflow-hidden p-7 md:p-9 transition-transform hover:-translate-y-0.5"
+              >
+                {/* Glow on hover */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                  style={{
+                    background:
+                      "radial-gradient(circle at 20% 0%, rgba(230,194,129,0.12), transparent 60%)",
+                  }}
+                />
+
+                <div className="relative flex items-start justify-between">
+                  <span className="kicker">{item.kicker}</span>
+                  <ArrowUpRight
+                    className="h-4 w-4 text-foreground/40 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
+                    aria-hidden="true"
+                  />
+                </div>
+
+                <div className="relative flex flex-col gap-3">
+                  <h2 className="font-display text-3xl leading-tight text-foreground md:text-4xl">
+                    {item.title}
+                  </h2>
+                  <p className="max-w-md text-sm leading-relaxed text-foreground/65 md:text-base read-prose">
+                    {item.description}
+                  </p>
+                </div>
+
+                <div className="relative mt-auto flex items-center gap-3 pt-4">
+                  <Icon
+                    className="h-4 w-4 text-primary/70"
+                    aria-hidden="true"
+                  />
+                  <span className="text-xs uppercase tracking-[0.25em] text-foreground/45">
+                    Enter
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
+        </motion.nav>
+
+        {/* Bottom rule + tagline */}
+        <motion.footer
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 1 }}
+          className="mt-16 flex flex-col gap-6 md:mt-24"
+        >
+          <div className="zen-rule" />
+          <p className="text-center text-[11px] uppercase tracking-[0.4em] text-foreground/35">
+            Tend the garden · 庭を整える
+          </p>
+        </motion.footer>
       </div>
     </div>
   );
-};
-
-export default Home;
+}

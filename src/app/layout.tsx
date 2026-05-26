@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display, Space_Grotesk } from "next/font/google";
-import FloatingElements from "@/components/animations/FloatingElements";
-import ParticleBackground from "@/components/particles/ParticleBackground";
+import AtmosphereBackground from "@/components/AtmosphereBackground";
 import ScrollRestoration from "@/components/ScrollRestoration";
 import CommandPalette from "@/components/CommandPalette";
 import ReadingProgress from "@/components/ReadingProgress";
@@ -66,7 +65,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#05080f",
+  themeColor: "#0b0a08",
   colorScheme: "dark",
 };
 
@@ -94,11 +93,9 @@ export default function RootLayout({
         <a href="#main-content" className="skip-link">
           Skip to content
         </a>
+        <AtmosphereBackground />
         <ReadingProgress />
         <ScrollRestoration />
-        <div className="noise-overlay" aria-hidden="true" />
-        <ParticleBackground />
-        <FloatingElements />
         <main id="main-content" className="relative z-10">
           {children}
         </main>
