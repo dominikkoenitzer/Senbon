@@ -17,7 +17,7 @@ const PostGrid = memo<PostGridProps>(({ posts }) => {
   }
 
   return (
-    <div className="grid gap-4 sm:gap-6 md:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:gap-6 lg:gap-7">
       {posts.map((post, index) => (
         <BlogCard key={post.slug} post={post} index={index} />
       ))}
