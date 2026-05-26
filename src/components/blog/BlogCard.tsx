@@ -1,16 +1,21 @@
 "use client";
 
 import { memo, useMemo } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Sparkles } from "lucide-react";
 import type { BlogCardProps } from "@/types/blog";
-import { formatJournalDate } from "@/lib/utils";
+import { formatJournalDate, formatRelativeDate } from "@/lib/utils";
 import { ANIMATION_CONFIG } from "@/constants/blog";
 
-const BlogCard = memo<BlogCardProps>(({ post, index = 0 }) => {
+const BlogCard = memo<BlogCardProps>(({ post, index = 0, featured = false }) => {
   const formattedDate = useMemo(
     () => formatJournalDate(post.publishedAt),
+    [post.publishedAt]
+  );
+  const relativeDate = useMemo(
+    () => formatRelativeDate(post.publishedAt),
     [post.publishedAt]
   );
 
@@ -37,7 +42,9 @@ const BlogCard = memo<BlogCardProps>(({ post, index = 0 }) => {
     >
       <Link
         href={`/journal/${post.slug}`}
-        className="zen-card relative flex h-full flex-col overflow-hidden transition-transform duration-300 hover:-translate-y-0.5"
+        className={`zen-card relative flex h-full flex-col overflow-hidden transition-transform duration-300 hover:-translate-y-0.5 ${
+          featured ? "border-primary/25" : ""
+        }`}
       >
         {/* Hover glow */}
         <span
@@ -49,18 +56,38 @@ const BlogCard = memo<BlogCardProps>(({ post, index = 0 }) => {
           }}
         />
 
+        {post.hero && (
+          <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-foreground/5 bg-foreground/[0.02]">
+            <Image
+              src={post.hero}
+              alt=""
+              fill
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            />
+          </div>
+        )}
+
         <div className="relative flex h-full flex-col gap-6 p-7 md:p-8">
           {/* Meta line */}
           <div className="flex items-center justify-between gap-3">
             <time
               dateTime={post.publishedAt}
+              title={formattedDate}
               className="kicker"
             >
-              {formattedDate}
+              {relativeDate}
             </time>
-            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/40">
-              {String(index + 1).padStart(2, "0")}
-            </span>
+            {featured ? (
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.2em] text-primary">
+                <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
+                Featured
+              </span>
+            ) : (
+              <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/40">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+            )}
           </div>
 
           {/* Title */}
