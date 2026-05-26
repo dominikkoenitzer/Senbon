@@ -1,53 +1,36 @@
 import { useCallback } from "react";
 
 interface UseSmoothScrollOptions {
+  /** Pixels of breathing room above the target (for sticky headers). */
   offset?: number;
-  delay?: number;
-  retryDelay?: number;
 }
 
 /**
- * Hook to handle smooth scrolling to elements
- * Includes retry logic and offset support
+ * Smooth-scroll to a DOM element by id, with an optional offset.
+ * Respects `prefers-reduced-motion`. Updates the URL hash without re-jumping.
  */
 export function useSmoothScroll(options: UseSmoothScrollOptions = {}) {
-  const { offset = 120, delay = 50, retryDelay = 100 } = options;
+  const { offset = 120 } = options;
 
-  const scrollToElement = useCallback(
+  return useCallback(
     (elementId: string) => {
-      const performScroll = (element: HTMLElement) => {
-        const elementPosition =
-          element.getBoundingClientRect().top + window.pageYOffset;
-        const offsetPosition = elementPosition - offset;
+      const element = document.getElementById(elementId);
+      if (!element) return;
 
-        window.scrollTo({
-          top: Math.max(0, offsetPosition),
-          behavior: "smooth",
-        });
+      const top = element.getBoundingClientRect().top + window.scrollY - offset;
+      const reduce =
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-        // Update URL hash without triggering scroll
-        window.history.pushState(null, "", `#${elementId}`);
-      };
+      window.scrollTo({
+        top: Math.max(0, top),
+        behavior: reduce ? "auto" : "smooth",
+      });
 
-      // Initial attempt after delay
-      setTimeout(() => {
-        const element = document.getElementById(elementId);
-        if (element) {
-          performScroll(element);
-        } else {
-          // Retry after additional delay in case element isn't ready
-          setTimeout(() => {
-            const retryElement = document.getElementById(elementId);
-            if (retryElement) {
-              performScroll(retryElement);
-            }
-          }, retryDelay);
-        }
-      }, delay);
+      // Update the URL without triggering another scroll.
+      if (window.location.hash !== `#${elementId}`) {
+        history.replaceState(null, "", `#${elementId}`);
+      }
     },
-    [offset, delay, retryDelay]
+    [offset]
   );
-
-  return scrollToElement;
 }
-

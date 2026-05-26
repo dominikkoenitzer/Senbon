@@ -1,8 +1,14 @@
 import { notFound } from "next/navigation";
-import { getAllPostSlugs, getPostBySlug } from "@/lib/blog";
+import {
+  getAdjacentPosts,
+  getAllPostSlugs,
+  getPostBySlug,
+} from "@/lib/blog";
 import { extractHeadings } from "@/lib/toc";
 import PostHeader from "@/components/blog/PostHeader";
+import PostHero from "@/components/blog/PostHero";
 import MarkdownRenderer from "@/components/blog/MarkdownRenderer";
+import PostNavigation from "@/components/blog/PostNavigation";
 import TableOfContents from "@/components/blog/TableOfContents";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
@@ -41,7 +47,10 @@ export const generateMetadata = async ({
 
 const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  const [post, adjacent] = await Promise.all([
+    getPostBySlug(slug),
+    getAdjacentPosts(slug),
+  ]);
   if (!post) return notFound();
 
   const headings = extractHeadings(post.content);
@@ -50,6 +59,10 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
     <ErrorBoundary>
       <article className="relative z-10 mx-auto flex max-w-5xl flex-col gap-10 px-6 py-12 md:px-10 md:py-20 lg:py-24">
         <PostHeader post={post} />
+
+        {post.hero && (
+          <PostHero src={post.hero} alt={post.title} priority />
+        )}
 
         {headings.length > 0 && (
           <div className="lg:hidden">
@@ -67,6 +80,8 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
             </aside>
           )}
         </div>
+
+        <PostNavigation newer={adjacent.newer} older={adjacent.older} />
       </article>
     </ErrorBoundary>
   );

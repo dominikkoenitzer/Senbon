@@ -1,6 +1,6 @@
 import { getAllPosts } from "@/lib/blog";
 import JournalHero from "@/components/blog/JournalHero";
-import PostGrid from "@/components/blog/PostGrid";
+import JournalBrowser from "@/components/blog/JournalBrowser";
 
 export const metadata = {
   title: "Journal",
@@ -15,9 +15,7 @@ const JournalPage = async () => {
       <JournalHero count={posts.length} />
 
       {posts.length > 0 ? (
-        <section className="flex flex-col gap-8 md:gap-12">
-          <PostGrid posts={posts} />
-        </section>
+        <JournalBrowser posts={posts} />
       ) : (
         <div className="zen-card flex flex-col items-center gap-3 px-8 py-16 text-center md:px-12 md:py-24">
           <p className="kicker">Empty plot</p>
