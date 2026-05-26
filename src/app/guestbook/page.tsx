@@ -19,10 +19,10 @@ const GuestbookPage = async () => {
       includePending: false,
       limit: 50,
     });
-    console.log(`[GuestbookPage] Fetched ${entries.length} entries from server`);
   } catch (error) {
-    console.error("[GuestbookPage] Failed to fetch guestbook entries on server:", error);
-    // Return empty array on error - client will handle it
+    if (process.env.NODE_ENV !== "production") {
+      console.error("[GuestbookPage] fetch failed:", error);
+    }
     entries = [];
   }
 
