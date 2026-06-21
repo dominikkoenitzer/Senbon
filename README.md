@@ -59,11 +59,11 @@ Journal entries are plain markdown files committed to the repo. There is no CMS 
 - **[react-markdown](https://github.com/remarkjs/react-markdown)** + `rehype-highlight` + `remark-gfm` for entry rendering
 - **[Vercel](https://vercel.com/)** hosting + first-party `@vercel/analytics`
 
-Package manager: **pnpm** (do not introduce an `npm`/`yarn` lockfile).
+Package manager: **Bun** (do not introduce an `npm`/`yarn`/`pnpm` lockfile).
 
 ## Getting started
 
-**Prerequisites:** [Node.js](https://nodejs.org/) 20+ and [pnpm](https://pnpm.io/) 10+.
+**Prerequisites:** [Bun](https://bun.sh/) 1.1.39+ (this repo pins `1.3.14` via `.bun-version`). Bun is the runtime and package manager.
 
 ```bash
 # Clone
@@ -71,10 +71,10 @@ git clone https://github.com/dominikkoenitzer/Senbon.git
 cd Senbon
 
 # Install dependencies
-pnpm install
+bun install
 
 # Start the dev server → http://localhost:3000
-pnpm dev
+bun run dev
 ```
 
 No configuration is required to run the journal locally — entries are read from `content/journal/`. The only optional environment variable is `NEXT_PUBLIC_SITE_URL` (see `env.example`).
@@ -83,10 +83,10 @@ No configuration is required to run the journal locally — entries are read fro
 
 | Command | Description |
 |---|---|
-| `pnpm dev` | Start the Next.js dev server on [http://localhost:3000](http://localhost:3000) |
-| `pnpm build` | Production build |
-| `pnpm start` | Serve the production build |
-| `pnpm lint` | Run ESLint |
+| `bun run dev` | Start the Next.js dev server on [http://localhost:3000](http://localhost:3000) |
+| `bun run build` | Production build |
+| `bun run start` | Serve the production build |
+| `bun run lint` | Run ESLint |
 
 ## Writing a journal entry
 

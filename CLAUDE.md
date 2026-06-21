@@ -17,7 +17,7 @@ This file is the load-bearing context for AI agents working on the codebase. Rea
 - **react-markdown + rehype-highlight + remark-gfm** for journal entries
 - **Vercel Analytics** for traffic stats (first-party, no third-party tracking)
 
-Package manager: **pnpm** (10.x). Never use `npm install` here — it creates a competing lockfile that breaks Vercel's `--frozen-lockfile`.
+Package manager: **Bun**. Never use `npm`/`pnpm` here — it creates a competing lockfile that breaks Vercel's `--frozen-lockfile`. The Bun version is pinned in `.bun-version`.
 
 ---
 
@@ -25,13 +25,13 @@ Package manager: **pnpm** (10.x). Never use `npm install` here — it creates a 
 
 | What                  | Command         |
 | --------------------- | --------------- |
-| Dev server            | `pnpm dev`      |
-| Production build      | `pnpm build`    |
-| Lint                  | `pnpm lint`     |
-| Start built app       | `pnpm start`    |
-| Reinstall (locked)    | `pnpm install --frozen-lockfile` |
+| Dev server            | `bun run dev`   |
+| Production build      | `bun run build` |
+| Lint                  | `bun run lint`  |
+| Start built app       | `bun run start` |
+| Reinstall (locked)    | `bun install --frozen-lockfile` |
 
-Always run `pnpm lint && pnpm build` before declaring work done. Vercel runs `pnpm install --frozen-lockfile`, so the lockfile must always be committed and consistent with `package.json`.
+Always run `bun run lint && bun run build` before declaring work done. Vercel runs `bun install --frozen-lockfile`, so the lockfile must always be committed and consistent with `package.json`.
 
 ---
 
@@ -208,7 +208,7 @@ The site rebuilds on commit. Posts are sorted newest-first. Slug = filename with
 - Don't add OG images, sitemap, structured data, or SEO metadata. The site is deindexed.
 - Don't add third-party analytics (PostHog, GA, Plausible, etc.). Vercel Analytics is the only telemetry.
 - Don't introduce `space-y-*` / `space-x-*` — use `flex flex-col gap-*`.
-- Don't use `npm install`. Always `pnpm`.
+- Don't use `npm install`. Always `bun`.
 - Don't suppress lint rules (`eslint-disable-next-line`) without a comment explaining why.
 
 ---

@@ -10,6 +10,11 @@
 !.yarn/releases
 !.yarn/versions
 
+# Non-Bun lockfiles (Bun only — bun.lock is committed)
+/package-lock.json
+/pnpm-lock.yaml
+/yarn.lock
+
 # testing
 /coverage
 
