@@ -1,6 +1,6 @@
 # Senbon Garden — CLAUDE.md
 
-A zen-garden-themed digital journal + guestbook at **senbon.ch**, owned by Dominik Könitzer.
+A zen-garden-themed digital journal at **senbon.ch**, owned by Dominik Könitzer. (A guestbook page exists but signing is currently paused — it renders a static notice.)
 
 This file is the load-bearing context for AI agents working on the codebase. Read it first, then act.
 
@@ -15,8 +15,6 @@ This file is the load-bearing context for AI agents working on the codebase. Rea
 - **shadcn/ui** primitives (Radix-backed)
 - **Framer Motion** for entrance animations
 - **react-markdown + rehype-highlight + remark-gfm** for journal entries
-- **react-hook-form + zod** for forms + API validation
-- ** serverless ** for the guestbook
 - **Vercel Analytics** for traffic stats (first-party, no third-party tracking)
 
 Package manager: **pnpm** (10.x). Never use `npm install` here — it creates a competing lockfile that breaks Vercel's `--frozen-lockfile`.
@@ -58,15 +56,7 @@ src/
         page.tsx           # Single entry (server)
         loading.tsx
     guestbook/
-      page.tsx             # Guestbook + form
-      loading.tsx
-    admin/
-      page.tsx             # Token-gated moderation panel
-    api/
-      auth/route.ts        # POST: verify admin token
-      guestbook/
-        route.ts           # GET (public), POST, DELETE
-        approve/route.ts   # GET + PATCH (admin only)
+      page.tsx             # Guestbook page — signing paused, renders a static notice
   components/
     AtmosphereBackground.tsx  # Single ambient layer (CSS + SVG ribbons)
     BackToTop.tsx
@@ -96,11 +86,6 @@ src/
         types.ts
         utils.ts
         index.ts
-    guestbook/
-      GuestbookWall.tsx
-      GuestbookForm.tsx       # Includes honeypot + char counter
-      GuestbookEntry.tsx
-      AdminEntryCard.tsx
     ui/                       # shadcn primitives
   constants/
     blog.ts                   # BLOG_CONFIG, ANIMATION_CONFIG, TOC_CONFIG
@@ -108,11 +93,7 @@ src/
     useIntersectionObserver.ts  # TOC scroll-spy
     useSmoothScroll.ts          # ID-targeted scroll with reduced-motion respect
   lib/
-    auth.ts                   # Timing-safe admin token check
     blog.ts                   # getAllPosts, getPostBySlug, getAdjacentPosts (all React.cache wrapped)
-    db.ts                     # Client + isomorphic helpers (normalizeEntry)
-    db-server.ts              # Server-only fetches (delegates to .ts)
-    .ts                   # Single source of DB connection logic + IP hash + ensureTable
     toc.ts                    # Markdown heading extractor (dedups, skips fences)
     utils.ts                  # cn() + formatJournalDate + formatRelativeDate
   types/
@@ -154,11 +135,6 @@ src/
 - Do NOT add per-page background components, particle systems, or extra orb layers. The old `ConstellationBackground`, `MysticalBackground`, `FloatingElements`, and `ParticleBackground` have been deliberately deleted — do not resurrect them.
 - The atmosphere ribbons are SVG paths with two cycles inside `viewBox 0..600`, positioned `left: 0; width: 200%`, animated by a `-50%` translate. Loop math is in `globals.css` near `.atmosphere-ribbon`.
 
-### Forms
-- Use `react-hook-form` + `zod` with `zodResolver`. Validate server-side with the same schema shape.
-- Forms include a hidden honeypot field named `website` that must stay empty.
-- Errors display under inputs in `text-destructive/80`; success/error feedback regions are `role="status" aria-live="polite"`.
-
 ---
 
 ## Privacy posture
@@ -176,28 +152,11 @@ When adding new pages, **do not** add OG/Twitter metadata or canonical URLs. The
 
 ---
 
-## Database
-
-Single helper: **`src/lib/.ts`**. Three other files use it; do not duplicate connection logic.
-
-The schema (`guestbook` table) is migrated on demand by `ensureGuestbookTable()`, which is idempotent and safe to call on cold start. The function is memoized after first success.
-
-IP addresses are hashed via `hashIp()` — HMAC-SHA256 keyed by `IP_HASH_SALT` when set, plain SHA-256 otherwise. **In production, set `IP_HASH_SALT`** so hashes are not trivially reversible.
-
----
-
 ## Env vars
 
-See `env.example` for the full list. Required in production:
+See `env.example`. The only variable is:
 
-- `DATABASE_URL` / `_URL` (provided by Vercel's  integration)
-- `GUESTBOOK_ADMIN_TOKEN` (gates `/admin` and admin API routes)
-- `IP_HASH_SALT` (high-entropy random string)
-- `NEXT_PUBLIC_SITE_URL`
-
-Optional:
-- `GUESTBOOK_AUTO_APPROVE` (`true` by default — set `false` to require moderation)
-- `GUESTBOOK_DISABLE_RATE_LIMIT` (`false` by default; useful in dev)
+- `NEXT_PUBLIC_SITE_URL` — canonical site URL
 
 ---
 
@@ -250,9 +209,6 @@ The site rebuilds on commit. Posts are sorted newest-first. Slug = filename with
 - Don't add third-party analytics (PostHog, GA, Plausible, etc.). Vercel Analytics is the only telemetry.
 - Don't introduce `space-y-*` / `space-x-*` — use `flex flex-col gap-*`.
 - Don't use `npm install`. Always `pnpm`.
-- Don't bypass the timing-safe token compare (`isAdminTokenValid`) for admin routes.
-- Don't `console.log` on the happy path in API routes — wrap in `process.env.NODE_ENV !== "production"` if you must debug.
-- Don't log user-submitted content (names, messages) — privacy.
 - Don't suppress lint rules (`eslint-disable-next-line`) without a comment explaining why.
 
 ---
