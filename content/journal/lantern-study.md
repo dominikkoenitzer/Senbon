@@ -73,7 +73,7 @@ Simple. Clean. Like the rest of the system.
 
 ### What's Next
 
-Next up: translating the "thousand needles" metaphor into a   schema that can scale while staying whisper-soft. I want each guestbook entry to feel handwritten even when it's just JSON gliding through serverless space.
+Next up: translating the "thousand needles" metaphor into a data schema that can scale while staying whisper-soft. I want each guestbook entry to feel handwritten even when it's just JSON gliding through serverless space.
 
 The garden is growing. Each entry is a new lantern, casting light on the path ahead.
 
