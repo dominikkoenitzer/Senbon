@@ -32,7 +32,7 @@ Simple. Clean. Like a stone basin that holds what it needs and nothing more.
 
 ### Implementation Drift
 
-1. ** pulse** — serverless  idles quietly until a message arrives, then wakes with a shimmer. The SQL layer stores IP charcoal sketches for rate-limiting without being intrusive.
+1. **A quiet pulse** — the store idles until a message arrives, then wakes with a shimmer. It keeps IP charcoal sketches for rate-limiting without being intrusive.
 
 2. **Token-only moderation** — a single secret printed in the `.env` acts like a wooden key hung behind the gate. No OAuth complexity, just a simple token check:
 
