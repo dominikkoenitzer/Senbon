@@ -1,31 +1,12 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import GuestbookWall from "@/components/guestbook/GuestbookWall";
-import { fetchGuestbookEntries } from "@/lib/db";
 
 export const metadata = {
   title: "Guestbook",
-  description: "Leave a message in the Senbon guestbook.",
+  description: "The Senbon guestbook.",
 };
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
-const GuestbookPage = async () => {
-  let entries: Awaited<ReturnType<typeof fetchGuestbookEntries>> = [];
-
-  try {
-    entries = await fetchGuestbookEntries({
-      includePending: false,
-      limit: 50,
-    });
-  } catch (error) {
-    if (process.env.NODE_ENV !== "production") {
-      console.error("[GuestbookPage] fetch failed:", error);
-    }
-    entries = [];
-  }
-
+const GuestbookPage = () => {
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-16 px-6 py-12 md:gap-20 md:px-10 md:py-20 lg:py-24">
       <header className="flex flex-col gap-10">
@@ -44,15 +25,21 @@ const GuestbookPage = async () => {
             <span className="italic text-foreground/80"> the stone</span>.
           </h1>
           <p className="max-w-2xl text-base leading-relaxed text-foreground/70 read-prose md:text-lg">
-            A quiet wall. Sign your name, leave a sentence — anything kind, or
-            anything true. New entries are held briefly, then bloom.
+            A quiet wall for passing visitors to sign.
           </p>
         </div>
 
         <div className="zen-rule" />
       </header>
 
-      <GuestbookWall initialEntries={entries} />
+      <div className="zen-card flex flex-col items-center gap-4 p-10 text-center md:p-14">
+        <p className="kicker">Resting · 休止中</p>
+        <p className="max-w-md text-base leading-relaxed text-foreground/65 read-prose">
+          The guestbook is not working right now — signing is temporarily
+          unavailable while the garden is re-tended. Please check back another
+          day.
+        </p>
+      </div>
     </div>
   );
 };
