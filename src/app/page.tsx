@@ -76,7 +76,7 @@ export default function Home() {
 
             <ul className="flex flex-col gap-2 text-sm text-foreground/55 md:items-end md:text-right">
               <li>
-                <span className="text-foreground/40">Stack —</span> Next.js · Tailwind · 
+                <span className="text-foreground/40">Stack —</span> Next.js · Tailwind · TypeScript
               </li>
               <li>
                 <span className="text-foreground/40">Shortcut —</span>{" "}
