@@ -48,7 +48,7 @@ src/
     error.tsx              # Route-segment error boundary (themed)
     global-error.tsx       # Root error boundary (re-declares <html>/<body>)
     not-found.tsx          # 404
-    robots.ts              # Deny-all robots config (incl. AI crawlers)
+    robots.ts              # Allows search-engine crawl (so noindex is seen); denies AI crawlers
     journal/
       page.tsx             # Journal index (server, fetches all posts)
       loading.tsx          # Streaming skeleton
@@ -141,7 +141,7 @@ src/
 
 This site is deliberately **non-indexable**:
 
-- `robots.ts` denies all search engines and AI crawlers explicitly (GPTBot, ClaudeBot, anthropic-ai, Google-Extended, PerplexityBot, CCBot, Bytespider, etc.).
+- `robots.ts` **allows** search engines to crawl (`userAgent: "*", allow: "/"`) — this is intentional and load-bearing. `noindex` only works if crawlers can fetch the page and see it; a blanket `disallow` makes Google index the bare URL from external links ("no information available for this page"). Do NOT change it back to deny-all. AI crawlers (GPTBot, ClaudeBot, anthropic-ai, Google-Extended, PerplexityBot, CCBot, Bytespider, etc.) remain explicitly disallowed, since for them the goal is blocking content *fetching*, which robots.txt does correctly.
 - `metadata.robots.index/follow: false` on the root layout.
 - `X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai` header on every response (`next.config.ts`).
 - Three layers of meta tags in `<head>` for redundancy.

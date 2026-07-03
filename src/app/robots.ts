@@ -2,7 +2,10 @@ import type { MetadataRoute } from "next";
 
 const robots = (): MetadataRoute.Robots => ({
   rules: [
-    { userAgent: "*", disallow: "/" },
+    // Search engines must be ALLOWED to crawl, or they never see the
+    // noindex header/meta and index the bare URL from external links.
+    // De-indexing is enforced by X-Robots-Tag (next.config.ts) + metadata.robots.
+    { userAgent: "*", allow: "/" },
     { userAgent: "GPTBot", disallow: "/" },
     { userAgent: "ChatGPT-User", disallow: "/" },
     { userAgent: "OAI-SearchBot", disallow: "/" },
