@@ -17,3 +17,19 @@ export function getTextContent(node: ReactNode): string {
   return "";
 }
 
+
+/**
+ * Slugify a heading into an anchor id.
+ *
+ * Previously lived in `src/lib/toc.ts` alongside the table-of-contents
+ * extractor. The TOC is gone, but headings still want stable anchors, so the
+ * one function that survived moved here.
+ */
+export function generateHeadingId(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}

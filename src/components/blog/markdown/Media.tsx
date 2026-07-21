@@ -1,23 +1,24 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { MarkdownImageProps } from "./types";
 
 /**
- * Image component with animation
+ * Image in markdown.
+ *
+ * The fade-in used to come from framer-motion, which meant this had to be a
+ * client component and pulled an animation library in to change opacity. The
+ * `fade-up` class in globals.css does the same thing for free.
  */
 export const Image = ({ className, src, alt }: MarkdownImageProps) => (
-  <motion.img
+  // Markdown images can point anywhere, so next/image would need per-host
+  // remotePatterns config for sources we do not control.
+  // eslint-disable-next-line @next/next/no-img-element
+  <img
     src={src}
     alt={alt}
-    initial={{ opacity: 0, scale: 0.95 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.6 }}
+    loading="lazy"
     className={cn(
-      "my-6 md:my-8 lg:my-10 rounded-lg border border-border w-full backdrop-blur-sm",
-      className
+      "fade-up my-6 w-full rounded-2xl border border-border md:my-8 lg:my-10",
+      className,
     )}
   />
 );
-
