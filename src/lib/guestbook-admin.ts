@@ -1,3 +1,12 @@
+// Poison pill — see the note in lib/guestbook.ts. This module holds the
+// moderation password and the admin bearer token.
+//
+// Here it genuinely is belt and braces: node:crypto and next/headers already
+// break a client build. But they do so by naming *those* imports, which sends
+// you looking at the crypto call rather than at the fact that a secret-bearing
+// module was imported from the browser at all. This says that directly.
+import "server-only";
+
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies, headers } from "next/headers";
 import type {

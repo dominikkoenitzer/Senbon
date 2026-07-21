@@ -117,7 +117,7 @@ const AutoApproveToggle = ({ initialAutoApprove }: AutoApproveToggleProps) => {
       >
         <span
           aria-hidden="true"
-          className="w-7 font-mono text-xs uppercase tracking-[0.15em] text-foreground/80 transition-colors duration-300 group-data-[state=on]:text-destructive"
+          className="w-7 text-xs lowercase text-foreground/80 transition-colors duration-300 group-data-[state=on]:text-destructive"
         >
           {autoApprove ? "on" : "off"}
         </span>

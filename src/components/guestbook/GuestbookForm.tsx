@@ -87,7 +87,7 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
       <div className="flex flex-col gap-2">
         <label
           htmlFor={nameId}
-          className="text-xs uppercase tracking-[0.25em] text-foreground/80"
+          className="text-xs lowercase text-foreground/80"
         >
           your name, obviously
         </label>
@@ -117,7 +117,7 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
       <div className="flex flex-col gap-2">
         <label
           htmlFor={messageId}
-          className="text-xs uppercase tracking-[0.25em] text-foreground/80"
+          className="text-xs lowercase text-foreground/80"
         >
           your message (the entire point)
         </label>
@@ -141,7 +141,7 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
         <span
           aria-hidden="true"
           className={cn(
-            "self-end font-mono text-[11px] lowercase tracking-wider",
+            "self-end text-xs lowercase tracking-wider",
             remaining < 20 ? "text-primary" : "text-foreground/70",
           )}
         >
@@ -168,7 +168,7 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
           type="submit"
           disabled={isPending}
           aria-describedby={statusId}
-          className="group inline-flex w-fit items-center gap-2.5 rounded-full border border-primary/30 px-6 py-3 text-xs uppercase tracking-[0.25em] text-primary transition-colors hover:border-primary/60 hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-50"
+          className="group inline-flex w-fit items-center gap-2.5 rounded-full border border-primary/30 px-6 py-3 text-xs lowercase text-primary transition-colors hover:border-primary/60 hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isPending ? (
             <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />

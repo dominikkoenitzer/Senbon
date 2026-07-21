@@ -23,19 +23,19 @@ export default function NotFound() {
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/"
-            className="rounded-full border border-primary/30 bg-primary/5 px-5 py-2 text-xs uppercase tracking-[0.25em] text-primary transition-colors hover:border-primary/60 hover:bg-primary/10"
+            className="rounded-full border border-primary/30 bg-primary/5 px-5 py-2 text-xs lowercase text-primary transition-colors hover:border-primary/60 hover:bg-primary/10"
           >
             home
           </Link>
           <Link
             href="/journal"
-            className="rounded-full border border-border px-5 py-2 text-xs uppercase tracking-[0.25em] text-foreground/80 transition-colors hover:border-primary/30 hover:text-primary"
+            className="rounded-full border border-border px-5 py-2 text-xs lowercase text-foreground/80 transition-colors hover:border-primary/30 hover:text-primary"
           >
             journal
           </Link>
           <Link
             href="/guestbook"
-            className="rounded-full border border-border px-5 py-2 text-xs uppercase tracking-[0.25em] text-foreground/80 transition-colors hover:border-primary/30 hover:text-primary"
+            className="rounded-full border border-border px-5 py-2 text-xs lowercase text-foreground/80 transition-colors hover:border-primary/30 hover:text-primary"
           >
             guestbook (please)
           </Link>
