@@ -39,13 +39,13 @@ export default function BackToTop() {
       onClick={onClick}
       aria-label="Back to top"
       tabIndex={visible ? 0 : -1}
-      className={`fixed bottom-5 right-5 z-50 inline-flex h-11 w-11 items-center justify-center rounded-full border border-zen-gold/25 bg-black/40 text-zen-gold/80 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.5)] transition-all duration-300 hover:text-zen-gold hover:border-zen-gold/50 hover:bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zen-gold/60 ${
+      className={`fixed bottom-5 right-5 z-50 inline-flex size-11 items-center justify-center rounded-full border border-border bg-card text-primary shadow-[var(--shadow-soft)] transition-all duration-300 hover:border-primary/40 hover:shadow-[var(--shadow-lift)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
         visible
           ? "opacity-100 translate-y-0 pointer-events-auto"
           : "opacity-0 translate-y-3 pointer-events-none"
       }`}
     >
-      <ArrowUp className="h-4 w-4" aria-hidden="true" />
+      <ArrowUp className="size-4" aria-hidden="true" />
     </button>
   );
 }

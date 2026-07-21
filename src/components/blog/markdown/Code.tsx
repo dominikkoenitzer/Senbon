@@ -15,7 +15,7 @@ export const Code = ({ className, children }: MarkdownCodeProps) => {
     <code
       className={cn(
         isInline
-          ? "rounded bg-white/10 px-1.5 md:px-2 py-0.5 text-xs md:text-sm font-mono text-zen-gold/90 before:content-none after:content-none"
+          ? "rounded bg-white/10 px-1.5 md:px-2 py-0.5 text-xs md:text-sm font-mono text-primary/90 before:content-none after:content-none"
           : "block text-xs md:text-sm font-mono my-0",
         className
       )}
@@ -61,7 +61,7 @@ export const Pre = ({ children, className }: MarkdownPreProps) => {
       <pre
         ref={ref}
         className={cn(
-          "mb-4 md:mb-6 rounded-lg bg-black/30 border border-zen-gold/15 p-3 md:p-4 lg:p-6 overflow-x-auto relative text-xs md:text-sm",
+          "mb-4 md:mb-6 rounded-lg bg-muted border border-primary/15 p-3 md:p-4 lg:p-6 overflow-x-auto relative text-xs md:text-sm",
           className
         )}
         style={{ boxShadow: "none" }}
