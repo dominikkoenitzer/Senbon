@@ -221,101 +221,6 @@
   will-change: transform;
 }
 
-/* Aurora ribbons: each is 200% wide so a -50% translateX loops seamlessly
-   because the path holds exactly 2 sine cycles inside the viewBox. */
-.atmosphere-aurora-wrap {
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 75vh;
-  pointer-events: none;
-  /* On a light ground, `screen` erases these. `multiply` lets the ribbons warm
-     the paper instead of glowing over it — light through a curtain, not neon. */
-  mix-blend-mode: multiply;
-  filter: blur(30px) saturate(115%);
-  opacity: 0.5;
-}
-
-.dark .atmosphere-aurora-wrap {
-  mix-blend-mode: screen;
-  opacity: 0.85;
-}
-
-/* Element is anchored at left: 0 with width: 200%, so the visible window
-   (0..100% of wrapper) always falls *inside* the path region of the SVG.
-   At 0% the visible window shows cycle 1 (viewBox 0..300).
-   At 100% (translate -50% of element width) it shows cycle 2 (viewBox
-   300..600). The two cycles are geometrically identical, so the keyframe
-   snap from 100% → 0% is invisible — no clipping, no jolt. */
-.atmosphere-ribbon {
-  position: absolute;
-  left: 0;
-  width: 200%;
-  height: 60vh;
-  will-change: transform;
-}
-
-.ribbon-gold {
-  top: -8vh;
-  animation: river-flow 38s linear infinite;
-}
-
-.ribbon-rose {
-  top: 10vh;
-  height: 55vh;
-  animation: river-flow 52s linear infinite reverse;
-}
-
-.ribbon-sage {
-  top: 22vh;
-  height: 50vh;
-  animation: river-flow 64s linear infinite;
-}
-
-/* River: anchored to the bottom, two waves drifting at different rates */
-.atmosphere-river {
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 38vh;
-  pointer-events: none;
-  filter: blur(8px);
-  mix-blend-mode: multiply;
-  opacity: 0.42;
-}
-
-.dark .atmosphere-river {
-  mix-blend-mode: screen;
-  opacity: 0.9;
-}
-
-.atmosphere-wave {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 200%;
-  height: 100%;
-  will-change: transform;
-}
-
-.wave-back {
-  animation: river-flow 46s linear infinite;
-}
-
-.wave-front {
-  bottom: -3vh;
-  height: 110%;
-  animation: river-flow 30s linear infinite reverse;
-}
-
-@keyframes river-flow {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    /* -50% of element width = exactly one full wave cycle = seamless loop */
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-
 .atmosphere-grain {
   position: absolute;
   inset: 0;
@@ -458,9 +363,7 @@ code {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .atmosphere-mesh,
-  .atmosphere-ribbon,
-  .atmosphere-wave {
+  .atmosphere-mesh {
     animation: none !important;
   }
 }
