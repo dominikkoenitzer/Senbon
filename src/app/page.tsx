@@ -11,12 +11,12 @@ const links = [
   {
     href: "/journal",
     title: "journal",
-    blurb: "things i actually thought. no lore, no filler.",
+    blurb: "things i actually thought, in the order i thought them. mostly typed at 2am.",
   },
   {
     href: "/guestbook",
     title: "guestbook",
-    blurb: "sign it. i read every one, which should worry you slightly.",
+    blurb: "sign it. four words is plenty. i will absolutely notice if you don't.",
   },
 ];
 
@@ -26,9 +26,10 @@ const Home = () => (
       <h1 className="font-display text-7xl lowercase leading-[0.82] tracking-tight text-foreground md:text-9xl display-balance">
         senbon
       </h1>
-      <p className="max-w-md text-lg leading-relaxed text-foreground/80 read-prose md:text-xl">
-        dominik&apos;s corner of the internet. i build things for a living and
-        then build more things for no reason. this is the second kind.
+      <p className="max-w-md text-lg leading-relaxed text-foreground/85 read-prose md:text-xl">
+        dominik. i build things for money, then go home and build more for
+        free. this one has two rooms: a journal, and a guestbook i refresh more
+        often than i&apos;m going to say out loud. take the second door.
       </p>
     </header>
 
@@ -56,7 +57,13 @@ const Home = () => (
       ))}
     </nav>
 
-    <footer className="fade-up" style={{ animationDelay: "300ms" }}>
+    <footer
+      className="flex flex-col gap-3 fade-up"
+      style={{ animationDelay: "300ms" }}
+    >
+      <p className="max-w-md text-sm leading-relaxed text-foreground/75 read-prose">
+        that&apos;s the whole site. there is no about page. you know enough.
+      </p>
       <a
         href="https://github.com/dominikkoenitzer"
         target="_blank"

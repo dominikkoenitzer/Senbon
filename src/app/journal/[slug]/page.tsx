@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { getAllPostSlugs, getPostBySlug } from "@/lib/blog";
 import MarkdownRenderer from "@/components/blog/MarkdownRenderer";
 import { formatJournalDate, formatRelativeDate } from "@/lib/utils";
@@ -54,7 +54,9 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
           <span>journal</span>
         </Link>
 
-        <h1 className="font-display text-4xl lowercase leading-[0.95] tracking-tight text-foreground md:text-6xl display-balance">
+        {/* Title is author-supplied frontmatter — one unbroken string must not
+            push the column sideways. */}
+        <h1 className="overflow-wrap-anywhere font-display text-4xl lowercase leading-[0.95] tracking-tight text-foreground md:text-6xl display-balance">
           {post.title}
         </h1>
 
@@ -68,6 +70,24 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
       </header>
 
       <MarkdownRenderer content={post.content} />
+
+      <footer className="flex flex-col gap-5">
+        <div className="zen-rule" />
+        <p className="text-base leading-relaxed text-foreground/85 read-prose">
+          you read the whole thing. i watched the scrollbar go all the way
+          down. now go put your name in the guestbook.
+        </p>
+        <Link
+          href="/guestbook"
+          className="group inline-flex w-fit items-center gap-2 text-xs uppercase tracking-[0.25em] text-primary transition-colors hover:text-foreground"
+        >
+          <span>fine, i&apos;ll sign it</span>
+          <ArrowUpRight
+            className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            aria-hidden="true"
+          />
+        </Link>
+      </footer>
     </article>
   );
 };
