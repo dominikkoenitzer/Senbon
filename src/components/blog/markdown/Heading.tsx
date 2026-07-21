@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { generateHeadingId } from "@/lib/toc";
+import { generateHeadingId } from "./utils";
 import { getTextContent } from "./utils";
 import type { MarkdownHeadingProps } from "./types";
 

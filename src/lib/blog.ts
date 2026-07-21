@@ -2,7 +2,6 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { cache } from "react";
 import matter from "gray-matter";
-import readingTime from "reading-time";
 import type { JournalPost, PostFrontmatter } from "@/types/blog";
 import { BLOG_CONFIG } from "@/constants/blog";
 
@@ -34,27 +33,6 @@ const isMarkdownFile = (filename: string): boolean =>
 /**
  * Parse a single post file
  */
-const publicDir = path.join(process.cwd(), "public");
-
-/**
- * Resolve a hero path declared in frontmatter. Only returns the path if the
- * file actually exists under /public — prevents broken-image renders for
- * posts that have `hero:` set but no asset uploaded yet.
- */
-const resolveHero = async (
-  hero: string | undefined
-): Promise<string | undefined> => {
-  if (!hero) return undefined;
-  // Only check site-relative paths (`/images/...`). External URLs pass through.
-  if (!hero.startsWith("/")) return hero;
-  try {
-    await fs.access(path.join(publicDir, hero));
-    return hero;
-  } catch {
-    return undefined;
-  }
-};
-
 const parsePostFile = async (file: string): Promise<JournalPost> => {
   const slug = file.replace(/\.mdx?$/, "");
   const filePath = path.join(contentDir, file);
@@ -68,9 +46,6 @@ const parsePostFile = async (file: string): Promise<JournalPost> => {
     excerpt: frontmatter.excerpt ?? "",
     publishedAt: frontmatter.publishedAt ?? new Date().toISOString(),
     tags: frontmatter.tags ?? [],
-    hero: await resolveHero(frontmatter.hero),
-    featured: frontmatter.featured ?? false,
-    readingTime: readingTime(content),
     content,
   };
 };

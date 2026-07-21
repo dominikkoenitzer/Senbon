@@ -1,16 +1,9 @@
 import { notFound } from "next/navigation";
-import {
-  getAdjacentPosts,
-  getAllPostSlugs,
-  getPostBySlug,
-} from "@/lib/blog";
-import { extractHeadings } from "@/lib/toc";
-import PostHeader from "@/components/blog/PostHeader";
-import PostHero from "@/components/blog/PostHero";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { getAllPostSlugs, getPostBySlug } from "@/lib/blog";
 import MarkdownRenderer from "@/components/blog/MarkdownRenderer";
-import PostNavigation from "@/components/blog/PostNavigation";
-import TableOfContents from "@/components/blog/TableOfContents";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { formatJournalDate, formatRelativeDate } from "@/lib/utils";
 
 type Params = {
   slug: string;
@@ -30,60 +23,52 @@ export const generateMetadata = async ({
 }) => {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
-  if (!post) return { title: "Post not found" };
+  if (!post) return { title: "not found" };
 
-  return {
-    title: post.title,
-    description: post.excerpt,
-    openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      type: "article",
-      publishedTime: post.publishedAt,
-      tags: post.tags,
-    },
-  };
+  // Deliberately no OpenGraph block. The site is deindexed on purpose, and the
+  // old one here contradicted that (see the privacy posture in CLAUDE.md).
+  return { title: post.title, description: post.excerpt };
 };
 
+/**
+ * One column, one entry.
+ *
+ * This page used to wrap a short post in a table of contents rendered twice
+ * (mobile and desktop), prev/next navigation, a reading-time estimate and a
+ * hero image slot. Entries here are a few hundred words — none of that earned
+ * its place.
+ */
 const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
   const { slug } = await params;
-  const [post, adjacent] = await Promise.all([
-    getPostBySlug(slug),
-    getAdjacentPosts(slug),
-  ]);
+  const post = await getPostBySlug(slug);
   if (!post) return notFound();
 
-  const headings = extractHeadings(post.content);
-
   return (
-    <ErrorBoundary>
-      <article className="relative z-10 mx-auto flex max-w-5xl flex-col gap-10 px-6 py-12 md:px-10 md:py-20 lg:py-24">
-        <PostHeader post={post} />
+    <article className="relative z-10 mx-auto flex max-w-2xl flex-col gap-10 px-6 py-12 md:px-8 md:py-20">
+      <header className="flex flex-col gap-6">
+        <Link
+          href="/journal"
+          className="group inline-flex w-fit items-center gap-2 text-xs lowercase tracking-[0.15em] text-foreground/70 transition-colors hover:text-primary"
+        >
+          <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
+          <span>journal</span>
+        </Link>
 
-        {post.hero && (
-          <PostHero src={post.hero} alt={post.title} priority />
-        )}
+        <h1 className="font-display text-4xl lowercase leading-[0.95] tracking-tight text-foreground md:text-6xl display-balance">
+          {post.title}
+        </h1>
 
-        {headings.length > 0 && (
-          <div className="lg:hidden">
-            <TableOfContents items={headings} mobile />
-          </div>
-        )}
+        <time
+          dateTime={post.publishedAt}
+          title={formatJournalDate(post.publishedAt)}
+          className="font-mono text-[11px] lowercase tracking-[0.15em] text-foreground/70"
+        >
+          {formatRelativeDate(post.publishedAt).toLowerCase()}
+        </time>
+      </header>
 
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_220px] lg:gap-16">
-          <div className="min-w-0">
-            <MarkdownRenderer content={post.content} />
-          </div>
-          {headings.length > 0 && (
-            <aside className="hidden lg:block">
-              <TableOfContents items={headings} />
-            </aside>
-          )}
-        </div>
-
-        <PostNavigation newer={adjacent.newer} older={adjacent.older} />
-      </article>
-    </ErrorBoundary>
+      <MarkdownRenderer content={post.content} />
+    </article>
   );
 };
 
