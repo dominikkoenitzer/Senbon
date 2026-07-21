@@ -148,11 +148,11 @@ it feeling warm rather than merely bright:
   background (`/40` measured 2.26:1). Only `aria-hidden` ornaments may go lower.
   Build hierarchy with size and weight instead of fading text out.
 - Headlines use `font-display` (Playfair Display).
-- Kicker labels use the `.kicker` utility (mono, uppercase, wide tracking, gold).
+- Kicker labels use the `.kicker` utility (mono, uppercase, `0.2em` tracking, clay, full opacity). It was 0.35em metallic gold at 85% — that read like a luxury advert and failed contrast at 3.42:1.
 - Apply `display-balance` (`text-wrap: balance`) on display headlines, `read-prose` (`text-wrap: pretty`) on body paragraphs.
 
 ### Components
-- New shadcn components go in `src/components/ui/`. Install via `npx shadcn@latest add <name>`.
+- There are currently **no shadcn primitives** — all nine were installed but never imported, so they and their five Radix dependencies were removed. `components.json` remains, so `npx shadcn@latest add <name>` still works and will recreate `src/components/ui/`. Only add one when something actually uses it.
 - For markdown overrides, edit the matching file in `src/components/blog/markdown/`.
 - For loading UI, use the streaming `loading.tsx` convention. Skeletons live in `src/components/blog/LoadingStates.tsx`.
 
@@ -163,7 +163,7 @@ it feeling warm rather than merely bright:
 ### Background
 - The site has **one** ambient background layer: `<AtmosphereBackground />` in the root layout.
 - Do NOT add per-page background components, particle systems, or extra orb layers. The old `ConstellationBackground`, `MysticalBackground`, `FloatingElements`, and `ParticleBackground` have been deliberately deleted — do not resurrect them.
-- The atmosphere ribbons are SVG paths with two cycles inside `viewBox 0..600`, positioned `left: 0; width: 200%`, animated by a `-50%` translate. Loop math is in `globals.css` near `.atmosphere-ribbon`.
+- The atmosphere is **three layers**: `.atmosphere-base`, `.atmosphere-mesh`, `.atmosphere-grain`. It previously had eleven, including three SVG aurora ribbons and a two-wave river. That machinery produced most of the mysterious, watched feeling and cost a full-screen SVG plus several large blur filters. Warmth comes from colour, not moving parts — do not add layers back.
 
 ---
 
@@ -283,7 +283,7 @@ The site rebuilds on commit. Posts are sorted newest-first. Slug = filename with
 - Guestbook signing at `/guestbook` — instant, rate-limited, honeypot-protected.
 - Copy button on every code block (appears on hover).
 - Themed 404 + error boundaries (route segment + global).
-- Aurora + river flowing background (CSS + SVG, seamless loop math).
+- Warm ambient background (three CSS layers, no SVG).
 
 ---
 
@@ -303,7 +303,7 @@ The site rebuilds on commit. Posts are sorted newest-first. Slug = filename with
 - **`React.cache` wraps `getAllPosts`, `getPostBySlug`, `getAllPostSlugs`, `getAdjacentPosts`** so the metadata and page render call the same function once per request.
 - **`optimizePackageImports`** in `next.config.ts` covers `lucide-react`, `framer-motion`, `react-markdown`, `remark-gfm`, `rehype-highlight`, `date-fns`, `dayjs` — keeps bundle small even with deep barrel imports.
 - **`useSyncExternalStore`** is used in `CommandPalette` for SSR-safe dark-mode detection. Don't replace it with a `useEffect + setState` pattern — React 19's lint rule will scream and the hydration story breaks.
-- **The atmosphere loop relies on path geometry**, not crossfading. If you edit `AtmosphereBackground.tsx`, the path must have exactly 2 sine cycles inside its viewBox, and the wrapper must be `left: 0; width: 200%; transform: translateX(-50%)`. See the comment in `globals.css`.
+- **The atmosphere is intentionally minimal.** The old SVG ribbon/river system and its seamless-loop path geometry were deleted, not broken. If a background feels too static, adjust colour and the mesh drift — do not reintroduce moving layers.
 - **fonts** use explicit `display: "swap"` + a system fallback chain. Mono is `preload: false` (saves a request).
 
 ---
