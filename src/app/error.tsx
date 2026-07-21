@@ -17,36 +17,47 @@ export default function RouteError({
   }, [error]);
 
   return (
-    <div className="relative min-h-[70vh] flex items-center justify-center px-6">
-      <div className="zen-card max-w-lg w-full px-8 py-12 md:px-12 md:py-16 text-center bg-muted">
-        <p className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-primary/40 mb-6">
-          静寂が乱れた
-        </p>
-        <h1 className="font-display text-3xl md:text-4xl text-foreground mb-4">
-          A ripple passed through the garden.
+    <div className="relative flex min-h-[70vh] items-center justify-center px-6">
+      <div className="zen-card w-full max-w-lg bg-muted px-8 py-12 text-center md:px-12 md:py-16">
+        <p className="kicker mb-6">error — my fault</p>
+        <h1 className="font-display mb-5 text-3xl lowercase text-foreground display-balance md:text-4xl">
+          okay, that was not supposed to happen.
         </h1>
-        <p className="text-sm md:text-base text-foreground/70 leading-relaxed max-w-md mx-auto">
-          Something went wrong while loading this page. The stones can be set
-          back in place.
+        <p className="mx-auto max-w-md text-sm leading-relaxed text-foreground/85 read-prose md:text-base">
+          this page fell over on its way to you. hit the button — it works far
+          more often than something written by me deserves to. if it fails
+          twice, go read the journal instead and let me sulk about it privately.
         </p>
         {error.digest && (
-          <p className="mt-4 text-[10px] uppercase tracking-[0.3em] text-foreground/70">
-            ref · {error.digest}
-          </p>
+          <div className="mt-6 flex flex-col gap-1.5">
+            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-foreground/75">
+              ref · {error.digest}
+            </p>
+            <p className="text-xs leading-relaxed text-foreground/75 read-prose">
+              screenshot that bit if you&apos;re feeling generous. it means
+              nothing to you and everything to me.
+            </p>
+          </div>
         )}
-        <div className="mt-10 flex items-center justify-center gap-3">
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <button
             type="button"
             onClick={() => reset()}
-            className="rounded-full border border-primary/30 bg-primary/5 px-5 py-2 text-xs uppercase tracking-[0.25em] text-primary/80 transition-colors hover:text-primary hover:border-primary/60"
+            className="rounded-full border border-primary/30 bg-primary/5 px-5 py-2 text-xs uppercase tracking-[0.25em] text-primary transition-colors hover:border-primary/60 hover:bg-primary/10"
           >
-            Try again
+            try again
           </button>
           <Link
-            href="/"
-            className="rounded-full border border-border px-5 py-2 text-xs uppercase tracking-[0.25em] text-foreground/70 transition-colors hover:text-primary/80 hover:border-primary/30"
+            href="/journal"
+            className="rounded-full border border-border px-5 py-2 text-xs uppercase tracking-[0.25em] text-foreground/80 transition-colors hover:border-primary/30 hover:text-primary"
           >
-            Home
+            journal
+          </Link>
+          <Link
+            href="/"
+            className="rounded-full border border-border px-5 py-2 text-xs uppercase tracking-[0.25em] text-foreground/80 transition-colors hover:border-primary/30 hover:text-primary"
+          >
+            home
           </Link>
         </div>
       </div>

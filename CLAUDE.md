@@ -57,26 +57,15 @@ src/
         loading.tsx
     guestbook/
       page.tsx             # Guestbook wall + sign form (server)
-      actions.ts           # signGuestbook server action (validates, forwards to the API)
+      actions.ts             # signGuestbook + resolveAutoPublish server actions
+      admin/
+        page.tsx             # Moderation: login gate, auto-publish toggle, entries
+        actions.ts           # signIn, signOut, removeEntry, approveSignature, updateAutoApprove
   components/
-    AtmosphereBackground.tsx  # Single ambient layer (CSS + SVG ribbons)
-    BackToTop.tsx
-    CommandPalette.tsx        # ⌘K + / launcher
-    ReadingProgress.tsx       # Hairline at top of viewport
-    ScrollRestoration.tsx     # Per-pathname scroll memory
-    ErrorBoundary.tsx         # Class-based for nested boundaries
+    AtmosphereBackground.tsx  # Single ambient layer (three CSS layers, no SVG)
     blog/
-      BlogCard.tsx
-      JournalBrowser.tsx      # Client: search + tag filter + load more
-      JournalHero.tsx
       MarkdownRenderer.tsx
-      PostGrid.tsx
-      PostHeader.tsx
-      PostHero.tsx
-      PostNavigation.tsx      # Prev/next links at bottom of post
-      TableOfContents.tsx
-      LoadingStates.tsx
-      MysticalBackground.tsx  # (removed; do not re-add)
+      index.ts
       markdown/               # ReactMarkdown component overrides
         Heading.tsx           # H1-H4 with slug anchors
         Text.tsx              # P, Link (external ↗), Strong, Em, Hr, Blockquote
@@ -85,22 +74,23 @@ src/
         Media.tsx
         Table.tsx
         types.ts
-        utils.ts
+        utils.ts              # generateHeadingId
         index.ts
     guestbook/
       GuestbookForm.tsx       # Client: useActionState sign form + honeypot
       GuestbookWall.tsx       # Server: renders approved signatures
-    ui/                       # shadcn primitives
+      AdminLogin.tsx          # Client: password form
+      AutoApproveToggle.tsx   # Client: auto-publish switch (useOptimistic)
+      EntryRow.tsx            # Client: one signature + approve / two-step delete
   constants/
-    blog.ts                   # BLOG_CONFIG, ANIMATION_CONFIG, TOC_CONFIG
+    blog.ts                   # BLOG_CONFIG
     guestbook.ts              # GUESTBOOK_CONFIG (length caps, honeypot field name)
   hooks/
-    useIntersectionObserver.ts  # TOC scroll-spy
     useSmoothScroll.ts          # ID-targeted scroll with reduced-motion respect
   lib/
     blog.ts                   # getAllPosts, getPostBySlug, getAdjacentPosts (all React.cache wrapped)
     guestbook.ts              # getGuestbookEntries (React.cache) + API config helpers
-    toc.ts                    # Markdown heading extractor (dedups, skips fences)
+    guestbook-admin.ts        # Server-only moderation client + HMAC session cookie
     utils.ts                  # cn() + formatJournalDate + formatRelativeDate
   types/
     blog.ts                   # JournalPost, BlogCardProps, etc.
