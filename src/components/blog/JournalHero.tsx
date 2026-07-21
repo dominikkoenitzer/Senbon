@@ -10,7 +10,7 @@ const JournalHero = ({ count }: Props) => {
     <section className="flex flex-col gap-10 md:gap-14">
       <Link
         href="/"
-        className="group inline-flex w-fit items-center gap-2 text-xs uppercase tracking-[0.3em] text-foreground/45 transition-colors hover:text-primary"
+        className="group inline-flex w-fit items-center gap-2 text-xs uppercase tracking-[0.3em] text-foreground/70 transition-colors hover:text-primary"
       >
         <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
         <span>Back</span>
@@ -31,7 +31,7 @@ const JournalHero = ({ count }: Props) => {
             Field notes on building, breaking, and reassembling. Each entry is
             a git commit — a single, small thing kept on purpose.
           </p>
-          <div className="flex items-center gap-4 text-xs uppercase tracking-[0.3em] text-foreground/45 md:justify-end">
+          <div className="flex items-center gap-4 text-xs uppercase tracking-[0.3em] text-foreground/70 md:justify-end">
             <span>{count} {count === 1 ? "entry" : "entries"}</span>
             <span className="h-3 w-px bg-foreground/15" aria-hidden="true" />
             <span>updated · {new Date().getFullYear()}</span>

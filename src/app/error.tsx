@@ -18,19 +18,19 @@ export default function RouteError({
 
   return (
     <div className="relative min-h-[70vh] flex items-center justify-center px-6">
-      <div className="zen-card max-w-lg w-full px-8 py-12 md:px-12 md:py-16 text-center backdrop-blur-sm bg-black/20">
-        <p className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-zen-gold/40 mb-6">
+      <div className="zen-card max-w-lg w-full px-8 py-12 md:px-12 md:py-16 text-center bg-muted">
+        <p className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-primary/40 mb-6">
           静寂が乱れた
         </p>
-        <h1 className="font-display text-3xl md:text-4xl text-zen-mist mb-4">
+        <h1 className="font-display text-3xl md:text-4xl text-foreground mb-4">
           A ripple passed through the garden.
         </h1>
-        <p className="text-sm md:text-base text-zen-mist/60 leading-relaxed max-w-md mx-auto">
+        <p className="text-sm md:text-base text-foreground/70 leading-relaxed max-w-md mx-auto">
           Something went wrong while loading this page. The stones can be set
           back in place.
         </p>
         {error.digest && (
-          <p className="mt-4 text-[10px] uppercase tracking-[0.3em] text-zen-mist/30">
+          <p className="mt-4 text-[10px] uppercase tracking-[0.3em] text-foreground/70">
             ref · {error.digest}
           </p>
         )}
@@ -38,13 +38,13 @@ export default function RouteError({
           <button
             type="button"
             onClick={() => reset()}
-            className="rounded-full border border-zen-gold/30 bg-zen-gold/5 px-5 py-2 text-xs uppercase tracking-[0.25em] text-zen-gold/80 transition-colors hover:text-zen-gold hover:border-zen-gold/60"
+            className="rounded-full border border-primary/30 bg-primary/5 px-5 py-2 text-xs uppercase tracking-[0.25em] text-primary/80 transition-colors hover:text-primary hover:border-primary/60"
           >
             Try again
           </button>
           <Link
             href="/"
-            className="rounded-full border border-white/10 px-5 py-2 text-xs uppercase tracking-[0.25em] text-zen-mist/70 transition-colors hover:text-zen-gold/80 hover:border-zen-gold/30"
+            className="rounded-full border border-border px-5 py-2 text-xs uppercase tracking-[0.25em] text-foreground/70 transition-colors hover:text-primary/80 hover:border-primary/30"
           >
             Home
           </Link>
