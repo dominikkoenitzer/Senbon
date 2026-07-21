@@ -32,14 +32,17 @@ const JournalPage = async () => {
         <h1 className="font-display text-6xl lowercase leading-[0.85] tracking-tight text-foreground md:text-8xl display-balance">
           journal
         </h1>
-        <p className="max-w-md text-lg leading-relaxed text-foreground/80 read-prose">
-          things i actually thought. no lore, no filler.
+        <p className="max-w-md text-lg leading-relaxed text-foreground/85 read-prose">
+          things i actually thought, typed while i still meant them. no lore, no
+          filler, no reading-time estimate — you have eyes, you can see how long
+          it is.
         </p>
       </header>
 
       {posts.length === 0 ? (
-        <p className="text-lg text-foreground/70">
-          nothing here yet. give me a minute.
+        <p className="text-lg leading-relaxed text-foreground/80 read-prose">
+          empty. i had thoughts this week and they were all bad, so you&apos;re
+          welcome. come back later.
         </p>
       ) : (
         <ul className="flex flex-col gap-3">
@@ -56,11 +59,13 @@ const JournalPage = async () => {
                 >
                   {formatRelativeDate(post.publishedAt).toLowerCase()}
                 </time>
-                <h2 className="font-display text-2xl lowercase leading-tight tracking-tight text-foreground transition-colors group-hover:text-primary md:text-3xl">
+                {/* Title and excerpt are author-supplied frontmatter, so a
+                    single unbroken string could otherwise widen the card. */}
+                <h2 className="overflow-wrap-anywhere font-display text-2xl lowercase leading-tight tracking-tight text-foreground transition-colors group-hover:text-primary md:text-3xl">
                   {post.title}
                 </h2>
                 {post.excerpt && (
-                  <p className="text-base leading-relaxed text-foreground/75 read-prose">
+                  <p className="overflow-wrap-anywhere text-base leading-relaxed text-foreground/75 read-prose">
                     {post.excerpt}
                   </p>
                 )}
