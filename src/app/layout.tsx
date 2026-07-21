@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display, Space_Grotesk } from "next/font/google";
+import { Fraunces, Nunito, Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import AtmosphereBackground from "@/components/AtmosphereBackground";
 import ScrollRestoration from "@/components/ScrollRestoration";
@@ -8,19 +8,26 @@ import ReadingProgress from "@/components/ReadingProgress";
 import BackToTop from "@/components/BackToTop";
 import "./globals.css";
 
-const heading = Playfair_Display({
+/**
+ * Fraunces over Playfair Display. Playfair is a literary-quarterly serif — it
+ * made every headline read as solemn, which fought the voice. Fraunces is a
+ * soft serif with SOFT and WONK axes: it still looks expensive, but it has a
+ * grin in it. Set the axes in `.font-display` in globals.css.
+ */
+const heading = Fraunces({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   variable: "--font-heading",
   display: "swap",
+  axes: ["SOFT", "WONK", "opsz"],
   fallback: ["Georgia", "Cambria", "Times New Roman", "serif"],
   preload: true,
 });
 
-const body = Inter({
+/** Nunito over Inter: rounded terminals, noticeably friendlier at body size. */
+const body = Nunito({
   subsets: ["latin"],
   variable: "--font-body",
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
   fallback: [
     "-apple-system",
