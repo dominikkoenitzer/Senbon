@@ -46,7 +46,7 @@ const AdminPage = async () => {
         {signedIn && (
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div className="flex flex-col gap-3">
-              <p className="kicker">Moderation · 管理</p>
+              <p className="kicker">moderation</p>
               <h1 className="font-display text-4xl tracking-tight text-foreground md:text-5xl display-balance">
                 Tend the wall
               </h1>
