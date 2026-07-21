@@ -85,7 +85,7 @@ export const signGuestbook = async (
 
     return {
       status: "success",
-      message: "Signed. Your mark will appear on the wall once approved.",
+      message: "Signed. Your mark is on the wall.",
     };
   } catch (error) {
     console.error("[guestbook] sign threw:", error);
