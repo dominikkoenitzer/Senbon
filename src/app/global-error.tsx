@@ -44,7 +44,7 @@ export default function GlobalError({
             style={{
               fontSize: "0.7rem",
               letterSpacing: "0.2em",
-              textTransform: "uppercase",
+              textTransform: "lowercase",
               color: "#b4593a",
               marginBottom: "1.5rem",
             }}
@@ -78,7 +78,7 @@ export default function GlobalError({
               style={{
                 fontSize: "0.7rem",
                 letterSpacing: "0.3em",
-                textTransform: "uppercase",
+                textTransform: "lowercase",
                 color: "rgba(59,46,36,0.78)",
                 marginBottom: "1.5rem",
               }}
@@ -105,7 +105,7 @@ export default function GlobalError({
                 color: "#b4593a",
                 fontSize: "0.75rem",
                 letterSpacing: "0.25em",
-                textTransform: "uppercase",
+                textTransform: "lowercase",
                 cursor: "pointer",
               }}
             >
@@ -123,7 +123,7 @@ export default function GlobalError({
                 color: "rgba(59,46,36,0.85)",
                 fontSize: "0.75rem",
                 letterSpacing: "0.25em",
-                textTransform: "uppercase",
+                textTransform: "lowercase",
                 textDecoration: "none",
               }}
             >

@@ -1,3 +1,20 @@
+// Poison pill: this module must never reach a client bundle. API_TOKEN is a
+// write-capable secret.
+//
+// Unlike guestbook-admin, nothing else here enforced that. This module imports
+// only react/cache, a type and a constant — no next/headers, no node:crypto —
+// so a "use client" file importing it compiled clean, and the failure surfaced
+// only at runtime, in the worst possible shape: Next blanks non-NEXT_PUBLIC_
+// env vars in the browser, so the token is *not* inlined (verified against the
+// built chunks), it is simply undefined. guestbookAuthHeader() would send
+// "Bearer undefined" and isGuestbookConfigured() would report false, making a
+// misplaced import look like a deploy with missing env vars.
+//
+// This turns that into a build error naming the cause. Next resolves the
+// specifier itself (bundler alias -> next/dist/compiled/server-only, plus a
+// declaration in next/types/global.d.ts), so it adds no dependency.
+import "server-only";
+
 import { cache } from "react";
 import type { GuestbookEntry } from "@/types/guestbook";
 import { GUESTBOOK_CONFIG } from "@/constants/guestbook";
