@@ -229,6 +229,12 @@ Key facts:
   width and bidi controls defeat the link filter and let a signature visually
   reorder itself on the page.
 - **Backups run daily** via `/etc/cron.d/senbon-guestbook-backup` on the VPS.
+- **Moderation lives at `/guestbook/admin`** — password login, then a delete
+  button per signature. `GUESTBOOK_ADMIN_TOKEN` is server-only and is never sent
+  to the browser; every moderation call is proxied through a server action. The
+  session cookie is an HMAC keyed by that token, so rotating the token
+  invalidates all sessions. `removeEntry` re-checks the session on every call —
+  do not rely on the page's conditional render alone.
 - **The VPS is shared with unrelated production projects.** Anything touching
   `/srv/caddy/Caddyfile` must back up, `caddy validate`, then `caddy reload` —
   never restart the container.
