@@ -43,7 +43,7 @@ const GuestbookForm = () => {
           htmlFor={nameId}
           className="text-xs uppercase tracking-[0.25em] text-foreground/70"
         >
-          your name
+          your name (required, obviously)
         </label>
         <input
           id={nameId}
@@ -58,7 +58,7 @@ const GuestbookForm = () => {
           readOnly={isPending}
           maxLength={GUESTBOOK_CONFIG.NAME_MAX}
           autoComplete="name"
-          placeholder="what should i call you?"
+          placeholder="what do i call you?"
           className="w-full rounded-md border border-foreground/10 bg-background/40 px-4 py-3 text-base text-foreground/90 outline-none transition-colors placeholder:text-foreground/70 focus-visible:border-primary/40"
         />
       </div>
@@ -79,17 +79,17 @@ const GuestbookForm = () => {
           onChange={(event) => setMessage(event.target.value)}
           readOnly={isPending}
           maxLength={GUESTBOOK_CONFIG.MESSAGE_MAX}
-          placeholder="say something. anything. go on."
+          placeholder="anything. literally anything. one letter. i'll take it."
           className="w-full resize-none rounded-md border border-foreground/10 bg-background/40 px-4 py-3 text-base leading-relaxed text-foreground/90 outline-none transition-colors placeholder:text-foreground/70 focus-visible:border-primary/40"
         />
         <span
           aria-hidden="true"
           className={cn(
-            "self-end font-mono text-[11px] tracking-wider",
-            remaining < 20 ? "text-primary/80" : "text-foreground/70",
+            "self-end font-mono text-[11px] lowercase tracking-wider",
+            remaining < 20 ? "text-primary" : "text-foreground/70",
           )}
         >
-          {remaining}
+          {remaining < 20 ? `${remaining} left. wrap it up.` : remaining}
         </span>
       </div>
 
@@ -122,7 +122,7 @@ const GuestbookForm = () => {
               aria-hidden="true"
             />
           )}
-          <span>{isPending ? "signing" : "sign it"}</span>
+          <span>{isPending ? "okay okay wait" : "sign it"}</span>
         </button>
 
         <p
@@ -137,7 +137,7 @@ const GuestbookForm = () => {
           )}
         >
           {state.status === "idle"
-            ? "goes up instantly. no approval, no vetting."
+            ? "goes up instantly. no approval, no vetting, no excuses left."
             : state.message}
         </p>
       </div>
