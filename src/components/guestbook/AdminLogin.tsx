@@ -16,9 +16,9 @@ const AdminLogin = () => {
       className="zen-card mx-auto flex w-full max-w-md flex-col gap-6 p-8 md:p-10"
     >
       <div className="flex flex-col gap-2">
-        <p className="kicker">Moderation · 管理</p>
+        <p className="kicker">moderation</p>
         <h2 className="font-display text-2xl tracking-tight text-foreground">
-          Sign in to tend the wall
+          sign in to tend the wall
         </h2>
       </div>
 
