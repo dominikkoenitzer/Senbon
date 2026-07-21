@@ -16,30 +16,37 @@ export const H1 = ({ className, children }: MarkdownHeadingProps) => (
   </h1>
 );
 
+/**
+ * H2 carries a permalink anchor. The anchor deliberately wraps only the `#`
+ * glyph, never `{children}`: an anchor spanning the whole heading makes accname
+ * resolution recurse into it and hand its `aria-label` back as the heading's own
+ * name, so every entry announced as "Link to Foo, heading level 2" and screen
+ * reader heading navigation read out a list of "Link to ..." strings.
+ *
+ * `aria-labelledby` then pins the heading's name to the text span, so the
+ * anchor's label cannot leak into it even as a suffix.
+ */
 export const H2 = ({ className, children }: MarkdownHeadingProps) => {
   const text = getTextContent(children);
   const id = generateHeadingId(text);
+  const textId = `${id}-text`;
   return (
     <h2
       id={id}
+      aria-labelledby={textId}
       className={cn(
-        "group mt-14 mb-5 scroll-m-20 font-display text-2xl font-medium leading-tight tracking-tight text-foreground md:text-[1.75rem]",
+        "group relative mt-14 mb-5 scroll-m-20 font-display text-2xl font-medium leading-tight tracking-tight text-foreground md:text-[1.75rem]",
         className
       )}
     >
       <a
         href={`#${id}`}
-        className="relative no-underline"
         aria-label={`Link to ${text}`}
+        className="absolute -left-6 top-1/2 -translate-y-1/2 no-underline text-primary/0 transition-colors group-hover:text-primary/70 focus-visible:text-primary/70"
       >
-        <span
-          aria-hidden="true"
-          className="absolute -left-6 top-1/2 -translate-y-1/2 text-primary/0 transition-colors group-hover:text-primary/60"
-        >
-          #
-        </span>
-        {children}
+        #
       </a>
+      <span id={textId}>{children}</span>
     </h2>
   );
 };

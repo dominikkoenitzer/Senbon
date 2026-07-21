@@ -4,10 +4,15 @@ import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { MarkdownComponentProps, MarkdownLinkProps } from "./types";
 
+/**
+ * `.overflow-wrap-anywhere` for the same reason the guestbook card needs it: a
+ * single unbroken string — a long URL pasted into an entry, a stack trace, a
+ * hash — otherwise escapes the column and stretches the page sideways.
+ */
 export const Paragraph = ({ className, children }: MarkdownComponentProps) => (
   <p
     className={cn(
-      "mb-6 text-[1.0625rem] leading-[1.8] text-foreground/85",
+      "overflow-wrap-anywhere mb-6 text-[1.0625rem] leading-[1.8] text-foreground/85",
       className
     )}
   >
@@ -23,7 +28,7 @@ export const Link = ({ className, children, href }: MarkdownLinkProps) => {
       target={isExternal ? "_blank" : undefined}
       rel={isExternal ? "noopener noreferrer" : undefined}
       className={cn(
-        "inline-flex items-baseline gap-0.5 text-primary underline decoration-primary/40 decoration-1 underline-offset-4 transition-colors hover:decoration-primary",
+        "overflow-wrap-anywhere inline-flex min-w-0 items-baseline gap-0.5 text-primary underline decoration-primary/40 decoration-1 underline-offset-4 transition-colors hover:decoration-primary",
         className
       )}
     >
