@@ -23,7 +23,7 @@ const JournalPage = async () => {
       <header className="flex flex-col gap-7">
         <Link
           href="/"
-          className="group inline-flex w-fit items-center gap-2 text-xs lowercase tracking-[0.15em] text-foreground/70 transition-colors hover:text-primary"
+          className="group inline-flex w-fit items-center gap-2 text-xs lowercase text-foreground/70 transition-colors hover:text-primary"
         >
           <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
           <span>back</span>
@@ -55,7 +55,7 @@ const JournalPage = async () => {
                 <time
                   dateTime={post.publishedAt}
                   title={formatJournalDate(post.publishedAt)}
-                  className="font-mono text-[11px] lowercase tracking-[0.15em] text-foreground/70"
+                  className="text-xs lowercase text-foreground/70"
                 >
                   {formatRelativeDate(post.publishedAt).toLowerCase()}
                 </time>

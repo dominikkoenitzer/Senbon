@@ -14,6 +14,9 @@ const heading = Fraunces({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
+  // Real italics, not a synthesised oblique: the kicker labels are set in
+  // Fraunces italic and a faked slant on a high-SOFT serif looks broken.
+  style: ["normal", "italic"],
   axes: ["SOFT", "WONK", "opsz"],
   fallback: ["Georgia", "Cambria", "Times New Roman", "serif"],
   preload: true,
