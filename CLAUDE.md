@@ -192,8 +192,11 @@ Vercel (server action)  ──HTTPS+token──►  caddy-proxy  ──►  API 
 
 Key facts:
 
-- **Signatures are moderated.** New entries land as `pending` and are invisible
-  until approved. Flip `AUTO_APPROVE=true` in the VPS `.env` to publish instantly.
+- **Signatures publish instantly** (`AUTO_APPROVE=true` in the VPS `.env`). The
+  moderation queue still exists in the API — set `AUTO_APPROVE=false` and
+  `docker compose up -d` to hold new entries for approval again. With instant
+  publishing, the honeypot, rate limit, and link block are the only defenses,
+  so spam lands on the wall until deleted via `DELETE /admin/entries/:id`.
 - **The API hostname uses sslip.io**, so it needs **no DNS records** — `senbon.ch`
   DNS is untouched. Only Vercel's server ever calls it; it never appears in HTML.
 - **Length caps live in two places** — `src/constants/guestbook.ts` and the API's
@@ -246,7 +249,7 @@ The site rebuilds on commit. Posts are sorted newest-first. Slug = filename with
 - Relative time on cards ("3 weeks ago"), absolute date on hover.
 - External link arrows (↗) on links in markdown.
 - Skip-to-content link for keyboard users.
-- Guestbook signing at `/guestbook` — moderated, rate-limited, honeypot-protected.
+- Guestbook signing at `/guestbook` — instant, rate-limited, honeypot-protected.
 - Copy button on every code block (appears on hover).
 - Themed 404 + error boundaries (route segment + global).
 - Aurora + river flowing background (CSS + SVG, seamless loop math).
