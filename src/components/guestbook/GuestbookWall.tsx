@@ -7,9 +7,10 @@ const GuestbookWall = ({ entries }: GuestbookWallProps) => {
       <div className="zen-card flex flex-col items-center gap-4 p-10 text-center md:p-14">
         <p className="kicker">still nobody</p>
         <p className="max-w-md text-base leading-relaxed text-foreground/85 read-prose">
-          sign it. i keep refreshing this like the number changes on its own, it
-          does not, and you are the only person here. four words. i&apos;ll stop
-          asking after that. i won&apos;t.
+          sign it. i refresh this page like the number is going to change on its
+          own and it never does and you are the only person standing here. four
+          words. that&apos;s all i want. i&apos;m not going to beg for it.
+          <span className="text-primary"> ...please.</span>
         </p>
       </div>
     );
