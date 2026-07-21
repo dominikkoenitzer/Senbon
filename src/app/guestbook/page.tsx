@@ -1,12 +1,21 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import GuestbookForm from "@/components/guestbook/GuestbookForm";
+import GuestbookWall from "@/components/guestbook/GuestbookWall";
+import { getGuestbookEntries, isGuestbookConfigured } from "@/lib/guestbook";
 
 export const metadata = {
   title: "Guestbook",
   description: "The Senbon guestbook.",
 };
 
-const GuestbookPage = () => {
+// Signatures appear as soon as they are approved, so the wall is never cached.
+export const dynamic = "force-dynamic";
+
+const GuestbookPage = async () => {
+  const configured = isGuestbookConfigured();
+  const entries = configured ? await getGuestbookEntries() : [];
+
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-16 px-6 py-12 md:gap-20 md:px-10 md:py-20 lg:py-24">
       <header className="flex flex-col gap-10">
@@ -25,21 +34,29 @@ const GuestbookPage = () => {
             <span className="italic text-foreground/80"> the stone</span>.
           </h1>
           <p className="max-w-2xl text-base leading-relaxed text-foreground/70 read-prose md:text-lg">
-            A quiet wall for passing visitors to sign.
+            A quiet wall. Sign your name, leave a sentence — anything kind, or
+            anything true. New entries are held briefly, then bloom.
           </p>
         </div>
 
         <div className="zen-rule" />
       </header>
 
-      <div className="zen-card flex flex-col items-center gap-4 p-10 text-center md:p-14">
-        <p className="kicker">Resting · 休止中</p>
-        <p className="max-w-md text-base leading-relaxed text-foreground/65 read-prose">
-          The guestbook is not working right now — signing is temporarily
-          unavailable while the garden is re-tended. Please check back another
-          day.
-        </p>
-      </div>
+      {configured ? (
+        <>
+          <GuestbookForm />
+          <GuestbookWall entries={entries} />
+        </>
+      ) : (
+        <div className="zen-card flex flex-col items-center gap-4 p-10 text-center md:p-14">
+          <p className="kicker">Resting · 休止中</p>
+          <p className="max-w-md text-base leading-relaxed text-foreground/65 read-prose">
+            The guestbook is not working right now — signing is temporarily
+            unavailable while the garden is re-tended. Please check back another
+            day.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
