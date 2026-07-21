@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
-import "highlight.js/styles/atom-one-dark.css";
+import "highlight.js/styles/atom-one-light.css";
 import type { MarkdownRendererProps } from "@/types/blog";
 import {
   H1,
