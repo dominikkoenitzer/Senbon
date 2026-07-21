@@ -35,7 +35,7 @@ const GuestbookPage = async () => {
           </h1>
           <p className="max-w-2xl text-base leading-relaxed text-foreground/70 read-prose md:text-lg">
             A quiet wall. Sign your name, leave a sentence — anything kind, or
-            anything true. New entries are held briefly, then bloom.
+            anything true. Your mark appears the moment you leave it.
           </p>
         </div>
 

@@ -132,7 +132,7 @@ const GuestbookForm = () => {
           )}
         >
           {state.status === "idle"
-            ? "New signatures are read before they appear."
+            ? "Signatures appear on the wall right away."
             : state.message}
         </p>
       </div>

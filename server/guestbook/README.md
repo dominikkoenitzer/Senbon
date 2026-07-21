@@ -48,7 +48,10 @@ All routes require `Authorization: Bearer <token>`.
 
 ## Moderation
 
-`AUTO_APPROVE=false` means nothing appears publicly until approved.
+Currently **`AUTO_APPROVE=true`** — signatures publish the moment they are
+submitted, and the endpoints below are for cleaning up after the fact rather
+than for gating. Set `AUTO_APPROVE=false` and `docker compose up -d` to hold
+new entries as `pending` until approved.
 
 ```bash
 ssh v2202507290292366800.luckysrv.de
