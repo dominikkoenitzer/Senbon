@@ -123,12 +123,30 @@ server/
 - Use **`truncate`** shorthand, not `overflow-hidden text-ellipsis whitespace-nowrap`.
 
 ### Colors
-- Use **semantic tokens** (`bg-background`, `text-foreground`, `text-primary`, `border-foreground/10`) wherever possible.
-- The custom palette tokens (`zen-gold`, `zen-mist`, `zen-rose`, `zen-sage`) are defined in `tailwind.config.ts` and `globals.css`. Use them when the semantic name doesn't fit.
-- **Never** hardcode raw color literals (`#e6c281`, `rgba(...)`). Add a token if the design needs a new one.
+- Use **semantic tokens** (`bg-background`, `text-foreground`, `text-primary`, `border-border`) wherever possible.
+- The custom palette tokens (`zen-clay`, `zen-gold`, `zen-mist`, `zen-rose`, `zen-sage`) are defined in `tailwind.config.ts` and `globals.css`. Use them when the semantic name doesn't fit.
+- **Never** hardcode raw color literals (`#a54d30`, `rgba(...)`). Add a token if the design needs a new one.
+
+**The palette is warm and light by default.** It was redesigned away from a
+near-black-and-gold scheme that read as cold and mysterious. The rules that keep
+it feeling warm rather than merely bright:
+
+- **Pigment, not metal.** Terracotta `#a54d30`, honey, dusty rose, sage. Metallic
+  gold shimmer is what made the old version feel distant — don't reintroduce it.
+- **Warm neutrals only.** Grey neutrals drain the whole thing. Even the shadows
+  are brown (`--shadow-soft`, `--shadow-lift`); black shadows on cream read as grime.
+- **Soft shadows, not hairlines.** Cards lift off the page. A thin cold border is
+  the single fastest way to make this feel clinical again.
+- **No vignette.** Darkened edges are literally what "closed in" looks like. The
+  atmosphere lights from the top instead.
+- **Dark mode is evening, not night** — warm brown-black `#211a15`, never a
+  blue-black.
 
 ### Type & spacing
-- Body copy lives at **`text-foreground/80–85`** — don't push below `/45` without good reason.
+- Body copy lives at **`text-foreground/80–85`**. **`/70` is the hard floor** for
+  anything a person actually reads — below that it fails WCAG AA on the cream
+  background (`/40` measured 2.26:1). Only `aria-hidden` ornaments may go lower.
+  Build hierarchy with size and weight instead of fading text out.
 - Headlines use `font-display` (Playfair Display).
 - Kicker labels use the `.kicker` utility (mono, uppercase, wide tracking, gold).
 - Apply `display-balance` (`text-wrap: balance`) on display headlines, `read-prose` (`text-wrap: pretty`) on body paragraphs.

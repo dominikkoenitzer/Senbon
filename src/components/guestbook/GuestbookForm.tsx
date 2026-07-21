@@ -41,7 +41,7 @@ const GuestbookForm = () => {
       <div className="flex flex-col gap-2">
         <label
           htmlFor={nameId}
-          className="text-xs uppercase tracking-[0.25em] text-foreground/50"
+          className="text-xs uppercase tracking-[0.25em] text-foreground/70"
         >
           Name
         </label>
@@ -59,14 +59,14 @@ const GuestbookForm = () => {
           maxLength={GUESTBOOK_CONFIG.NAME_MAX}
           autoComplete="name"
           placeholder="How should the stone remember you?"
-          className="w-full rounded-md border border-foreground/10 bg-background/40 px-4 py-3 text-base text-foreground/90 outline-none transition-colors placeholder:text-foreground/30 focus-visible:border-primary/40"
+          className="w-full rounded-md border border-foreground/10 bg-background/40 px-4 py-3 text-base text-foreground/90 outline-none transition-colors placeholder:text-foreground/70 focus-visible:border-primary/40"
         />
       </div>
 
       <div className="flex flex-col gap-2">
         <label
           htmlFor={messageId}
-          className="text-xs uppercase tracking-[0.25em] text-foreground/50"
+          className="text-xs uppercase tracking-[0.25em] text-foreground/70"
         >
           Message
         </label>
@@ -80,13 +80,13 @@ const GuestbookForm = () => {
           readOnly={isPending}
           maxLength={GUESTBOOK_CONFIG.MESSAGE_MAX}
           placeholder="Anything kind, or anything true."
-          className="w-full resize-none rounded-md border border-foreground/10 bg-background/40 px-4 py-3 text-base leading-relaxed text-foreground/90 outline-none transition-colors placeholder:text-foreground/30 focus-visible:border-primary/40"
+          className="w-full resize-none rounded-md border border-foreground/10 bg-background/40 px-4 py-3 text-base leading-relaxed text-foreground/90 outline-none transition-colors placeholder:text-foreground/70 focus-visible:border-primary/40"
         />
         <span
           aria-hidden="true"
           className={cn(
             "self-end font-mono text-[11px] tracking-wider",
-            remaining < 20 ? "text-primary/80" : "text-foreground/35",
+            remaining < 20 ? "text-primary/80" : "text-foreground/70",
           )}
         >
           {remaining}
@@ -133,7 +133,7 @@ const GuestbookForm = () => {
             "text-sm leading-relaxed read-prose",
             state.status === "error" && "text-primary/90",
             state.status === "success" && "text-foreground/70",
-            state.status === "idle" && "text-foreground/40",
+            state.status === "idle" && "text-foreground/70",
           )}
         >
           {state.status === "idle"

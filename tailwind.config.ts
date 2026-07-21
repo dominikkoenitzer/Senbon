@@ -5,18 +5,22 @@ const config = {
   theme: {
     extend: {
       colors: {
-        background: "#0b0a08",
-        foreground: "#f4ede0",
+        // Kept in step with the CSS custom properties in globals.css. Prefer
+        // the semantic tokens (bg-background, text-primary) in components —
+        // these named shades exist for the few places a specific pigment is
+        // the point.
+        background: "#fbf5ec",
+        foreground: "#3b2e24",
         zen: {
-          mist: "#f4ede0",
-          moss: "#7a9989",
-          ember: "#d9a86b",
-          dusk: "#1a1410",
-          tide: "#2a201b",
-          bloom: "#c89993",
-          aurora: "#9fb3c4",
-          gold: "#e6c281",
-          ink: "#0b0a08",
+          mist: "#fbf5ec",
+          moss: "#7e9a7c",
+          ember: "#d9a05a",
+          dusk: "#3b2e24",
+          tide: "#574335",
+          bloom: "#d3937f",
+          clay: "#a54d30",
+          gold: "#c9873c",
+          ink: "#3b2e24",
         },
       },
       fontFamily: {

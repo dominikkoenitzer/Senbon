@@ -43,15 +43,15 @@ export class ErrorBoundary extends Component<
 
       return (
         <div className="zen-card px-6 md:px-10 py-12 md:py-20 text-center">
-          <h2 className="font-display text-xl md:text-2xl text-zen-mist mb-4">
+          <h2 className="font-display text-xl md:text-2xl text-foreground mb-4">
             Something went wrong
           </h2>
-          <p className="text-sm md:text-base text-zen-mist/60 mb-6">
+          <p className="text-sm md:text-base text-foreground/70 mb-6">
             {this.state.error?.message || "An unexpected error occurred"}
           </p>
           <button
             onClick={() => this.setState({ hasError: false, error: null })}
-            className="px-4 py-2 rounded-lg bg-zen-gold/10 border border-zen-gold/20 text-zen-gold hover:bg-zen-gold/20 transition-colors"
+            className="px-4 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors"
           >
             Try again
           </button>
@@ -68,10 +68,10 @@ export class ErrorBoundary extends Component<
  */
 export const BlogErrorFallback = ({ error }: { error?: string }) => (
   <div className="zen-card px-6 md:px-10 py-12 md:py-20 text-center">
-    <h2 className="font-display text-xl md:text-2xl text-zen-mist mb-4">
+    <h2 className="font-display text-xl md:text-2xl text-foreground mb-4">
       Unable to load post
     </h2>
-    <p className="text-sm md:text-base text-zen-mist/60">
+    <p className="text-sm md:text-base text-foreground/70">
       {error || "This post could not be loaded. Please try again later."}
     </p>
   </div>

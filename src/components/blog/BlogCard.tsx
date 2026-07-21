@@ -52,7 +52,7 @@ const BlogCard = memo<BlogCardProps>(({ post, index = 0, featured = false }) => 
           className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           style={{
             background:
-              "radial-gradient(circle at 30% 0%, rgba(230,194,129,0.10), transparent 60%)",
+              "radial-gradient(circle at 30% 0%, rgba(226,156,96,0.10), transparent 60%)",
           }}
         />
 
@@ -78,7 +78,7 @@ const BlogCard = memo<BlogCardProps>(({ post, index = 0, featured = false }) => 
             >
               {relativeDate}
             </time>
-            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/40">
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/70">
               {String(index + 1).padStart(2, "0")}
             </span>
           </div>
@@ -106,21 +106,21 @@ const BlogCard = memo<BlogCardProps>(({ post, index = 0, featured = false }) => 
                 <span
                   key={tag}
                   role="listitem"
-                  className="rounded-full border border-foreground/10 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.15em] text-foreground/55"
+                  className="rounded-full border border-foreground/10 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.15em] text-foreground/70"
                 >
                   {tag}
                 </span>
               ))}
               {remainingTagsCount > 0 && (
                 <span
-                  className="text-[10px] uppercase tracking-[0.15em] text-foreground/35"
+                  className="text-[10px] uppercase tracking-[0.15em] text-foreground/70"
                   aria-label={`${remainingTagsCount} more tags`}
                 >
                   +{remainingTagsCount}
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-foreground/45">
+            <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-foreground/70">
               <span aria-label={`${readingMinutes} minute read`}>
                 {readingMinutes} min
               </span>
