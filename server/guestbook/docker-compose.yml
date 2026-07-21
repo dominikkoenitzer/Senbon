@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: senbon-guestbook-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: senbon
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: senbon_guestbook
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - senbon_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U senbon -d senbon_guestbook"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./api
+    container_name: senbon-guestbook-api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://senbon:${DB_PASSWORD}@db:5432/senbon_guestbook
+      API_TOKEN: ${API_TOKEN}
+      ADMIN_TOKEN: ${ADMIN_TOKEN}
+      IP_HASH_SALT: ${IP_HASH_SALT}
+      AUTO_APPROVE: ${AUTO_APPROVE:-false}
+      RATE_LIMIT_SECONDS: ${RATE_LIMIT_SECONDS:-30}
+      PORT: 3000
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - senbon_net
+
+networks:
+  senbon_net:
+    name: senbon_net
+
+volumes:
+  db_data:
+    name: senbon_guestbook_db_data
