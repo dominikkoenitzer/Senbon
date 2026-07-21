@@ -52,6 +52,10 @@ const GuestbookForm = () => {
           required
           value={name}
           onChange={(event) => setName(event.target.value)}
+          // Kept read-only in flight: a success clears both fields, so edits
+          // made while the previous submission was still pending would be
+          // silently discarded.
+          readOnly={isPending}
           maxLength={GUESTBOOK_CONFIG.NAME_MAX}
           autoComplete="name"
           placeholder="How should the stone remember you?"
@@ -73,6 +77,7 @@ const GuestbookForm = () => {
           rows={4}
           value={message}
           onChange={(event) => setMessage(event.target.value)}
+          readOnly={isPending}
           maxLength={GUESTBOOK_CONFIG.MESSAGE_MAX}
           placeholder="Anything kind, or anything true."
           className="w-full resize-none rounded-md border border-foreground/10 bg-background/40 px-4 py-3 text-base leading-relaxed text-foreground/90 outline-none transition-colors placeholder:text-foreground/30 focus-visible:border-primary/40"
