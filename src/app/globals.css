@@ -32,14 +32,17 @@
 }
 
 :root {
-  --radius: 1.25rem;
+  --radius: 1.75rem;
 
   /*
-   * Warmth comes from pigment, not brightness. Everything sits in the 20-45deg
-   * earth range (clay, honey, terracotta) with a single sage counterpoint near
-   * 130deg so the warmth reads as deliberate rather than monotonous. Nothing
-   * here is metallic — gold shimmer photographs as cold and distant, which is
-   * what made the old palette feel ghostly.
+   * Warmth comes from pigment, not brightness. Rose-plum leads, with honey and
+   * blush around it and a single sage counterpoint near 130deg so the warmth
+   * reads as deliberate rather than monotonous. Nothing here is metallic — gold
+   * shimmer photographs cold and distant, which is what made the original
+   * palette feel ghostly.
+   *
+   * Blush tones (--accent) are DECORATIVE ONLY: they measure under 3:1 on the
+   * cream ground. Use them for glow, fills and borders, never for text.
    */
 
   /* Morning paper, not white */
@@ -52,12 +55,12 @@
   --popover: #fffdf9;
   --popover-foreground: #3b2e24;
 
-  /* Terracotta carries the emotional weight */
-  --primary: #a54d30;
+  /* Rose-plum carries the emotional weight */
+  --primary: #a8455c;
   --primary-foreground: #fffaf3;
   --secondary: #7e9a7c;
   --secondary-foreground: #2b2119;
-  --accent: #d3937f;
+  --accent: #e8a0b0;
   --accent-foreground: #3b2e24;
 
   /* Neutrals stay warm — grey neutrals would drain the whole thing */
@@ -67,14 +70,14 @@
   --destructive-foreground: #fffaf3;
   --border: rgba(140, 100, 70, 0.14);
   --input: rgba(140, 100, 70, 0.18);
-  --ring: rgba(165, 77, 48, 0.45);
+  --ring: rgba(168, 69, 92, 0.45);
 
   /* Brand accents - exposed for use in components */
   --zen-gold: #c9873c;
   --zen-gold-warm: #d9a05a;
-  --zen-rose: #d3937f;
+  --zen-rose: #e8a0b0;
   --zen-sage: #7e9a7c;
-  --zen-clay: #a54d30;
+  --zen-clay: #a8455c;
   --zen-mist: #fbf5ec;
   --zen-ink: #3b2e24;
   --zen-ink-warm: #574335;
@@ -98,7 +101,7 @@
   --card-foreground: #f3e7d8;
   --popover: #2b221b;
   --popover-foreground: #f3e7d8;
-  --primary: #e08a63;
+  --primary: #f0919f;
   --primary-foreground: #2b1a12;
   --secondary: #8fae8c;
   --secondary-foreground: #211a15;
@@ -110,13 +113,13 @@
   --destructive-foreground: #2b1a12;
   --border: rgba(243, 231, 216, 0.12);
   --input: rgba(243, 231, 216, 0.16);
-  --ring: rgba(224, 138, 99, 0.45);
+  --ring: rgba(240, 145, 159, 0.45);
 
   --zen-gold: #e0a85f;
   --zen-gold-warm: #e8bb7d;
   --zen-rose: #e0a892;
   --zen-sage: #8fae8c;
-  --zen-clay: #e08a63;
+  --zen-clay: #f0919f;
   --zen-ink: #f3e7d8;
   --zen-ink-warm: #d9c6ae;
 
@@ -165,7 +168,7 @@
     ),
     radial-gradient(
       ellipse 80% 60% at 100% 0%,
-      rgba(211, 147, 127, 0.24),
+      rgba(232, 160, 176, 0.28),
       transparent 60%
     ),
     radial-gradient(
@@ -213,7 +216,7 @@
     ),
     radial-gradient(
       circle at 60% 20%,
-      rgba(211, 147, 127, 0.14) 0%,
+      rgba(232, 160, 176, 0.16) 0%,
       transparent 35%
     );
   filter: blur(40px);
@@ -288,11 +291,11 @@
 .zen-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lift);
-  border-color: rgba(165, 77, 48, 0.25);
+  border-color: rgba(168, 69, 92, 0.28);
 }
 
 .dark .zen-card:hover {
-  border-color: rgba(224, 138, 99, 0.30);
+  border-color: rgba(240, 145, 159, 0.34);
 }
 
 /* No double-border ring */
@@ -308,6 +311,17 @@ code {
 }
 
 /* ---------- Editorial type helpers ---------- */
+
+/*
+ * Fraunces ships SOFT and WONK axes. Turned up, the serifs round off and a few
+ * letters tilt — it keeps looking expensive but stops looking solemn, which is
+ * the whole reason it replaced Playfair Display.
+ */
+.font-display {
+  font-variation-settings: "SOFT" 60, "WONK" 1, "opsz" 60;
+  letter-spacing: -0.015em;
+}
+
 
 /*
  * Was 0.35em gold — wide metallic tracking reads as a luxury watch advert.
@@ -337,8 +351,8 @@ code {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(165, 77, 48, 0.30) 30%,
-    rgba(165, 77, 48, 0.30) 70%,
+    rgba(168, 69, 92, 0.32) 30%,
+    rgba(168, 69, 92, 0.32) 70%,
     transparent
   );
 }
@@ -347,8 +361,8 @@ code {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(224, 138, 99, 0.32) 30%,
-    rgba(224, 138, 99, 0.32) 70%,
+    rgba(240, 145, 159, 0.34) 30%,
+    rgba(240, 145, 159, 0.34) 70%,
     transparent
   );
 }
