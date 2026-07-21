@@ -20,7 +20,7 @@ const JournalPage = async () => {
         <div className="zen-card flex flex-col items-center gap-3 px-8 py-16 text-center md:px-12 md:py-24">
           <p className="kicker">Empty plot</p>
           <p className="text-lg text-foreground/70">No entries yet.</p>
-          <p className="max-w-sm text-sm text-foreground/50">
+          <p className="max-w-sm text-sm text-foreground/70">
             Add markdown files to{" "}
             <code className="rounded bg-foreground/5 px-2 py-1 font-mono text-xs text-primary/80">
               content/journal/

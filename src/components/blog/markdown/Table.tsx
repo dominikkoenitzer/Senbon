@@ -8,7 +8,7 @@ export const TableWrapper = ({ className, children }: MarkdownComponentProps) =>
   <div className="my-4 md:my-6 lg:my-8 overflow-x-auto -mx-2 md:mx-0">
     <table
       className={cn(
-        "w-full border-collapse border border-white/5 rounded-lg overflow-hidden backdrop-blur-sm text-xs md:text-sm lg:text-base",
+        "w-full border-collapse border border-border rounded-lg overflow-hidden text-xs md:text-sm lg:text-base",
         className
       )}
     >
@@ -32,7 +32,7 @@ export const Thead = ({ className, children }: MarkdownComponentProps) => (
 export const Th = ({ className, children }: MarkdownComponentProps) => (
   <th
     className={cn(
-      "border border-white/5 px-2 md:px-3 lg:px-4 py-2 md:py-3 text-left font-semibold text-zen-gold",
+      "border border-border px-2 md:px-3 lg:px-4 py-2 md:py-3 text-left font-semibold text-primary",
       className
     )}
   >
@@ -46,7 +46,7 @@ export const Th = ({ className, children }: MarkdownComponentProps) => (
 export const Td = ({ className, children }: MarkdownComponentProps) => (
   <td
     className={cn(
-      "border border-white/5 px-2 md:px-3 lg:px-4 py-2 md:py-3 text-zen-mist/95",
+      "border border-border px-2 md:px-3 lg:px-4 py-2 md:py-3 text-foreground/95",
       className
     )}
   >
