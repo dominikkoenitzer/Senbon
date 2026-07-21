@@ -30,12 +30,13 @@ const GuestbookPage = async () => {
         <div className="flex flex-col gap-6">
           <p className="kicker">guestbook</p>
           <h1 className="font-display text-5xl leading-[0.95] tracking-tight text-foreground sm:text-6xl md:text-7xl display-balance">
-            sign it.
-            <span className="italic text-foreground/80"> go on</span>.
+            just sign
+            <span className="italic text-primary"> it</span>.
           </h1>
           <p className="max-w-2xl text-base leading-relaxed text-foreground/70 read-prose md:text-lg">
-            no account, no email, no waiting around. type a name, say something,
-            it&apos;s live. i read every single one, which should worry you slightly.
+            no account. no email. no waiting. you type a name, you type a thing,
+            it goes up. nine seconds, tops. and yet people still just read and
+            leave. anyway. no pressure. (there is pressure.)
           </p>
         </div>
 
@@ -51,7 +52,8 @@ const GuestbookPage = async () => {
         <div className="zen-card flex flex-col items-center gap-4 p-10 text-center md:p-14">
           <p className="kicker">temporarily unavailable</p>
           <p className="max-w-md text-base leading-relaxed text-foreground/70 read-prose">
-            the guestbook is down. not paused, not resting — down. i&apos;m on it.
+            it&apos;s down. not &quot;paused&quot;, not &quot;resting&quot; — down. i know. i&apos;m on it.
+            stop looking at me.
           </p>
         </div>
       )}

@@ -5,9 +5,11 @@ const GuestbookWall = ({ entries }: GuestbookWallProps) => {
   if (entries.length === 0) {
     return (
       <div className="zen-card flex flex-col items-center gap-4 p-10 text-center md:p-14">
-        <p className="kicker">nothing yet</p>
+        <p className="kicker">zero. none. zilch</p>
         <p className="max-w-md text-base leading-relaxed text-foreground/70 read-prose">
-          nobody has signed this. embarrassing for me specifically. you could fix it.
+          not one person has signed this. not one. i&apos;m completely normal about
+          it. you could be the first, if you felt like it. no pressure.
+          (there is so much pressure.)
         </p>
       </div>
     );
@@ -16,7 +18,7 @@ const GuestbookWall = ({ entries }: GuestbookWallProps) => {
   return (
     <section className="flex flex-col gap-8" aria-label="Guestbook signatures">
       <div className="flex items-baseline justify-between gap-4">
-        <p className="kicker">signed</p>
+        <p className="kicker">look who showed up</p>
         <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-foreground/70">
           {entries.length}
         </span>
