@@ -81,9 +81,53 @@ To publish signatures instantly instead, set `AUTO_APPROVE=true` in
 - **Honeypot** — a hidden `website` field. Filled means bot; the server action
   reports success and writes nothing, so the bot gets no signal.
 - **Rate limit** — one signature per hashed IP per `RATE_LIMIT_SECONDS` (30).
-- **Link block** — messages containing URLs are rejected with `422`.
+  **Fails closed**: a request with no `x-visitor-ip` is not exempt, it falls into
+  a shared bucket. An earlier version skipped the limit entirely when the header
+  was missing, which allowed an unlimited write stream straight at the API.
+- **Link block** — rejects `http(s)://`, `www.`, `[url]`, `<a `, `href=`, bare
+  domains on a known TLD list, and the usual obfuscations (`spam[dot]com`,
+  `spam dot com`). Returns `422`.
+- **Invisible-character stripping** — `clean()` removes zero-width and
+  bidirectional control characters before validation. They defeat the link
+  filter (`http<ZWSP>s://…`) and let a signature visually reorder itself for
+  every other visitor.
 - **Length caps** — name 40, message 280. Mirrored in `src/constants/guestbook.ts`.
-- **Moderation** — the backstop for anything the above misses.
+- **Moderation** — available as a backstop, currently off (see below).
+
+The link filter is a heuristic and always will be — prose describing a domain
+will get through. Moderation is the only complete answer if that ever matters.
+
+---
+
+## Backups
+
+`/opt/scripts/backup-senbon-guestbook.sh`, run daily at 03:30 by
+`/etc/cron.d/senbon-guestbook-backup`. Dumps to
+`/opt/backups/senbon-guestbook/senbon-guestbook-<date>.sql.gz` and prunes
+anything older than 30 days.
+
+```bash
+# restore
+zcat /opt/backups/senbon-guestbook/senbon-guestbook-2026-07-21.sql.gz \
+  | docker exec -i senbon-guestbook-db psql -U senbon -d senbon_guestbook
+```
+
+Without this the docker volume was the single copy of every signature — the
+same "one failure and it's gone" shape that killed the previous guestbook.
+
+---
+
+## Hardening
+
+- Both containers have `mem_limit`, `cpus`, and `pids_limit` set, so a leak or
+  runaway query here cannot starve the six unrelated production stacks sharing
+  the host.
+- The API container runs as the unprivileged `node` user, not root.
+- Both services have healthchecks; Docker restarts the API if `/health` stops
+  answering.
+- Unhandled errors return a generic `{"error":"internal error"}` — raw Postgres
+  codes and messages used to reach the client.
+- Admin `:id` params are validated as positive integers before touching the DB.
 
 Visitor IPs are **never stored raw**. They arrive via the `x-visitor-ip` header
 (the request itself comes from Vercel, not the visitor) and are HMAC-hashed
