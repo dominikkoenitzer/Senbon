@@ -1,41 +1,43 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Lost in the garden",
+  title: "page not found",
 };
 
 export default function NotFound() {
   return (
-    <div className="relative min-h-[80vh] flex items-center justify-center px-6">
-      <div className="zen-card max-w-xl w-full px-8 py-12 md:px-12 md:py-16 text-center bg-muted">
-        <p className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-primary/40 mb-6">
-          404 — 迷子
-        </p>
-        <h1 className="font-display text-3xl md:text-5xl text-foreground mb-4">
-          A path that doesn&apos;t lead anywhere.
+    <div className="relative flex min-h-[80vh] items-center justify-center px-6">
+      <div className="zen-card w-full max-w-xl bg-muted px-8 py-12 text-center md:px-12 md:py-16">
+        <p className="kicker mb-6">404 — nothing here</p>
+        <h1 className="font-display mb-5 text-3xl lowercase text-foreground display-balance md:text-5xl">
+          this page does not exist. i checked.
         </h1>
-        <p className="text-sm md:text-base text-foreground/70 leading-relaxed max-w-md mx-auto">
-          The page you were looking for has drifted out of the garden. Take a
-          breath and return to a known stone.
+        <p className="mx-auto max-w-md text-sm leading-relaxed text-foreground/85 read-prose md:text-base">
+          either you typed it wrong or i deleted it and forgot, and i&apos;m not
+          telling you which. nothing lives at this url. one of us is embarrassed
+          and it isn&apos;t going to be me.
+        </p>
+        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-foreground/75 read-prose">
+          pick a door. all three of them work.
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/"
-            className="rounded-full border border-primary/30 bg-primary/5 px-5 py-2 text-xs uppercase tracking-[0.25em] text-primary/80 transition-colors hover:text-primary hover:border-primary/60"
+            className="rounded-full border border-primary/30 bg-primary/5 px-5 py-2 text-xs uppercase tracking-[0.25em] text-primary transition-colors hover:border-primary/60 hover:bg-primary/10"
           >
-            Home
+            home
           </Link>
           <Link
             href="/journal"
-            className="rounded-full border border-border px-5 py-2 text-xs uppercase tracking-[0.25em] text-foreground/70 transition-colors hover:text-primary/80 hover:border-primary/30"
+            className="rounded-full border border-border px-5 py-2 text-xs uppercase tracking-[0.25em] text-foreground/80 transition-colors hover:border-primary/30 hover:text-primary"
           >
-            Journal
+            journal
           </Link>
           <Link
             href="/guestbook"
-            className="rounded-full border border-border px-5 py-2 text-xs uppercase tracking-[0.25em] text-foreground/70 transition-colors hover:text-primary/80 hover:border-primary/30"
+            className="rounded-full border border-border px-5 py-2 text-xs uppercase tracking-[0.25em] text-foreground/80 transition-colors hover:border-primary/30 hover:text-primary"
           >
-            Guestbook
+            guestbook (please)
           </Link>
         </div>
       </div>

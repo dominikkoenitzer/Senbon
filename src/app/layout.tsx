@@ -45,10 +45,11 @@ const mono = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s • Senbon Garden",
-    default: "Senbon Garden Journal",
+    template: "%s • senbon",
+    default: "senbon — journal and guestbook",
   },
-  description: "A private digital garden.",
+  description:
+    "The personal journal and guestbook of Dominik Könitzer. Please sign it.",
   robots: {
     index: false,
     follow: false,
