@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
@@ -31,12 +30,7 @@ import {
 
 const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, ease: "easeOut" }}
-      className="read-prose max-w-[68ch] text-foreground/85"
-    >
+    <div className="fade-up read-prose max-w-[68ch] text-foreground/85">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
@@ -65,7 +59,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
       >
         {content}
       </ReactMarkdown>
-    </motion.div>
+    </div>
   );
 };
 

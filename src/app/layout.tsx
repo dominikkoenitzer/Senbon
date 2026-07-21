@@ -2,10 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Nunito, Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import AtmosphereBackground from "@/components/AtmosphereBackground";
-import ScrollRestoration from "@/components/ScrollRestoration";
-import CommandPalette from "@/components/CommandPalette";
-import ReadingProgress from "@/components/ReadingProgress";
-import BackToTop from "@/components/BackToTop";
 import "./globals.css";
 
 /**
@@ -102,13 +98,9 @@ export default function RootLayout({
           Skip to content
         </a>
         <AtmosphereBackground />
-        <ReadingProgress />
-        <ScrollRestoration />
         <main id="main-content" className="relative z-10">
           {children}
         </main>
-        <CommandPalette />
-        <BackToTop />
         <Analytics />
       </body>
     </html>

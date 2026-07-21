@@ -18,11 +18,9 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: [
       "lucide-react",
-      "framer-motion",
       "react-markdown",
       "remark-gfm",
       "rehype-highlight",
-      "date-fns",
       "dayjs",
     ],
   },
