@@ -66,8 +66,8 @@ const JournalBrowser = ({ posts }: Props) => {
     <section className="flex flex-col gap-12 md:gap-16">
       {/* Filter bar */}
       <div className="flex flex-col gap-5">
-        <div className="flex items-center gap-3 border-b border-white/10 pb-2">
-          <Search className="h-4 w-4 text-foreground/40" aria-hidden="true" />
+        <div className="flex items-center gap-3 border-b border-border pb-2">
+          <Search className="h-4 w-4 text-foreground/70" aria-hidden="true" />
           <label htmlFor="journal-search" className="sr-only">
             Search journal entries
           </label>
@@ -77,14 +77,14 @@ const JournalBrowser = ({ posts }: Props) => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search the garden…"
-            className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-foreground/35"
+            className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-foreground/70"
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery("")}
               aria-label="Clear search"
-              className="text-foreground/40 transition-colors hover:text-foreground"
+              className="text-foreground/70 transition-colors hover:text-foreground"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -99,7 +99,7 @@ const JournalBrowser = ({ posts }: Props) => {
               className={`rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.2em] transition-colors ${
                 activeTag === null
                   ? "border-primary/50 bg-primary/10 text-primary"
-                  : "border-foreground/10 text-foreground/55 hover:border-foreground/30 hover:text-foreground"
+                  : "border-foreground/10 text-foreground/70 hover:border-foreground/30 hover:text-foreground"
               }`}
             >
               All
@@ -114,10 +114,10 @@ const JournalBrowser = ({ posts }: Props) => {
                 className={`rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.2em] transition-colors ${
                   activeTag === tag
                     ? "border-primary/50 bg-primary/10 text-primary"
-                    : "border-foreground/10 text-foreground/55 hover:border-foreground/30 hover:text-foreground"
+                    : "border-foreground/10 text-foreground/70 hover:border-foreground/30 hover:text-foreground"
                 }`}
               >
-                {tag} <span className="text-foreground/35">{count}</span>
+                {tag} <span className="text-foreground/70">{count}</span>
               </button>
             ))}
           </div>
@@ -138,7 +138,7 @@ const JournalBrowser = ({ posts }: Props) => {
 
       {/* Result count when filtering */}
       {hasFilter && (
-        <p className="text-xs uppercase tracking-[0.3em] text-foreground/45">
+        <p className="text-xs uppercase tracking-[0.3em] text-foreground/70">
           {filtered.length === 0
             ? "No entries match"
             : `${filtered.length} ${filtered.length === 1 ? "entry" : "entries"}`}
@@ -149,7 +149,7 @@ const JournalBrowser = ({ posts }: Props) => {
       {rest.length === 0 && hasFilter ? (
         <div className="zen-card flex flex-col items-center gap-3 px-8 py-16 text-center">
           <p className="kicker">No match</p>
-          <p className="text-sm text-foreground/65">
+          <p className="text-sm text-foreground/70">
             Try a different search or clear the filter.
           </p>
         </div>

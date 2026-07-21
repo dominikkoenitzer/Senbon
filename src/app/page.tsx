@@ -74,12 +74,12 @@ export default function Home() {
               <span className="text-foreground">words on a stone</span>.
             </p>
 
-            <ul className="flex flex-col gap-2 text-sm text-foreground/55 md:items-end md:text-right">
+            <ul className="flex flex-col gap-2 text-sm text-foreground/70 md:items-end md:text-right">
               <li>
-                <span className="text-foreground/40">Stack —</span> Next.js · Tailwind · TypeScript
+                <span className="text-foreground/70">Stack —</span> Next.js · Tailwind · TypeScript
               </li>
               <li>
-                <span className="text-foreground/40">Shortcut —</span>{" "}
+                <span className="text-foreground/70">Shortcut —</span>{" "}
                 <kbd className="rounded border border-foreground/15 px-1.5 py-0.5 text-[10px] tracking-widest">
                   ⌘K
                 </kbd>{" "}
@@ -121,14 +121,14 @@ export default function Home() {
                   className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                   style={{
                     background:
-                      "radial-gradient(circle at 20% 0%, rgba(230,194,129,0.12), transparent 60%)",
+                      "radial-gradient(circle at 20% 0%, rgba(226,156,96,0.12), transparent 60%)",
                   }}
                 />
 
                 <div className="relative flex items-start justify-between">
                   <span className="kicker">{item.kicker}</span>
                   <ArrowUpRight
-                    className="h-4 w-4 text-foreground/40 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
+                    className="h-4 w-4 text-foreground/70 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
                     aria-hidden="true"
                   />
                 </div>
@@ -137,7 +137,7 @@ export default function Home() {
                   <h2 className="font-display text-3xl leading-tight text-foreground md:text-4xl">
                     {item.title}
                   </h2>
-                  <p className="max-w-md text-sm leading-relaxed text-foreground/65 md:text-base read-prose">
+                  <p className="max-w-md text-sm leading-relaxed text-foreground/70 md:text-base read-prose">
                     {item.description}
                   </p>
                 </div>
@@ -147,7 +147,7 @@ export default function Home() {
                     className="h-4 w-4 text-primary/70"
                     aria-hidden="true"
                   />
-                  <span className="text-xs uppercase tracking-[0.25em] text-foreground/45">
+                  <span className="text-xs uppercase tracking-[0.25em] text-foreground/70">
                     Enter
                   </span>
                 </div>
@@ -164,7 +164,7 @@ export default function Home() {
           className="mt-16 flex flex-col gap-6 md:mt-24"
         >
           <div className="zen-rule" />
-          <p className="text-center text-[11px] uppercase tracking-[0.4em] text-foreground/35">
+          <p className="text-center text-[11px] uppercase tracking-[0.4em] text-foreground/70">
             Tend the garden · 庭を整える
           </p>
         </motion.footer>

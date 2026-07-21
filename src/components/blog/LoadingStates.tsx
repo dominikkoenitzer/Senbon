@@ -4,7 +4,7 @@
 
 export const BlogCardSkeleton = () => (
   <div
-    className="zen-card h-80 animate-pulse rounded-xl bg-black/20"
+    className="zen-card h-80 animate-pulse rounded-xl bg-muted"
     aria-label="Loading post…"
   >
     <div className="flex flex-col gap-4 p-5 md:gap-6 md:p-8">

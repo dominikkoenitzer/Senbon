@@ -11,7 +11,7 @@ const PostGrid = memo<PostGridProps>(({ posts }) => {
   if (posts.length === 0) {
     return (
       <div className="zen-card px-6 md:px-10 py-12 md:py-20 text-center">
-        <p className="text-base md:text-lg text-zen-mist/60">No entries found.</p>
+        <p className="text-base md:text-lg text-foreground/70">No entries found.</p>
       </div>
     );
   }
