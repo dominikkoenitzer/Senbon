@@ -28,14 +28,14 @@ const GuestbookPage = async () => {
         </Link>
 
         <div className="flex flex-col gap-6">
-          <p className="kicker">Guestbook · 芳名帳</p>
+          <p className="kicker">guestbook</p>
           <h1 className="font-display text-5xl leading-[0.95] tracking-tight text-foreground sm:text-6xl md:text-7xl display-balance">
-            Leave a mark on
-            <span className="italic text-foreground/80"> the stone</span>.
+            sign it.
+            <span className="italic text-foreground/80"> go on</span>.
           </h1>
           <p className="max-w-2xl text-base leading-relaxed text-foreground/70 read-prose md:text-lg">
-            A quiet wall. Sign your name, leave a sentence — anything kind, or
-            anything true. Your mark appears the moment you leave it.
+            no account, no email, no waiting around. type a name, say something,
+            it&apos;s live. i read every single one, which should worry you slightly.
           </p>
         </div>
 
@@ -49,11 +49,9 @@ const GuestbookPage = async () => {
         </>
       ) : (
         <div className="zen-card flex flex-col items-center gap-4 p-10 text-center md:p-14">
-          <p className="kicker">Resting · 休止中</p>
+          <p className="kicker">temporarily unavailable</p>
           <p className="max-w-md text-base leading-relaxed text-foreground/70 read-prose">
-            The guestbook is not working right now — signing is temporarily
-            unavailable while the garden is re-tended. Please check back another
-            day.
+            the guestbook is down. not paused, not resting — down. i&apos;m on it.
           </p>
         </div>
       )}
