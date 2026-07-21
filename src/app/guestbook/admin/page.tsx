@@ -106,7 +106,7 @@ const AdminPage = async () => {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link
             href="/guestbook"
-            className="group inline-flex min-h-11 w-fit items-center gap-2 text-xs uppercase tracking-[0.2em] text-foreground/80 transition-colors hover:text-primary"
+            className="group inline-flex min-h-11 w-fit items-center gap-2 text-xs lowercase text-foreground/80 transition-colors hover:text-primary"
           >
             <ArrowLeft
               className="size-3.5 transition-transform group-hover:-translate-x-0.5"
@@ -120,7 +120,7 @@ const AdminPage = async () => {
               <button
                 type="submit"
                 aria-label="Sign out of guestbook moderation"
-                className="inline-flex min-h-11 items-center rounded-full border border-border px-5 text-xs uppercase tracking-[0.2em] text-foreground/80 transition-colors hover:border-primary/40 hover:text-primary"
+                className="inline-flex min-h-11 items-center rounded-full border border-border px-5 text-xs lowercase text-foreground/80 transition-colors hover:border-primary/40 hover:text-primary"
               >
                 sign out
               </button>
@@ -213,7 +213,7 @@ const AdminPage = async () => {
                     <h2 id="pending-heading" className="kicker">
                       waiting on you
                     </h2>
-                    <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">
+                    <span className="text-xs lowercase text-primary">
                       {pending.length}
                     </span>
                   </div>
@@ -233,7 +233,7 @@ const AdminPage = async () => {
                   <h2 id="published-heading" className="kicker">
                     already up
                   </h2>
-                  <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-foreground/80">
+                  <span className="text-xs lowercase text-foreground/80">
                     {published.length}
                   </span>
                 </div>

@@ -107,7 +107,7 @@ const EntryRow = ({ entry }: EntryRowProps) => {
         */}
         <span
           className={cn(
-            "inline-flex items-center rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em]",
+            "inline-flex items-center rounded-full border px-3 py-1 text-xs lowercase",
             awaitingReview
               ? "border-primary bg-primary text-primary-foreground"
               : "border-border text-foreground/80",
@@ -118,7 +118,7 @@ const EntryRow = ({ entry }: EntryRowProps) => {
 
         <time
           dateTime={entry.signedAt}
-          className="flex flex-wrap items-center gap-x-2 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/80"
+          className="flex flex-wrap items-center gap-x-2 text-xs lowercase text-foreground/80"
         >
           <span>{formatRelativeDate(entry.signedAt)}</span>
           <span aria-hidden="true">&middot;</span>
@@ -161,7 +161,7 @@ const EntryRow = ({ entry }: EntryRowProps) => {
                   ? `putting it up: approving the signature from ${entry.name}`
                   : `approve the signature from ${entry.name}`
               }
-              className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-primary/50 bg-primary/10 px-6 text-xs uppercase tracking-[0.15em] text-primary transition-colors hover:bg-primary/20 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+              className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-primary/50 bg-primary/10 px-6 text-xs lowercase text-primary transition-colors hover:bg-primary/20 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
               {isApproving ? (
                 <Loader2 className="size-4 animate-spin" aria-hidden="true" />
@@ -194,7 +194,7 @@ const EntryRow = ({ entry }: EntryRowProps) => {
                   : `delete the signature from ${entry.name}`
             }
             className={cn(
-              "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border px-6 text-xs uppercase tracking-[0.15em] transition-colors disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto",
+              "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border px-6 text-xs lowercase transition-colors disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto",
               armed
                 ? "border-destructive bg-destructive text-destructive-foreground"
                 : "border-destructive/40 text-destructive hover:bg-destructive/10",

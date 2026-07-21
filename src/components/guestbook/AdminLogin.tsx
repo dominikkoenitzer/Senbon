@@ -36,7 +36,7 @@ const AdminLogin = () => {
       <div className="flex flex-col gap-2">
         <label
           htmlFor={passwordId}
-          className="text-xs uppercase tracking-[0.2em] text-foreground/80"
+          className="text-xs lowercase text-foreground/80"
         >
           password
         </label>
@@ -55,7 +55,7 @@ const AdminLogin = () => {
       <button
         type="submit"
         disabled={isPending}
-        className="inline-flex min-h-11 w-full items-center justify-center gap-2.5 rounded-full border border-primary/40 px-6 text-xs uppercase tracking-[0.2em] text-primary transition-colors hover:border-primary/60 hover:bg-primary/10 disabled:cursor-not-allowed disabled:opacity-60 sm:w-fit"
+        className="inline-flex min-h-11 w-full items-center justify-center gap-2.5 rounded-full border border-primary/40 px-6 text-xs lowercase text-primary transition-colors hover:border-primary/60 hover:bg-primary/10 disabled:cursor-not-allowed disabled:opacity-60 sm:w-fit"
       >
         {isPending ? (
           <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />

@@ -21,7 +21,7 @@ const GuestbookWall = ({ entries }: GuestbookWallProps) => {
       <div className="flex flex-col gap-3">
         <div className="flex items-baseline justify-between gap-4">
           <p className="kicker">look who finally bothered</p>
-          <span className="shrink-0 font-mono text-[11px] uppercase tracking-[0.25em] text-foreground/80">
+          <span className="shrink-0 text-xs lowercase text-foreground/80">
             {entries.length}
           </span>
         </div>
@@ -47,7 +47,7 @@ const GuestbookWall = ({ entries }: GuestbookWallProps) => {
               <time
                 dateTime={entry.signedAt}
                 title={formatJournalDate(entry.signedAt)}
-                className="shrink-0 font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/70"
+                className="shrink-0 text-xs lowercase text-foreground/70"
               >
                 {formatRelativeDate(entry.signedAt)}
               </time>
