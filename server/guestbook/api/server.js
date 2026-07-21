@@ -30,6 +30,21 @@ const FETCH_LIMIT_MAX = 200;
 const SPACE = 32;
 const DEL = 127;
 
+const STATUSES = ["pending", "approved", "rejected"];
+
+/**
+ * Zero-width and bidirectional-control code points. They are invisible, so they
+ * are useless to an honest signer but let an attacker slip past the link filter
+ * ("http<ZWSP>s://...") or visually reorder a signature for every other visitor
+ * (a trojan-source style trick). Written as hex literals rather than string
+ * escapes so this file stays pure ASCII.
+ */
+const INVISIBLE_CODE_POINTS = new Set([
+  0x200b, 0x200c, 0x200d, 0x200e, 0x200f, 0x2060, 0xfeff,
+  0x202a, 0x202b, 0x202c, 0x202d, 0x202e,
+  0x2066, 0x2067, 0x2068, 0x2069,
+]);
+
 const pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 5 });
 
 const app = Fastify({ logger: true, bodyLimit: 16 * 1024 });
@@ -54,6 +69,20 @@ app.addContentTypeParser(
   },
 );
 
+/**
+ * Never let a raw driver error reach the client — a bad :id used to surface the
+ * Postgres error code and message verbatim. Log the real thing, return a
+ * generic one.
+ */
+app.setErrorHandler((error, request, reply) => {
+  const status = error.statusCode ?? 500;
+  if (status >= 500) {
+    request.log.error({ err: error }, "unhandled route error");
+    return reply.code(500).send({ error: "internal error" });
+  }
+  return reply.code(status).send({ error: error.message ?? "request failed" });
+});
+
 // --- helpers ---------------------------------------------------------------
 
 /** Constant-time compare that tolerates unequal lengths without throwing. */
@@ -75,30 +104,72 @@ const requireToken = (expected) => async (request, reply) => {
   }
 };
 
+const hmac = (value) =>
+  createHmac("sha256", IP_HASH_SALT).update(value).digest("hex");
+
 /**
  * Visitor IPs are hashed, never stored raw. The caller (the Next.js server
  * action) forwards the real client IP, since the request itself originates
  * from Vercel's infrastructure.
+ *
+ * A missing header must NOT disable rate limiting — that failed open and let an
+ * unlimited stream of signatures through. Callers without an IP share a single
+ * bucket instead, so they stay throttled.
  */
-const hashIp = (ip) =>
-  ip ? createHmac("sha256", IP_HASH_SALT).update(ip).digest("hex") : null;
+const UNKNOWN_IP_BUCKET = "unknown-visitor";
+
+const rateLimitKey = (request) => {
+  const forwarded = request.headers["x-visitor-ip"];
+  const ip = Array.isArray(forwarded) ? forwarded[0] : forwarded;
+  const trimmed = typeof ip === "string" ? ip.trim() : "";
+  return hmac(trimmed || UNKNOWN_IP_BUCKET);
+};
 
 /**
- * Drop control characters (they only ever arrive from bots or paste
- * accidents), then collapse whitespace runs.
+ * Drop control characters (bots and paste accidents) and invisible formatting
+ * characters (filter evasion and display spoofing), normalise compatibility
+ * forms, then collapse whitespace runs.
  */
 const clean = (value) => {
   if (typeof value !== "string") return "";
-  const printable = Array.from(value)
-    .map((char) => {
-      const code = char.charCodeAt(0);
-      return code < SPACE || code === DEL ? " " : char;
-    })
-    .join("");
-  return printable.replace(/\s+/g, " ").trim();
+  let out = "";
+  for (const char of value.normalize("NFKC")) {
+    const code = char.codePointAt(0);
+    if (INVISIBLE_CODE_POINTS.has(code)) continue;
+    out += code < SPACE || code === DEL ? " " : char;
+  }
+  return out.replace(/\s+/g, " ").trim();
 };
 
-const looksLikeSpam = (text) => /https?:\/\/|www\.|\[url|<a\s/i.test(text);
+/**
+ * Link detection: the obvious forms plus the obfuscations that trivially beat a
+ * bare protocol match — "spam[dot]com", "spam dot com", "spam (.) com".
+ *
+ * This is a heuristic and always will be; a determined spammer can describe a
+ * domain in prose. It runs on already-cleaned text, so zero-width evasion is
+ * handled upstream in clean().
+ */
+const TLDS =
+  "com|net|org|io|co|de|ch|ru|cn|xyz|top|info|biz|shop|club|online|site|live|link|app|dev|me|tv|cc|pw|casino|bet|loan|work|click|example";
+
+const SEPARATOR =
+  "\\s*(?:\\.|\\[\\s*dot\\s*\\]|\\(\\s*\\.?\\s*\\)|\\s+dot\\s+)\\s*";
+
+const LINK_PATTERNS = [
+  /https?:\s*\/\//i,
+  /www\s*\./i,
+  /\[url|<a\s|href\s*=/i,
+  new RegExp(`\\b[a-z0-9][a-z0-9-]*${SEPARATOR}(?:${TLDS})\\b`, "i"),
+];
+
+const looksLikeSpam = (text) => LINK_PATTERNS.some((pattern) => pattern.test(text));
+
+/** Reject anything that is not a positive integer before it reaches Postgres. */
+const parseId = (raw) => {
+  if (!/^\d+$/.test(String(raw))) return null;
+  const id = Number(raw);
+  return Number.isSafeInteger(id) && id > 0 ? id : null;
+};
 
 const serialize = (row) => ({
   id: String(row.id),
@@ -128,6 +199,16 @@ await pool.query(`
 await pool.query(`
   CREATE INDEX IF NOT EXISTS entries_ip_hash_created_idx
     ON entries (ip_hash, created_at DESC);
+`);
+
+// Defense in depth: nothing should ever write a status outside this set.
+await pool.query(
+  `ALTER TABLE entries DROP CONSTRAINT IF EXISTS entries_status_check;`,
+);
+await pool.query(`
+  ALTER TABLE entries
+    ADD CONSTRAINT entries_status_check
+    CHECK (status IN ('pending', 'approved', 'rejected'));
 `);
 
 // --- routes ----------------------------------------------------------------
@@ -181,9 +262,9 @@ app.post(
         .send({ error: "links are not allowed in the guestbook" });
     }
 
-    const ipHash = hashIp(request.headers["x-visitor-ip"]);
+    const ipHash = rateLimitKey(request);
 
-    if (ipHash && RATE_LIMIT_SECONDS > 0) {
+    if (RATE_LIMIT_SECONDS > 0) {
       const { rows } = await pool.query(
         `SELECT 1
            FROM entries
@@ -216,8 +297,25 @@ app.post(
 app.get(
   "/admin/entries",
   { preHandler: requireToken(ADMIN_TOKEN) },
-  async (request) => {
+  async (request, reply) => {
     const status = request.query?.status ?? "pending";
+
+    if (status === "all") {
+      const { rows } = await pool.query(
+        `SELECT id, name, message, created_at
+           FROM entries
+          ORDER BY created_at DESC
+          LIMIT 200`,
+      );
+      return { entries: rows.map(serialize) };
+    }
+
+    if (!STATUSES.includes(status)) {
+      return reply
+        .code(400)
+        .send({ error: `status must be one of: ${STATUSES.join(", ")}, all` });
+    }
+
     const { rows } = await pool.query(
       `SELECT id, name, message, created_at
          FROM entries
@@ -234,9 +332,12 @@ app.post(
   "/admin/entries/:id/approve",
   { preHandler: requireToken(ADMIN_TOKEN) },
   async (request, reply) => {
+    const id = parseId(request.params.id);
+    if (id === null) return reply.code(400).send({ error: "invalid id" });
+
     const { rowCount } = await pool.query(
       `UPDATE entries SET status = 'approved' WHERE id = $1`,
-      [request.params.id],
+      [id],
     );
     if (rowCount === 0) return reply.code(404).send({ error: "not found" });
     return { ok: true };
@@ -247,8 +348,11 @@ app.delete(
   "/admin/entries/:id",
   { preHandler: requireToken(ADMIN_TOKEN) },
   async (request, reply) => {
+    const id = parseId(request.params.id);
+    if (id === null) return reply.code(400).send({ error: "invalid id" });
+
     const { rowCount } = await pool.query(`DELETE FROM entries WHERE id = $1`, [
-      request.params.id,
+      id,
     ]);
     if (rowCount === 0) return reply.code(404).send({ error: "not found" });
     return { ok: true };

@@ -66,6 +66,7 @@ export const signGuestbook = async (
         "x-visitor-ip": await visitorIp(),
       },
       body: JSON.stringify({ name, message }),
+      signal: AbortSignal.timeout(GUESTBOOK_CONFIG.REQUEST_TIMEOUT_MS),
     });
 
     if (response.status === 429) {
