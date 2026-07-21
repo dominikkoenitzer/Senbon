@@ -1,6 +1,6 @@
 # Senbon Garden — CLAUDE.md
 
-A zen-garden-themed digital journal at **senbon.ch**, owned by Dominik Könitzer. (A guestbook page exists but signing is currently paused — it renders a static notice.)
+A zen-garden-themed digital journal at **senbon.ch**, owned by Dominik Könitzer. The guestbook is live, backed by a self-hosted API on Dominik's own VPS (see **Guestbook** below).
 
 This file is the load-bearing context for AI agents working on the codebase. Read it first, then act.
 
@@ -56,7 +56,8 @@ src/
         page.tsx           # Single entry (server)
         loading.tsx
     guestbook/
-      page.tsx             # Guestbook page — signing paused, renders a static notice
+      page.tsx             # Guestbook wall + sign form (server)
+      actions.ts           # signGuestbook server action (validates, forwards to the API)
   components/
     AtmosphereBackground.tsx  # Single ambient layer (CSS + SVG ribbons)
     BackToTop.tsx
@@ -86,19 +87,30 @@ src/
         types.ts
         utils.ts
         index.ts
+    guestbook/
+      GuestbookForm.tsx       # Client: useActionState sign form + honeypot
+      GuestbookWall.tsx       # Server: renders approved signatures
     ui/                       # shadcn primitives
   constants/
     blog.ts                   # BLOG_CONFIG, ANIMATION_CONFIG, TOC_CONFIG
+    guestbook.ts              # GUESTBOOK_CONFIG (length caps, honeypot field name)
   hooks/
     useIntersectionObserver.ts  # TOC scroll-spy
     useSmoothScroll.ts          # ID-targeted scroll with reduced-motion respect
   lib/
     blog.ts                   # getAllPosts, getPostBySlug, getAdjacentPosts (all React.cache wrapped)
+    guestbook.ts              # getGuestbookEntries (React.cache) + API config helpers
     toc.ts                    # Markdown heading extractor (dedups, skips fences)
     utils.ts                  # cn() + formatJournalDate + formatRelativeDate
   types/
     blog.ts                   # JournalPost, BlogCardProps, etc.
+    guestbook.ts              # GuestbookEntry, GuestbookFormState
     index.ts
+server/
+  guestbook/                  # Self-hosted guestbook API (deployed to the VPS)
+    docker-compose.yml        # Fastify API + Postgres 16, neither publishes a host port
+    README.md                 # Moderation commands, deploy steps, Caddy notes
+    api/server.js             # The whole API — routes, validation, rate limit, moderation
 ```
 
 ---
@@ -154,9 +166,47 @@ When adding new pages, **do not** add OG/Twitter metadata or canonical URLs. The
 
 ## Env vars
 
-See `env.example`. The only variable is:
+See `env.example`.
 
 - `NEXT_PUBLIC_SITE_URL` — canonical site URL
+- `GUESTBOOK_API_URL` — base URL of the self-hosted guestbook API
+- `GUESTBOOK_API_TOKEN` — bearer token for that API
+
+The two guestbook vars are **server-only**. Never give them a `NEXT_PUBLIC_`
+prefix — the token grants write access. If either is missing, `/guestbook`
+degrades to the old "paused" notice instead of erroring, which is why preview
+deployments without them still build fine.
+
+---
+
+## Guestbook
+
+Signing is backed by a **self-hosted API on Dominik's own VPS** — no third-party
+database, no managed service to lapse. Source lives in `server/guestbook/`;
+see its README for moderation commands and deploy steps.
+
+```
+Vercel (server action)  ──HTTPS+token──►  caddy-proxy  ──►  API  ──►  Postgres
+                                          (VPS, shared with his other projects)
+```
+
+Key facts:
+
+- **Signatures are moderated.** New entries land as `pending` and are invisible
+  until approved. Flip `AUTO_APPROVE=true` in the VPS `.env` to publish instantly.
+- **The API hostname uses sslip.io**, so it needs **no DNS records** — `senbon.ch`
+  DNS is untouched. Only Vercel's server ever calls it; it never appears in HTML.
+- **Length caps live in two places** — `src/constants/guestbook.ts` and the API's
+  `server.js`. Keep them in sync or the client counter will promise something the
+  server rejects.
+- **Visitor IPs are never stored raw.** The action forwards `x-visitor-ip`; the
+  API HMAC-hashes it before it reaches the database.
+- **The VPS is shared with unrelated production projects.** Anything touching
+  `/srv/caddy/Caddyfile` must back up, `caddy validate`, then `caddy reload` —
+  never restart the container.
+- **`GuestbookForm` adjusts state during render, not in an effect.** React 19's
+  `react-hooks/set-state-in-effect` rejects the effect version. Don't "fix" it
+  back into a `useEffect`.
 
 ---
 
@@ -196,6 +246,7 @@ The site rebuilds on commit. Posts are sorted newest-first. Slug = filename with
 - Relative time on cards ("3 weeks ago"), absolute date on hover.
 - External link arrows (↗) on links in markdown.
 - Skip-to-content link for keyboard users.
+- Guestbook signing at `/guestbook` — moderated, rate-limited, honeypot-protected.
 - Copy button on every code block (appears on hover).
 - Themed 404 + error boundaries (route segment + global).
 - Aurora + river flowing background (CSS + SVG, seamless loop math).
