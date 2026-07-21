@@ -29,9 +29,9 @@ const AtmosphereBackground = () => (
       >
         <defs>
           <linearGradient id="rg-gold" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(230,194,129,0)" />
-            <stop offset="50%" stopColor="rgba(230,194,129,0.85)" />
-            <stop offset="100%" stopColor="rgba(230,194,129,0)" />
+            <stop offset="0%" stopColor="rgba(226,156,96,0)" />
+            <stop offset="50%" stopColor="rgba(226,156,96,0.85)" />
+            <stop offset="100%" stopColor="rgba(226,156,96,0)" />
           </linearGradient>
         </defs>
         <path
@@ -48,9 +48,9 @@ const AtmosphereBackground = () => (
       >
         <defs>
           <linearGradient id="rg-rose" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(200,153,147,0)" />
-            <stop offset="50%" stopColor="rgba(200,153,147,0.7)" />
-            <stop offset="100%" stopColor="rgba(200,153,147,0)" />
+            <stop offset="0%" stopColor="rgba(211,147,127,0)" />
+            <stop offset="50%" stopColor="rgba(211,147,127,0.7)" />
+            <stop offset="100%" stopColor="rgba(211,147,127,0)" />
           </linearGradient>
         </defs>
         <path
@@ -67,9 +67,9 @@ const AtmosphereBackground = () => (
       >
         <defs>
           <linearGradient id="rg-sage" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(122,153,137,0)" />
-            <stop offset="50%" stopColor="rgba(122,153,137,0.65)" />
-            <stop offset="100%" stopColor="rgba(122,153,137,0)" />
+            <stop offset="0%" stopColor="rgba(126,154,124,0)" />
+            <stop offset="50%" stopColor="rgba(126,154,124,0.65)" />
+            <stop offset="100%" stopColor="rgba(126,154,124,0)" />
           </linearGradient>
         </defs>
         <path
@@ -89,8 +89,8 @@ const AtmosphereBackground = () => (
       >
         <defs>
           <linearGradient id="wave-back-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(217,168,107,0)" />
-            <stop offset="100%" stopColor="rgba(217,168,107,0.55)" />
+            <stop offset="0%" stopColor="rgba(226,156,96,0)" />
+            <stop offset="100%" stopColor="rgba(226,156,96,0.55)" />
           </linearGradient>
         </defs>
         <path
@@ -107,8 +107,8 @@ const AtmosphereBackground = () => (
       >
         <defs>
           <linearGradient id="wave-front-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(122,153,137,0)" />
-            <stop offset="100%" stopColor="rgba(122,153,137,0.6)" />
+            <stop offset="0%" stopColor="rgba(126,154,124,0)" />
+            <stop offset="100%" stopColor="rgba(126,154,124,0.6)" />
           </linearGradient>
         </defs>
         <path

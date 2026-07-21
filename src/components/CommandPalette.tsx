@@ -164,7 +164,7 @@ export default function CommandPalette() {
         type="button"
         onClick={openPalette}
         aria-label="Open command palette"
-        className="fixed bottom-5 left-5 z-50 inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-2 text-[11px] uppercase tracking-[0.25em] text-zen-mist/55 backdrop-blur-md transition-colors hover:text-zen-gold/80 hover:border-zen-gold/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zen-gold/60"
+        className="fixed bottom-5 left-5 z-50 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-2 text-[11px] uppercase tracking-[0.25em] text-foreground/70 transition-colors hover:text-primary/80 hover:border-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
       >
         <Search className="h-3.5 w-3.5" aria-hidden="true" />
         <span className="hidden sm:inline">{isMac ? "⌘K" : "Ctrl K"}</span>
@@ -180,27 +180,27 @@ export default function CommandPalette() {
       className="fixed inset-0 z-[70] flex items-start justify-center px-4 pt-[12vh]"
     >
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-md"
+        className="absolute inset-0 bg-foreground/25 backdrop-blur-sm"
         onClick={closePalette}
       />
-      <div className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-white/10 bg-[rgba(8,12,22,0.95)] shadow-[0_30px_80px_rgba(0,0,0,0.6)]">
-        <div className="flex items-center gap-3 border-b border-white/5 px-4 py-3">
-          <Search className="h-4 w-4 text-zen-gold/60" aria-hidden="true" />
+      <div className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-border bg-popover shadow-[var(--shadow-lift)]">
+        <div className="flex items-center gap-3 border-b border-border px-4 py-3">
+          <Search className="size-4 text-primary/70" aria-hidden="true" />
           <input
             ref={inputRef}
             value={query}
             onChange={onQueryChange}
             placeholder="Type a command or search…"
-            className="flex-1 bg-transparent text-sm text-zen-mist placeholder:text-zen-mist/35 outline-none"
+            className="flex-1 bg-transparent text-sm text-foreground placeholder:text-foreground/70 outline-none"
             aria-label="Command palette search"
           />
-          <kbd className="rounded border border-white/10 px-1.5 py-0.5 text-[10px] uppercase tracking-widest text-zen-mist/50">
+          <kbd className="rounded border border-border px-1.5 py-0.5 text-[10px] uppercase tracking-widest text-foreground/70">
             esc
           </kbd>
         </div>
         <div ref={listRef} className="max-h-[50vh] overflow-y-auto py-1">
           {filtered.length === 0 && (
-            <p className="px-4 py-6 text-center text-xs text-zen-mist/40">
+            <p className="px-4 py-6 text-center text-xs text-foreground/70">
               Nothing matches.
             </p>
           )}
@@ -215,13 +215,13 @@ export default function CommandPalette() {
               }}
               className={`relative flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-sm transition-colors ${
                 i === active
-                  ? "bg-zen-gold/15 text-zen-gold"
-                  : "text-zen-mist/80 hover:bg-white/[0.03]"
+                  ? "bg-primary/15 text-primary"
+                  : "text-foreground/80 hover:bg-muted"
               }`}
             >
               <span
                 aria-hidden="true"
-                className={`absolute inset-y-1 left-0 w-[3px] rounded-r-full bg-zen-gold transition-opacity ${
+                className={`absolute inset-y-1 left-0 w-[3px] rounded-r-full bg-primary transition-opacity ${
                   i === active ? "opacity-100" : "opacity-0"
                 }`}
               />
@@ -229,8 +229,8 @@ export default function CommandPalette() {
                 <span
                   className={`grid h-7 w-7 place-items-center rounded-md border transition-colors ${
                     i === active
-                      ? "border-zen-gold/60 bg-zen-gold/15 text-zen-gold"
-                      : "border-white/10 text-zen-mist/60"
+                      ? "border-primary/60 bg-primary/15 text-primary"
+                      : "border-border text-foreground/70"
                   }`}
                 >
                   {a.icon}
@@ -242,7 +242,7 @@ export default function CommandPalette() {
               {a.hint && (
                 <span
                   className={`text-[10px] uppercase tracking-[0.25em] ${
-                    i === active ? "text-zen-gold/70" : "text-zen-mist/35"
+                    i === active ? "text-primary/70" : "text-foreground/70"
                   }`}
                 >
                   {a.hint}
@@ -251,7 +251,7 @@ export default function CommandPalette() {
             </button>
           ))}
         </div>
-        <div className="flex items-center justify-between border-t border-white/5 px-4 py-2 text-[10px] uppercase tracking-[0.25em] text-zen-mist/35">
+        <div className="flex items-center justify-between border-t border-border px-4 py-2 text-[10px] uppercase tracking-[0.25em] text-foreground/70">
           <span>↑ ↓ to navigate</span>
           <span>↵ to select</span>
         </div>

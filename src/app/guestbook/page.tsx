@@ -21,7 +21,7 @@ const GuestbookPage = async () => {
       <header className="flex flex-col gap-10">
         <Link
           href="/"
-          className="group inline-flex w-fit items-center gap-2 text-xs uppercase tracking-[0.3em] text-foreground/45 transition-colors hover:text-primary"
+          className="group inline-flex w-fit items-center gap-2 text-xs uppercase tracking-[0.3em] text-foreground/70 transition-colors hover:text-primary"
         >
           <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
           <span>Back</span>
@@ -50,7 +50,7 @@ const GuestbookPage = async () => {
       ) : (
         <div className="zen-card flex flex-col items-center gap-4 p-10 text-center md:p-14">
           <p className="kicker">Resting · 休止中</p>
-          <p className="max-w-md text-base leading-relaxed text-foreground/65 read-prose">
+          <p className="max-w-md text-base leading-relaxed text-foreground/70 read-prose">
             The guestbook is not working right now — signing is temporarily
             unavailable while the garden is re-tended. Please check back another
             day.

@@ -32,63 +32,98 @@
 }
 
 :root {
-  --radius: 1rem;
+  --radius: 1.25rem;
 
-  /* Warm ink base */
-  --background: #0b0a08;
-  --foreground: #f4ede0;
+  /*
+   * Warmth comes from pigment, not brightness. Everything sits in the 20-45deg
+   * earth range (clay, honey, terracotta) with a single sage counterpoint near
+   * 130deg so the warmth reads as deliberate rather than monotonous. Nothing
+   * here is metallic — gold shimmer photographs as cold and distant, which is
+   * what made the old palette feel ghostly.
+   */
 
-  /* Surface */
-  --card: rgba(22, 19, 15, 0.78);
-  --card-foreground: #f4ede0;
-  --popover: rgba(16, 14, 11, 0.92);
-  --popover-foreground: #f4ede0;
+  /* Morning paper, not white */
+  --background: #fbf5ec;
+  --foreground: #3b2e24;
 
-  /* Accents */
-  --primary: #e6c281;
-  --primary-foreground: #1a1410;
-  --secondary: rgba(122, 153, 137, 0.55);
-  --secondary-foreground: #f4ede0;
-  --accent: rgba(200, 153, 147, 0.45);
-  --accent-foreground: #f4ede0;
+  /* Surfaces lift off the page with warm shadow, not hairlines */
+  --card: #fffdf9;
+  --card-foreground: #3b2e24;
+  --popover: #fffdf9;
+  --popover-foreground: #3b2e24;
 
-  /* Neutrals */
-  --muted: rgba(244, 237, 224, 0.06);
-  --muted-foreground: rgba(244, 237, 224, 0.72);
-  --destructive: #e87b6e;
-  --destructive-foreground: #1a1410;
-  --border: rgba(244, 237, 224, 0.08);
-  --input: rgba(244, 237, 224, 0.12);
-  --ring: rgba(230, 194, 129, 0.5);
+  /* Terracotta carries the emotional weight */
+  --primary: #a54d30;
+  --primary-foreground: #fffaf3;
+  --secondary: #7e9a7c;
+  --secondary-foreground: #2b2119;
+  --accent: #d3937f;
+  --accent-foreground: #3b2e24;
+
+  /* Neutrals stay warm — grey neutrals would drain the whole thing */
+  --muted: rgba(140, 100, 70, 0.07);
+  --muted-foreground: rgba(59, 46, 36, 0.72);
+  --destructive: #b23b32;
+  --destructive-foreground: #fffaf3;
+  --border: rgba(140, 100, 70, 0.14);
+  --input: rgba(140, 100, 70, 0.18);
+  --ring: rgba(165, 77, 48, 0.45);
 
   /* Brand accents - exposed for use in components */
-  --zen-gold: #e6c281;
-  --zen-gold-warm: #d9a86b;
-  --zen-rose: #c89993;
-  --zen-sage: #7a9989;
-  --zen-mist: #f4ede0;
-  --zen-ink: #1a1410;
-  --zen-ink-warm: #2a201b;
+  --zen-gold: #c9873c;
+  --zen-gold-warm: #d9a05a;
+  --zen-rose: #d3937f;
+  --zen-sage: #7e9a7c;
+  --zen-clay: #a54d30;
+  --zen-mist: #fbf5ec;
+  --zen-ink: #3b2e24;
+  --zen-ink-warm: #574335;
+
+  /* Shadows are brown, never black. Black on cream reads as grime. */
+  --shadow-soft: 0 2px 6px -2px rgba(120, 82, 55, 0.10),
+    0 12px 28px -12px rgba(120, 82, 55, 0.16);
+  --shadow-lift: 0 4px 10px -3px rgba(120, 82, 55, 0.14),
+    0 20px 44px -16px rgba(120, 82, 55, 0.22);
 }
 
+/*
+ * Evening, not night. The old dark mode was #07060a — a blue-black that read
+ * as cold and empty. This is a warm brown-black, lit like a room with a lamp
+ * on rather than a room with the lights off.
+ */
 .dark {
-  --background: #07060a;
-  --foreground: #f6efe2;
-  --card: rgba(22, 19, 15, 0.82);
-  --card-foreground: #f6efe2;
-  --popover: rgba(12, 10, 8, 0.94);
-  --popover-foreground: #f6efe2;
-  --primary: #e6c281;
-  --primary-foreground: #1a1410;
-  --muted: rgba(255, 255, 255, 0.04);
-  --muted-foreground: rgba(246, 239, 226, 0.7);
-  --accent: rgba(200, 153, 147, 0.4);
-  --accent-foreground: #f6efe2;
-  --destructive: #e87b6e;
-  --destructive-foreground: #1a1410;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.12);
-  --ring: rgba(230, 194, 129, 0.45);
+  --background: #211a15;
+  --foreground: #f3e7d8;
+  --card: #2b221b;
+  --card-foreground: #f3e7d8;
+  --popover: #2b221b;
+  --popover-foreground: #f3e7d8;
+  --primary: #e08a63;
+  --primary-foreground: #2b1a12;
+  --secondary: #8fae8c;
+  --secondary-foreground: #211a15;
+  --muted: rgba(243, 231, 216, 0.07);
+  --muted-foreground: rgba(243, 231, 216, 0.68);
+  --accent: #e0a892;
+  --accent-foreground: #211a15;
+  --destructive: #e0705f;
+  --destructive-foreground: #2b1a12;
+  --border: rgba(243, 231, 216, 0.12);
+  --input: rgba(243, 231, 216, 0.16);
+  --ring: rgba(224, 138, 99, 0.45);
+
+  --zen-gold: #e0a85f;
+  --zen-gold-warm: #e8bb7d;
+  --zen-rose: #e0a892;
+  --zen-sage: #8fae8c;
+  --zen-clay: #e08a63;
+  --zen-ink: #f3e7d8;
+  --zen-ink-warm: #d9c6ae;
+
+  --shadow-soft: 0 2px 6px -2px rgba(0, 0, 0, 0.34),
+    0 12px 28px -12px rgba(0, 0, 0, 0.44);
+  --shadow-lift: 0 4px 10px -3px rgba(0, 0, 0, 0.40),
+    0 20px 44px -16px rgba(0, 0, 0, 0.52);
 }
 
 @layer base {
@@ -97,8 +132,12 @@
   }
 
   html {
-    color-scheme: dark;
+    color-scheme: light;
     background-color: var(--background);
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   body {
@@ -121,20 +160,40 @@
   background:
     radial-gradient(
       ellipse 90% 70% at 15% -10%,
-      rgba(217, 168, 107, 0.18),
+      rgba(226, 156, 96, 0.30),
       transparent 55%
     ),
     radial-gradient(
       ellipse 80% 60% at 100% 0%,
-      rgba(200, 153, 147, 0.13),
+      rgba(211, 147, 127, 0.24),
       transparent 60%
     ),
     radial-gradient(
       ellipse 70% 60% at 50% 110%,
-      rgba(122, 153, 137, 0.18),
+      rgba(126, 154, 124, 0.16),
       transparent 60%
     ),
-    linear-gradient(180deg, #0a0807 0%, #0b0a08 40%, #0a0908 100%);
+    linear-gradient(180deg, #fdf8f1 0%, #fbf5ec 45%, #f7eee1 100%);
+}
+
+.dark .atmosphere-base {
+  background:
+    radial-gradient(
+      ellipse 90% 70% at 15% -10%,
+      rgba(224, 138, 99, 0.16),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 80% 60% at 100% 0%,
+      rgba(224, 168, 146, 0.12),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 70% 60% at 50% 110%,
+      rgba(143, 174, 140, 0.14),
+      transparent 60%
+    ),
+    linear-gradient(180deg, #251d17 0%, #211a15 45%, #1d1712 100%);
 }
 
 .atmosphere-mesh {
@@ -144,17 +203,17 @@
   background:
     radial-gradient(
       circle at 20% 30%,
-      rgba(230, 194, 129, 0.08) 0%,
+      rgba(226, 156, 96, 0.16) 0%,
       transparent 35%
     ),
     radial-gradient(
       circle at 80% 70%,
-      rgba(122, 153, 137, 0.07) 0%,
+      rgba(126, 154, 124, 0.13) 0%,
       transparent 40%
     ),
     radial-gradient(
       circle at 60% 20%,
-      rgba(200, 153, 147, 0.06) 0%,
+      rgba(211, 147, 127, 0.14) 0%,
       transparent 35%
     );
   filter: blur(40px);
@@ -169,9 +228,16 @@
   inset: 0 0 auto 0;
   height: 75vh;
   pointer-events: none;
+  /* On a light ground, `screen` erases these. `multiply` lets the ribbons warm
+     the paper instead of glowing over it — light through a curtain, not neon. */
+  mix-blend-mode: multiply;
+  filter: blur(30px) saturate(115%);
+  opacity: 0.5;
+}
+
+.dark .atmosphere-aurora-wrap {
   mix-blend-mode: screen;
-  filter: blur(28px) saturate(140%);
-  opacity: 1;
+  opacity: 0.85;
 }
 
 /* Element is anchored at left: 0 with width: 200%, so the visible window
@@ -211,9 +277,14 @@
   inset: auto 0 0 0;
   height: 38vh;
   pointer-events: none;
-  filter: blur(6px);
+  filter: blur(8px);
+  mix-blend-mode: multiply;
+  opacity: 0.42;
+}
+
+.dark .atmosphere-river {
   mix-blend-mode: screen;
-  opacity: 1;
+  opacity: 0.9;
 }
 
 .atmosphere-wave {
@@ -248,20 +319,39 @@
 .atmosphere-grain {
   position: absolute;
   inset: 0;
-  opacity: 0.07;
-  mix-blend-mode: overlay;
+  /* Just enough tooth to read as paper rather than screen. */
+  opacity: 0.35;
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.88  0 0 0 0 0.75  0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/*
+ * Was a heavy black vignette. Darkening the edges is exactly how you make a
+ * page feel closed-in and watched, which is the opposite of the intent here.
+ * Inverted: light gathers at the top, like a window above the page.
+ */
 .atmosphere-vignette {
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    ellipse 110% 80% at 50% 50%,
-    transparent 40%,
-    rgba(0, 0, 0, 0.55) 100%
+    ellipse 120% 70% at 50% 0%,
+    rgba(255, 249, 238, 0.65) 0%,
+    transparent 60%
   );
   pointer-events: none;
+}
+
+.dark .atmosphere-vignette {
+  background: radial-gradient(
+    ellipse 120% 70% at 50% 0%,
+    rgba(255, 218, 176, 0.10) 0%,
+    transparent 60%
+  );
+}
+
+.dark .atmosphere-grain {
+  opacity: 0.07;
+  mix-blend-mode: overlay;
 }
 
 @keyframes drift {
@@ -275,28 +365,29 @@
 
 /* ---------- Surfaces ---------- */
 
+/*
+ * A card should feel like something resting on the page, not a pane of smoked
+ * glass cut into it. Soft warm shadow does the lifting; the border is nearly
+ * invisible and exists only to hold an edge where shadows overlap.
+ */
 .zen-card {
   position: relative;
   border-radius: var(--radius);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(28, 23, 18, 0.78) 0%,
-      rgba(20, 17, 14, 0.85) 100%
-    );
-  border: 1px solid rgba(244, 237, 224, 0.08);
-  backdrop-filter: blur(20px) saturate(120%);
-  -webkit-backdrop-filter: blur(20px) saturate(120%);
-  box-shadow:
-    0 1px 0 rgba(244, 237, 224, 0.04) inset,
-    0 30px 60px -20px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(0, 0, 0, 0.2);
-  transition: border-color 240ms ease, transform 240ms ease,
-    box-shadow 240ms ease;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 260ms ease, border-color 260ms ease;
 }
 
 .zen-card:hover {
-  border-color: rgba(230, 194, 129, 0.22);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+  border-color: rgba(165, 77, 48, 0.25);
+}
+
+.dark .zen-card:hover {
+  border-color: rgba(224, 138, 99, 0.30);
 }
 
 /* No double-border ring */
@@ -313,13 +404,17 @@ code {
 
 /* ---------- Editorial type helpers ---------- */
 
+/*
+ * Was 0.35em gold — wide metallic tracking reads as a luxury watch advert.
+ * Tighter, in clay, at full opacity: quieter and considerably friendlier.
+ */
 .kicker {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.35em;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--zen-gold);
-  opacity: 0.7;
+  color: var(--primary);
+  opacity: 1;
 }
 
 .display-balance {
@@ -337,8 +432,18 @@ code {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(230, 194, 129, 0.35) 30%,
-    rgba(230, 194, 129, 0.35) 70%,
+    rgba(165, 77, 48, 0.30) 30%,
+    rgba(165, 77, 48, 0.30) 70%,
+    transparent
+  );
+}
+
+.dark .zen-rule {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(224, 138, 99, 0.32) 30%,
+    rgba(224, 138, 99, 0.32) 70%,
     transparent
   );
 }

@@ -15,7 +15,7 @@ export const Image = ({ className, src, alt }: MarkdownImageProps) => (
     animate={{ opacity: 1, scale: 1 }}
     transition={{ duration: 0.6 }}
     className={cn(
-      "my-6 md:my-8 lg:my-10 rounded-lg border border-white/10 w-full backdrop-blur-sm",
+      "my-6 md:my-8 lg:my-10 rounded-lg border border-border w-full backdrop-blur-sm",
       className
     )}
   />

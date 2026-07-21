@@ -29,7 +29,7 @@ const PostHeader = memo<PostHeaderProps>(({ post }) => {
     >
       <nav
         aria-label="Breadcrumb"
-        className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.3em] text-foreground/45"
+        className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.3em] text-foreground/70"
       >
         <Link
           href="/"
@@ -55,7 +55,7 @@ const PostHeader = memo<PostHeaderProps>(({ post }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="flex flex-wrap items-center gap-4 text-[11px] uppercase tracking-[0.35em] text-foreground/50"
+            className="flex flex-wrap items-center gap-4 text-[11px] uppercase tracking-[0.35em] text-foreground/70"
           >
             <time dateTime={post.publishedAt} className="text-primary/80">
               {formattedDate}
@@ -100,7 +100,7 @@ const PostHeader = memo<PostHeaderProps>(({ post }) => {
               <span
                 key={tag}
                 role="listitem"
-                className="rounded-full border border-foreground/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground/55"
+                className="rounded-full border border-foreground/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground/70"
               >
                 {tag}
               </span>
