@@ -37,6 +37,7 @@ export const getGuestbookEntries = cache(
           headers: guestbookAuthHeader(),
           // Signatures appear as soon as they are approved.
           cache: "no-store",
+          signal: AbortSignal.timeout(GUESTBOOK_CONFIG.REQUEST_TIMEOUT_MS),
         },
       );
 
