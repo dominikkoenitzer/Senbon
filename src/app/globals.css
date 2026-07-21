@@ -382,6 +382,11 @@ code {
   }
 }
 
+/*
+ * Was --zen-gold on --zen-ink: 4.38:1 in light and 1.73:1 in dark (light ink on
+ * a light gold plate), and this is 0.75rem/0.2em small text needing 4.5:1. The
+ * primary pair is the only token pair guaranteed to be legible in both themes.
+ */
 .skip-link {
   position: fixed;
   top: -100px;
@@ -389,8 +394,8 @@ code {
   transform: translateX(-50%);
   z-index: 9999;
   padding: 0.5rem 1rem;
-  background: var(--zen-gold);
-  color: var(--zen-ink);
+  background: var(--primary);
+  color: var(--primary-foreground);
   font-size: 0.75rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -398,26 +403,51 @@ code {
   transition: top 0.2s ease;
 }
 
+/*
+ * The only control that exists purely for keyboard users had `outline: none`
+ * with nothing in its place. The global ring is drawn in --primary, which is
+ * now this element's own background, so it draws its own ring inboard in the
+ * contrasting foreground instead.
+ */
 .skip-link:focus-visible,
 .skip-link:focus {
   top: 0;
-  outline: none;
+  outline: 2px solid var(--primary-foreground);
+  outline-offset: -5px;
 }
 
+/*
+ * Was rgba(230, 194, 129, 0.6) — leftover metallic gold that composites to
+ * #eed6ac on cream: 1.30:1 against the page, 1.35:1 against a card. That is the
+ * site's only focus indicator, so keyboard users had none. --primary is the one
+ * accent that clears 1.4.11's 3:1 in both themes, and the token indirection
+ * means the .dark block gets the fix for free.
+ */
 :focus-visible {
-  outline: 2px solid rgba(230, 194, 129, 0.6);
+  outline: 2px solid var(--primary);
   outline-offset: 3px;
   border-radius: 4px;
 }
 
+/*
+ * Was gold@0.35 with a #f6efe2 text literal — selected text composited to
+ * 1.10:1 and effectively disappeared. Selection now keeps the normal foreground
+ * and the highlight darkens underneath it instead.
+ */
 ::selection {
-  background: rgba(230, 194, 129, 0.35);
-  color: #f6efe2;
+  background: color-mix(in srgb, var(--primary) 28%, transparent);
+  color: var(--foreground);
+}
+
+.dark ::selection {
+  background: color-mix(in srgb, var(--primary) 35%, transparent);
+  color: var(--foreground);
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(230, 194, 129, 0.22) transparent;
+  scrollbar-color: color-mix(in srgb, var(--primary) 75%, transparent)
+    transparent;
 }
 
 *::-webkit-scrollbar {
@@ -430,22 +460,28 @@ code {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: rgba(230, 194, 129, 0.18);
+  background: color-mix(in srgb, var(--primary) 75%, transparent);
   border-radius: 8px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(230, 194, 129, 0.4);
+  background: color-mix(in srgb, var(--primary) 95%, transparent);
   background-clip: content-box;
 }
 
-/* Copy-code button on hover */
+/* Copy-code button */
 .code-block-wrap {
   position: relative;
 }
 
+/*
+ * Was gold@0.75 text on a near-black chip left over from the deleted dark
+ * palette: 2.56:1 resting, 3.33:1 on hover, on 0.65rem text that needs 4.5:1.
+ * Clay on the card surface with a solid clay border gives 5.63:1 text and a
+ * 4.84:1 boundary against the code block, in both themes.
+ */
 .code-block-wrap .copy-code-btn {
   position: absolute;
   top: 0.5rem;
@@ -454,24 +490,34 @@ code {
   font-size: 0.65rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgba(230, 194, 129, 0.75);
-  background: rgba(11, 10, 8, 0.6);
-  border: 1px solid rgba(230, 194, 129, 0.2);
+  color: var(--primary);
+  background: var(--card);
+  border: 1px solid var(--primary);
   border-radius: 0.4rem;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-  backdrop-filter: blur(6px);
+  transition: opacity 0.2s ease, color 0.2s ease, background-color 0.2s ease;
 }
 
 .code-block-wrap:hover .copy-code-btn,
+.code-block-wrap:focus-within .copy-code-btn,
 .code-block-wrap .copy-code-btn:focus-visible {
   opacity: 1;
 }
 
+/*
+ * Hover never fires on touch, so the copy button was permanently invisible —
+ * and unreachable — on phones and tablets. There it is simply always on.
+ */
+@media (hover: none) {
+  .code-block-wrap .copy-code-btn {
+    opacity: 1;
+  }
+}
+
 .code-block-wrap .copy-code-btn:hover {
-  color: rgba(230, 194, 129, 1);
-  border-color: rgba(230, 194, 129, 0.5);
+  color: var(--primary-foreground);
+  background: var(--primary);
 }
 
 /* Quiet "noise-overlay" remnant (now no-op since atmosphere supplies grain) */
@@ -536,4 +582,14 @@ a.zen-card:active {
   label.zen-card:hover {
     transform: none;
   }
+}
+
+/*
+ * Visitor-supplied text can be a single 280-character word. Without this it
+ * escapes its card and stretches the page sideways — which is exactly what a
+ * spammer did within an hour of the guestbook going live.
+ */
+.overflow-wrap-anywhere {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
