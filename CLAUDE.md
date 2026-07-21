@@ -138,11 +138,40 @@ it feeling warm rather than merely bright:
   background (`/40` measured 2.26:1). Only `aria-hidden` ornaments may go lower.
   Build hierarchy with size and weight instead of fading text out.
 - Headlines use `font-display` (Playfair Display).
-- Kicker labels use the `.kicker` utility (mono, uppercase, `0.2em` tracking, clay, full opacity). It was 0.35em metallic gold at 85% — that read like a luxury advert and failed contrast at 3.42:1.
+- Kicker labels use the `.kicker` utility: **body face (Nunito), lowercase,
+  semibold, ~0.95rem, near-zero tracking**, in the primary rose-plum at full
+  opacity. It has been walked back twice — first from 0.35em metallic gold at
+  85% (read like a luxury watch advert, failed contrast at 3.42:1), then from
+  mono + uppercase + `0.2em` tracking, which the owner rejected on sight as
+  "not cute".
+- **No uppercase, wide-tracked micro-labels anywhere.** That treatment was swept
+  out of all twelve chrome files in one pass — back links, buttons, badges,
+  timestamps, counters. It reads as a luxury brand, not as this site, and mixing
+  it across the mono and body faces made two identical "← journal" links render
+  in visibly different typefaces. Chrome is lowercase, normal tracking, body
+  face. **Mono (Space Grotesk) is for code blocks only** — do not put it on a UI
+  label.
+- The site uses exactly **two faces in the chrome**: Fraunces (`font-display`)
+  for headlines, Nunito for everything else. Fraunces loads upright only — do
+  not set it in italic without adding `style: ["normal", "italic"]` to the
+  loader in `layout.tsx`, or you get a synthesised oblique that looks broken on
+  a high-`SOFT` serif.
 - Apply `display-balance` (`text-wrap: balance`) on display headlines, `read-prose` (`text-wrap: pretty`) on body paragraphs.
 
 ### Components
 - There are currently **no shadcn primitives** — all nine were installed but never imported, so they and their five Radix dependencies were removed. `components.json` remains, so `npx shadcn@latest add <name>` still works and will recreate `src/components/ui/`. Only add one when something actually uses it.
+- `ErrorBoundary.tsx` was **deleted** — nothing imported it, and `app/error.tsx`
+  plus `app/global-error.tsx` already cover both boundary levels. Do not re-add
+  a class-based boundary unless something genuinely needs one.
+- **Known latent bug — `.zen-card` and `.kicker` are unlayered CSS**, while
+  Tailwind v4 emits all utilities inside the `utilities` cascade layer.
+  Unlayered rules beat layered ones, so a `border-*` / `bg-*` utility applied to
+  a `.zen-card` element is **silently a no-op**. This already cost one admin
+  highlight that never rendered at all. Until these move into
+  `@layer components`, build emphasised surfaces from utilities alone rather
+  than stacking them onto `.zen-card`. Moving them is the real fix, but it will
+  activate previously-inert utilities across the site, so audit every call site
+  first rather than doing it blind.
 - For markdown overrides, edit the matching file in `src/components/blog/markdown/`.
 - For loading UI, use the streaming `loading.tsx` convention. Skeletons live in `src/components/blog/LoadingStates.tsx`.
 
@@ -200,13 +229,38 @@ Vercel (server action)  ──HTTPS+token──►  caddy-proxy  ──►  API 
 
 Key facts:
 
-- **Signatures publish instantly** (`AUTO_APPROVE=true` in the VPS `.env`). The
-  moderation queue still exists in the API — set `AUTO_APPROVE=false` and
-  `docker compose up -d` to hold new entries for approval again. With instant
-  publishing, the honeypot, rate limit, and link block are the only defenses,
-  so spam lands on the wall until deleted via `DELETE /admin/entries/:id`.
-- **The API hostname uses sslip.io**, so it needs **no DNS records** — `senbon.ch`
-  DNS is untouched. Only Vercel's server ever calls it; it never appears in HTML.
+- **Auto-publish is a runtime setting in Postgres, not an env var.** It lives in
+  the `settings` table under `auto_approve`, is read through `GET/POST
+  /admin/settings`, and is toggled from `/guestbook/admin`. `AUTO_APPROVE` in
+  the VPS `.env` only **seeds** the row the very first time it is created
+  (`ON CONFLICT DO NOTHING`) — after that the DB wins, so editing `.env` and
+  restarting does **nothing**. Currently ON: signatures publish instantly.
+  With it on, the honeypot, rate limit, link block, slur filter and mash filter
+  are the only defences, so spam lands on the wall until deleted.
+- **The publish-timing copy is derived, never hardcoded.** `/guestbook` resolves
+  the live setting server-side and passes one boolean to the form; the success
+  message branches on the `status` the API actually returned. Three surfaces
+  previously each carried their own hardcoded promise and contradicted each
+  other. Do not reintroduce a literal "goes up instantly" string anywhere.
+- **The content filters have two failure modes that already bit once.** Keep
+  both in mind before touching them:
+  - `isMashed` must **not** divide unique-character count by unbounded length —
+    distinct characters top out around 40 in real English, so a plain ratio
+    rejects every ordinary message past ~165 chars. The denominator is capped.
+  - `hasBlockedWord` splits into `BLOCKED_SUBSTRINGS` (long, unambiguous slurs,
+    matched against the space-stripped projection so `n i g g e r` and
+    `niiiigger` are caught) and `BLOCKED_TOKENS` (short/ambiguous terms, matched
+    as **whole words only**). Collapsing them back into one substring list
+    re-breaks "raccoon", "cocoon", "flame retardant" and "a chink in the
+    armour" — this was live for hours.
+- **The API hostname uses sslip.io** (`senbon.<ip>.sslip.io`), which resolves any
+  hostname containing an IP to that IP. It needs **no DNS records** — `senbon.ch`
+  DNS is untouched — and gives Caddy a real hostname to get a Let's Encrypt cert
+  for, which a bare IP cannot. Only Vercel's server ever calls it; it never
+  appears in HTML. **Trade-off:** it is a third-party dependency. If sslip.io
+  stops resolving, signing degrades to the "it's down" card. Swapping to a real
+  `api.senbon.ch` A record is a five-minute change (record, Caddyfile hostname,
+  `GUESTBOOK_API_URL`).
 - **Length caps live in two places** — `src/constants/guestbook.ts` and the API's
   `server.js`. Keep them in sync or the client counter will promise something the
   server rejects.
