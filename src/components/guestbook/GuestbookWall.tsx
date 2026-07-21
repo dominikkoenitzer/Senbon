@@ -5,11 +5,11 @@ const GuestbookWall = ({ entries }: GuestbookWallProps) => {
   if (entries.length === 0) {
     return (
       <div className="zen-card flex flex-col items-center gap-4 p-10 text-center md:p-14">
-        <p className="kicker">zero. none. zilch</p>
-        <p className="max-w-md text-base leading-relaxed text-foreground/70 read-prose">
-          not one person has signed this. not one. i&apos;m completely normal about
-          it. you could be the first, if you felt like it. no pressure.
-          (there is so much pressure.)
+        <p className="kicker">still nobody</p>
+        <p className="max-w-md text-base leading-relaxed text-foreground/85 read-prose">
+          sign it. i keep refreshing this like the number changes on its own, it
+          does not, and you are the only person here. four words. i&apos;ll stop
+          asking after that. i won&apos;t.
         </p>
       </div>
     );
@@ -17,11 +17,17 @@ const GuestbookWall = ({ entries }: GuestbookWallProps) => {
 
   return (
     <section className="flex flex-col gap-8" aria-label="Guestbook signatures">
-      <div className="flex items-baseline justify-between gap-4">
-        <p className="kicker">look who showed up</p>
-        <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-foreground/70">
-          {entries.length}
-        </span>
+      <div className="flex flex-col gap-3">
+        <div className="flex items-baseline justify-between gap-4">
+          <p className="kicker">look who finally bothered</p>
+          <span className="shrink-0 font-mono text-[11px] uppercase tracking-[0.25em] text-foreground/80">
+            {entries.length}
+          </span>
+        </div>
+        <p className="max-w-md text-sm leading-relaxed text-foreground/80 read-prose">
+          the people who did the bare minimum. i think about them constantly.
+          put your name down there with them.
+        </p>
       </div>
 
       <ul className="flex flex-col gap-4">
@@ -30,11 +36,11 @@ const GuestbookWall = ({ entries }: GuestbookWallProps) => {
             key={entry.id}
             className="zen-card flex flex-col gap-4 p-6 md:p-7"
           >
-            <p className="text-base leading-relaxed text-foreground/80 read-prose">
+            <p className="overflow-wrap-anywhere text-base leading-relaxed text-foreground/80 read-prose">
               {entry.message}
             </p>
             <div className="flex items-center justify-between gap-4 border-t border-foreground/5 pt-4">
-              <span className="font-display text-lg tracking-tight text-foreground/90">
+              <span className="overflow-wrap-anywhere min-w-0 font-display text-lg tracking-tight text-foreground/90">
                 {entry.name}
               </span>
               <time
