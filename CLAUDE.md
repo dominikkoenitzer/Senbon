@@ -204,6 +204,13 @@ Key facts:
   server rejects.
 - **Visitor IPs are never stored raw.** The action forwards `x-visitor-ip`; the
   API HMAC-hashes it before it reaches the database.
+- **The rate limiter fails closed.** A request with no `x-visitor-ip` shares one
+  bucket rather than skipping the limit. Do not "simplify" this back to
+  `if (ipHash)` — that made the limiter a no-op for any direct API caller.
+- **`clean()` strips invisible characters**, not just control characters. Zero-
+  width and bidi controls defeat the link filter and let a signature visually
+  reorder itself on the page.
+- **Backups run daily** via `/etc/cron.d/senbon-guestbook-backup` on the VPS.
 - **The VPS is shared with unrelated production projects.** Anything touching
   `/srv/caddy/Caddyfile` must back up, `caddy validate`, then `caddy reload` —
   never restart the container.
