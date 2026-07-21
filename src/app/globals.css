@@ -328,11 +328,9 @@ code {
  * Tighter, in clay, at full opacity: quieter and considerably friendlier.
  */
 .kicker {
-  font-family: var(--font-heading), Georgia, serif;
-  font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 20;
-  font-style: italic;
-  font-size: 1.05rem;
-  font-weight: 500;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
   letter-spacing: 0.005em;
   text-transform: lowercase;
   color: var(--primary);
