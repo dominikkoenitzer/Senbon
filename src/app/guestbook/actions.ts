@@ -31,29 +31,29 @@ export const signGuestbook = async (
   formData: FormData,
 ): Promise<GuestbookFormState> => {
   if (!isGuestbookConfigured()) {
-    return fail("The guestbook is not accepting signatures right now.");
+    return fail("guestbook is down right now. i am on it.");
   }
 
   // Bots fill hidden fields; humans never see this one. Report success so the
   // bot has no signal to adapt to, but write nothing.
   if (String(formData.get(GUESTBOOK_CONFIG.HONEYPOT_FIELD) ?? "").trim()) {
-    return { status: "success", message: "Thank you for signing." };
+    return { status: "success", message: "done. you are on the wall." };
   }
 
   const name = String(formData.get("name") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
 
   if (!name || !message) {
-    return fail("Please add both a name and a message.");
+    return fail("need a name and a message. both. sorry.");
   }
   if (name.length > GUESTBOOK_CONFIG.NAME_MAX) {
     return fail(
-      `Name must be ${GUESTBOOK_CONFIG.NAME_MAX} characters or fewer.`,
+      `that name is over ${GUESTBOOK_CONFIG.NAME_MAX} characters. trim it.`,
     );
   }
   if (message.length > GUESTBOOK_CONFIG.MESSAGE_MAX) {
     return fail(
-      `Message must be ${GUESTBOOK_CONFIG.MESSAGE_MAX} characters or fewer.`,
+      `over ${GUESTBOOK_CONFIG.MESSAGE_MAX} characters. say less, literally.`,
     );
   }
 
@@ -70,26 +70,26 @@ export const signGuestbook = async (
     });
 
     if (response.status === 429) {
-      return fail("You just signed — give it a moment before signing again.");
+      return fail("you literally just signed. give it a second.");
     }
     if (response.status === 422) {
-      return fail("Links aren't allowed in the guestbook.");
+      return fail("no links. nice try.");
     }
     if (!response.ok) {
       console.error(
         `[guestbook] sign failed: ${response.status} ${response.statusText}`,
       );
-      return fail("Something went wrong. Please try again in a moment.");
+      return fail("something broke. not your fault. try again in a sec.");
     }
 
     revalidatePath("/guestbook");
 
     return {
       status: "success",
-      message: "Signed. Your mark is on the wall.",
+      message: "done. you are on the wall.",
     };
   } catch (error) {
     console.error("[guestbook] sign threw:", error);
-    return fail("Something went wrong. Please try again in a moment.");
+    return fail("something broke. not your fault. try again in a sec.");
   }
 };

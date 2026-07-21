@@ -43,7 +43,7 @@ const GuestbookForm = () => {
           htmlFor={nameId}
           className="text-xs uppercase tracking-[0.25em] text-foreground/70"
         >
-          Name
+          your name
         </label>
         <input
           id={nameId}
@@ -58,7 +58,7 @@ const GuestbookForm = () => {
           readOnly={isPending}
           maxLength={GUESTBOOK_CONFIG.NAME_MAX}
           autoComplete="name"
-          placeholder="How should the stone remember you?"
+          placeholder="what should i call you?"
           className="w-full rounded-md border border-foreground/10 bg-background/40 px-4 py-3 text-base text-foreground/90 outline-none transition-colors placeholder:text-foreground/70 focus-visible:border-primary/40"
         />
       </div>
@@ -68,7 +68,7 @@ const GuestbookForm = () => {
           htmlFor={messageId}
           className="text-xs uppercase tracking-[0.25em] text-foreground/70"
         >
-          Message
+          your message
         </label>
         <textarea
           id={messageId}
@@ -79,7 +79,7 @@ const GuestbookForm = () => {
           onChange={(event) => setMessage(event.target.value)}
           readOnly={isPending}
           maxLength={GUESTBOOK_CONFIG.MESSAGE_MAX}
-          placeholder="Anything kind, or anything true."
+          placeholder="say something. anything. go on."
           className="w-full resize-none rounded-md border border-foreground/10 bg-background/40 px-4 py-3 text-base leading-relaxed text-foreground/90 outline-none transition-colors placeholder:text-foreground/70 focus-visible:border-primary/40"
         />
         <span
@@ -122,7 +122,7 @@ const GuestbookForm = () => {
               aria-hidden="true"
             />
           )}
-          <span>{isPending ? "Signing" : "Sign the stone"}</span>
+          <span>{isPending ? "signing" : "sign it"}</span>
         </button>
 
         <p
@@ -137,7 +137,7 @@ const GuestbookForm = () => {
           )}
         >
           {state.status === "idle"
-            ? "Signatures appear on the wall right away."
+            ? "goes up instantly. no approval, no vetting."
             : state.message}
         </p>
       </div>
