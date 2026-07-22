@@ -2,23 +2,21 @@ import type { ReactNode } from "react";
 
 /**
  * Common markdown component props
+ *
+ * These describe what the overrides actually destructure, not everything
+ * react-markdown happens to pass. `MarkdownHeadingProps.level`,
+ * `MarkdownCodeProps.inline` and the `node` fields on the code and pre props
+ * were all declared and never read — `Code` re-derives inline-ness from
+ * `className.includes("language-")`, and the heading components are separate
+ * H1-H4 functions rather than one level-switching component.
  */
 export interface MarkdownComponentProps {
   className?: string;
   children?: ReactNode;
 }
 
-export interface MarkdownHeadingProps extends MarkdownComponentProps {
-  level?: number;
-}
-
 export interface MarkdownLinkProps extends MarkdownComponentProps {
   href?: string;
-}
-
-export interface MarkdownCodeProps extends MarkdownComponentProps {
-  inline?: boolean;
-  node?: unknown;
 }
 
 export interface MarkdownImageProps {
@@ -26,8 +24,3 @@ export interface MarkdownImageProps {
   src?: string | Blob;
   alt?: string;
 }
-
-export interface MarkdownPreProps extends MarkdownComponentProps {
-  node?: unknown;
-}
-

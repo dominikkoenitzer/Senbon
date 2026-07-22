@@ -3,9 +3,9 @@
 import { cn } from "@/lib/utils";
 import { generateHeadingId } from "./utils";
 import { getTextContent } from "./utils";
-import type { MarkdownHeadingProps } from "./types";
+import type { MarkdownComponentProps } from "./types";
 
-export const H1 = ({ className, children }: MarkdownHeadingProps) => (
+export const H1 = ({ className, children }: MarkdownComponentProps) => (
   <h1
     className={cn(
       "mt-16 mb-6 scroll-m-20 font-display text-3xl font-medium leading-tight tracking-tight text-foreground first:mt-0 md:text-4xl",
@@ -26,7 +26,7 @@ export const H1 = ({ className, children }: MarkdownHeadingProps) => (
  * `aria-labelledby` then pins the heading's name to the text span, so the
  * anchor's label cannot leak into it even as a suffix.
  */
-export const H2 = ({ className, children }: MarkdownHeadingProps) => {
+export const H2 = ({ className, children }: MarkdownComponentProps) => {
   const text = getTextContent(children);
   const id = generateHeadingId(text);
   const textId = `${id}-text`;
@@ -51,7 +51,7 @@ export const H2 = ({ className, children }: MarkdownHeadingProps) => {
   );
 };
 
-export const H3 = ({ className, children }: MarkdownHeadingProps) => {
+export const H3 = ({ className, children }: MarkdownComponentProps) => {
   const text = getTextContent(children);
   const id = generateHeadingId(text);
   return (
@@ -67,7 +67,7 @@ export const H3 = ({ className, children }: MarkdownHeadingProps) => {
   );
 };
 
-export const H4 = ({ className, children }: MarkdownHeadingProps) => {
+export const H4 = ({ className, children }: MarkdownComponentProps) => {
   const text = getTextContent(children);
   const id = generateHeadingId(text);
   return (
