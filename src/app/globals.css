@@ -622,107 +622,39 @@ code {
   word-break: break-word;
 }
 
-/* ---------- Navigation ---------- */
+/* ---------- Theme transition ---------- */
 
 /*
- * The whole trick of the seamless feel is what does NOT move. The atmosphere
- * and the floating controls are named, so the browser treats each as the same
- * element on both sides of the navigation and leaves it alone; only the content
- * crossfades underneath them. Without this the fixed background would fade out
- * and back in on every click, which announces "new page" louder than a reload.
+ * Route navigation is a plain client-side render with no animation. It ran
+ * through the View Transitions API for a while, which required Next's
+ * prerelease React build and made clicks stall for seconds; the morphs were
+ * not worth that, so the whole route-transition layer is gone.
  *
- * Old is hidden outright rather than left at `animation: none` — otherwise both
- * snapshots render on top of each other for the duration and the layer ghosts.
- */
-.atmosphere-root {
-  view-transition-name: atmosphere;
-}
-
-.chrome-controls {
-  view-transition-name: chrome;
-}
-
-/*
- * One duration and one curve for every animated part of a navigation. The
- * morphing title, the sliding back link and the content crossfade all used to
- * run on different clocks — the browser's 250ms default for the morphs against
- * a 200ms-out/340ms-in crossfade — and things that start together but land at
- * three different moments read as flaky rather than fast.
- *
- * Deliberately first: the atmosphere and chrome rules below opt out of
- * animation entirely, and a wildcard has the same specificity as a named one,
- * so it has to lose on order rather than beat them.
- */
-::view-transition-group(*) {
-  animation-duration: 160ms;
-  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-::view-transition-group(atmosphere),
-::view-transition-group(chrome) {
-  animation: none;
-}
-
-::view-transition-old(atmosphere),
-::view-transition-old(chrome) {
-  animation: none;
-  opacity: 0;
-}
-
-::view-transition-new(atmosphere),
-::view-transition-new(chrome) {
-  animation: none;
-  opacity: 1;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  /*
-   * A pure crossfade, matching the morph timing exactly. The incoming content
-   * used to drift up 8px on the way in, which fought every shared element:
-   * the title travelled its own path from card to headline while the page
-   * underneath slid a different direction. Two motions at once is the whole
-   * reason it felt unsettled. Nothing that is staying put should move.
-   */
-  ::view-transition-old(root) {
-    animation: vt-out 160ms cubic-bezier(0.4, 0, 0.2, 1) both;
-  }
-
-  ::view-transition-new(root) {
-    animation: vt-in 160ms cubic-bezier(0.4, 0, 0.2, 1) both;
-  }
-}
-
-/* A navigation still happens — it just happens instantly. */
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
-  }
-}
-
-/*
- * Theme switching reuses the same transition machinery, but it is a different
- * gesture: nothing moved, the paint changed. So no drift on the way in, equal
- * timing both directions, and the atmosphere crossfades instead of holding
- * still — during a route change it is the constant, here it is the subject.
+ * This is the native `document.startViewTransition`, called directly by the
+ * theme toggle. It needs no framework support and no experimental flag: it is
+ * a browser API animating a paint change, which is the one case here where a
+ * transition is genuinely cheap. Everything below only ever runs on a theme
+ * switch, because that is now the only transition the site starts.
  */
 :root.theme-switching::view-transition-old(root),
-:root.theme-switching::view-transition-new(root),
-:root.theme-switching::view-transition-old(atmosphere),
-:root.theme-switching::view-transition-new(atmosphere) {
+:root.theme-switching::view-transition-new(root) {
   animation-duration: 180ms;
   animation-timing-function: ease;
 }
 
-:root.theme-switching::view-transition-old(root),
-:root.theme-switching::view-transition-old(atmosphere) {
+:root.theme-switching::view-transition-old(root) {
   animation-name: vt-out;
-  opacity: 1;
 }
 
-:root.theme-switching::view-transition-new(root),
-:root.theme-switching::view-transition-new(atmosphere) {
+:root.theme-switching::view-transition-new(root) {
   animation-name: vt-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root.theme-switching::view-transition-old(root),
+  :root.theme-switching::view-transition-new(root) {
+    animation: none;
+  }
 }
 
 @keyframes vt-out {
