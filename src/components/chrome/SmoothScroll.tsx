@@ -38,8 +38,13 @@ const SmoothScroll = () => {
        * keeps interrupting and relaunching itself, and reads as steppy.
        * Interpolating a constant fraction of the remaining distance each frame
        * absorbs the burst into one continuous glide instead.
+       *
+       * 0.2, not the usual 0.1. Smooth scrolling buys its feel with lag, and
+       * past a certain point the page visibly trails the wheel — which is a
+       * headache, not a flourish. This is close enough to native to stay out
+       * of the way while still taking the edge off.
        */
-      lerp: 0.1,
+      lerp: 0.2,
       // Touch devices already have momentum scrolling in the OS. Doubling it up
       // feels laggy and breaks the platform's own overscroll behaviour.
       smoothWheel: true,

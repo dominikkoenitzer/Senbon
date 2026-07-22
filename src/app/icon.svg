@@ -1,30 +1,34 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="senbon">
   <!--
-    An enso: the zen circle, left deliberately open. Detail dies at 16px, so
-    this is one heavy stroke and nothing else — a mark, not a drawing.
+    An enso: the zen circle, left open. One heavy stroke and nothing else,
+    because detail turns to mush at 16px.
 
-    Colours are the real tokens (--primary and --background), inlined because
-    an SVG loaded as a favicon has no access to the page's stylesheet. The
-    media query is honoured by the browser chrome, so the tab icon follows the
-    OS theme the same way the site does.
+    Colours are presentation attributes, NOT only CSS. Favicon renderers are a
+    restricted environment and several drop embedded stylesheets — when that
+    happens a CSS-only fill falls back to black and a CSS-only stroke
+    disappears, so the tab shows a black square instead of a mark. The
+    attributes always render; the media query below is a progressive
+    enhancement that follows the OS theme where it is supported, and costs
+    nothing where it is not.
+
+    Values are copies of --primary and --background: an SVG loaded as a
+    favicon cannot see the page stylesheet.
   -->
   <style>
-    .plate { fill: #fbf5ec; }
-    .ring { stroke: #a8455c; }
-
     @media (prefers-color-scheme: dark) {
       .plate { fill: #211a15; }
       .ring { stroke: #f0919f; }
     }
   </style>
 
-  <rect class="plate" width="32" height="32" rx="7" />
+  <rect class="plate" width="32" height="32" rx="7" fill="#fbf5ec" />
   <circle
     class="ring"
     cx="16"
     cy="16"
     r="9"
     fill="none"
+    stroke="#a8455c"
     stroke-width="3.5"
     stroke-linecap="round"
     stroke-dasharray="47 10"
