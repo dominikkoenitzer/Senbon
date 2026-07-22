@@ -16,6 +16,13 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   compress: true,
   experimental: {
+    /*
+     * Cross-fades route changes through the View Transitions API instead of
+     * swapping the DOM outright, so navigating reads as one continuous surface
+     * rather than a new document. The atmosphere and the floating controls opt
+     * out of the animation in globals.css and stay perfectly still across it.
+     */
+    viewTransition: true,
     optimizePackageImports: [
       "lucide-react",
       "react-markdown",
