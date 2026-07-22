@@ -55,15 +55,38 @@ const ChromeControls = () => {
   );
 
   const toggleTheme = useCallback(() => {
-    const next = !document.documentElement.classList.contains("dark");
-    document.documentElement.classList.toggle("dark", next);
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, next ? "dark" : "light");
-    } catch {
-      // Private mode or a blocked origin — the class still flipped, the
-      // choice just will not survive a reload. Not worth failing over.
+    const root = document.documentElement;
+
+    const apply = () => {
+      const next = !root.classList.contains("dark");
+      root.classList.toggle("dark", next);
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, next ? "dark" : "light");
+      } catch {
+        // Private mode or a blocked origin — the class still flipped, the
+        // choice just will not survive a reload. Not worth failing over.
+      }
+      window.dispatchEvent(new Event(THEME_EVENT));
+    };
+
+    /*
+     * Swapping every colour on the page in one frame is a flash. Running it
+     * through a view transition dissolves between the two palettes instead —
+     * the same machinery the routes use, pointed at a paint change.
+     *
+     * `theme-switching` swaps the route animation for a plain crossfade: no
+     * upward drift, and the atmosphere fades rather than holding still, since
+     * here it is the thing that changed.
+     */
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !document.startViewTransition) {
+      apply();
+      return;
     }
-    window.dispatchEvent(new Event(THEME_EVENT));
+
+    root.classList.add("theme-switching");
+    const transition = document.startViewTransition(apply);
+    transition.finished.finally(() => root.classList.remove("theme-switching"));
   }, []);
 
   /*

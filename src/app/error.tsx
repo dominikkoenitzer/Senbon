@@ -21,23 +21,15 @@ export default function RouteError({
       <div className="zen-card w-full max-w-lg px-8 py-12 text-center md:px-12 md:py-16">
         <p className="kicker mb-6">error — my fault</p>
         <h1 className="font-display mb-5 text-3xl lowercase text-foreground display-balance md:text-4xl">
-          okay, that was not supposed to happen.
+          okay, that wasn&apos;t supposed to happen.
         </h1>
         <p className="mx-auto max-w-md text-sm leading-relaxed text-foreground/85 read-prose md:text-base">
-          this page fell over on its way to you. hit the button — it works far
-          more often than something written by me deserves to. if it fails
-          twice, go read the journal instead and let me sulk about it privately.
+          it fell over on the way to you. hit the button, it usually works.
         </p>
         {error.digest && (
-          <div className="mt-6 flex flex-col gap-1.5">
-            <p className="text-xs lowercase text-foreground/75">
-              ref · {error.digest}
-            </p>
-            <p className="text-xs leading-relaxed text-foreground/75 read-prose">
-              screenshot that bit if you&apos;re feeling generous. it means
-              nothing to you and everything to me.
-            </p>
-          </div>
+          <p className="mt-6 text-xs lowercase text-foreground/75">
+            ref · {error.digest} — screenshot it if you&apos;re feeling generous
+          </p>
         )}
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <button

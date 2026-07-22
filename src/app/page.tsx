@@ -1,3 +1,4 @@
+import { ViewTransition } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Github } from "lucide-react";
 
@@ -11,12 +12,12 @@ const links = [
   {
     href: "/journal",
     title: "journal",
-    blurb: "things i actually thought, in the order i thought them. mostly typed at 2am.",
+    blurb: "things i thought at 2am, in the order i thought them.",
   },
   {
     href: "/guestbook",
     title: "guestbook",
-    blurb: "sign it. four words is plenty. i will absolutely notice if you don't.",
+    blurb: "four words is plenty. i will notice if you don't.",
   },
 ];
 
@@ -27,9 +28,8 @@ const Home = () => (
         senbon
       </h1>
       <p className="max-w-md text-lg leading-relaxed text-foreground/85 read-prose md:text-xl">
-        dominik. i build things for money, then go home and build more for
-        free. this one has two rooms: a journal, and a guestbook i refresh more
-        often than i&apos;m going to say out loud. take the second door.
+        dominik. two rooms: a journal, and a guestbook i refresh more than
+        i&apos;ll admit. take the second door.
       </p>
     </header>
 
@@ -42,9 +42,17 @@ const Home = () => (
           style={{ animationDelay: `${120 + i * 90}ms` }}
         >
           <span className="flex flex-col gap-1.5">
-            <span className="font-display text-2xl lowercase tracking-tight text-foreground transition-colors group-hover:text-primary md:text-3xl">
-              {link.title}
-            </span>
+            {/*
+              These read "journal" and "guestbook" — the exact words those two
+              pages lead with. Naming them pairs each card label with the
+              heading it becomes, so choosing a room lifts its name out of the
+              list and grows it into the title rather than swapping documents.
+            */}
+            <ViewTransition name={`section-${link.title}`}>
+              <span className="font-display text-2xl lowercase tracking-tight text-foreground transition-colors group-hover:text-primary md:text-3xl">
+                {link.title}
+              </span>
+            </ViewTransition>
             <span className="text-base leading-relaxed text-foreground/75 read-prose">
               {link.blurb}
             </span>
@@ -62,7 +70,7 @@ const Home = () => (
       style={{ animationDelay: "300ms" }}
     >
       <p className="max-w-md text-sm leading-relaxed text-foreground/75 read-prose">
-        that&apos;s the whole site. there is no about page. you know enough.
+        that&apos;s the whole site. no about page. you know enough.
       </p>
       <a
         href="https://github.com/dominikkoenitzer"

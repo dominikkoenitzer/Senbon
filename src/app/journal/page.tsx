@@ -32,13 +32,15 @@ const JournalPage = async () => {
           </Link>
         </ViewTransition>
 
-        <h1 className="font-display text-6xl lowercase leading-[0.85] tracking-tight text-foreground md:text-8xl display-balance">
-          journal
-        </h1>
+        {/* Pairs with the "journal" card label on the home page. */}
+        <ViewTransition name="section-journal">
+          <h1 className="font-display text-6xl lowercase leading-[0.85] tracking-tight text-foreground md:text-8xl display-balance">
+            journal
+          </h1>
+        </ViewTransition>
         <p className="max-w-md text-lg leading-relaxed text-foreground/85 read-prose">
-          things i actually thought, typed while i still meant them. no lore, no
-          filler, no reading-time estimate — you have eyes, you can see how long
-          it is.
+          things i thought, typed while i still meant them. no reading-time
+          estimate — you have eyes.
         </p>
       </header>
 
