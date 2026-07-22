@@ -63,6 +63,9 @@ src/
         actions.ts           # signIn, signOut, removeEntry, approveSignature, updateAutoApprove
   components/
     AtmosphereBackground.tsx  # Single ambient layer (three CSS layers, no SVG)
+    chrome/
+      ChromeControls.tsx      # Client: theme toggle + back-to-top, fixed bottom-right
+      ThemeScript.tsx         # Inline pre-paint script that sets .dark on <html>
     blog/
       MarkdownRenderer.tsx
       index.ts
@@ -84,11 +87,12 @@ src/
       EntryRow.tsx            # Client: one signature + approve / two-step delete
   constants/
     blog.ts                   # BLOG_CONFIG
+    theme.ts                  # localStorage key + toggle event name
     guestbook.ts              # GUESTBOOK_CONFIG (length caps, honeypot field name)
   hooks/
     useSmoothScroll.ts          # ID-targeted scroll with reduced-motion respect
   lib/
-    blog.ts                   # getAllPosts, getPostBySlug, getAdjacentPosts (all React.cache wrapped)
+    blog.ts                   # getAllPosts, getPostBySlug, getAllPostSlugs (all React.cache wrapped)
     guestbook.ts              # getGuestbookEntries (React.cache) + API config helpers
     guestbook-admin.ts        # Server-only moderation client + HMAC session cookie
     utils.ts                  # cn() + formatJournalDate + formatRelativeDate
@@ -177,7 +181,7 @@ it feeling warm rather than merely bright:
     purpose**: `!important` reverses layer precedence, so layering it would make
     it outrank an important utility instead of yielding to one.
 - For markdown overrides, edit the matching file in `src/components/blog/markdown/`.
-- For loading UI, use the streaming `loading.tsx` convention. Skeletons live in `src/components/blog/LoadingStates.tsx`.
+- For loading UI, use the streaming `loading.tsx` convention. Skeletons are written inline in each `loading.tsx`; there is no shared `LoadingStates.tsx` (this file used to claim one).
 
 ### Animation
 - Framer Motion is used for entrance animations only — don't add hover-state JS animations when CSS `transition` works.
@@ -304,28 +308,43 @@ publishedAt: "2026-05-26"
 tags:
   - design
   - performance
-featured: true                              # optional, surfaces on /journal top
-hero: "/images/journal/your-image.jpg"      # optional, must exist in public/
 ---
 ```
 
 The site rebuilds on commit. Posts are sorted newest-first. Slug = filename without extension.
 
-- `featured: true` floats the post into the "Featured" strip on `/journal` (max 2 shown).
-- `hero:` is **only rendered if the file exists** at the given path under `public/`. Missing files silently degrade — no broken images. Drop placeholder images into `public/images/journal/`.
-- TOC auto-generates from H2–H4 headings. Code fences are skipped. Duplicate slugs are auto-suffixed (`-2`, `-3`).
+**Those four keys are the whole schema.** `PostFrontmatter` in `src/types/blog.ts`
+declares exactly `title`, `excerpt`, `publishedAt`, `tags`, and `parsePostFile`
+reads nothing else. This section used to document `featured:` and `hero:` — both
+were **silently ignored**, since neither the type nor the parser has ever known
+about them. If you want either, add it to the type, the parser and the page
+first.
+
+- Heading anchors are generated from H2–H4 by `generateHeadingId`. Duplicate
+  slugs are auto-suffixed (`-2`, `-3`). There is no rendered TOC consuming them.
 
 ---
 
 ## Existing user-facing features
 
-- **⌘K / Ctrl+K / `/`** opens the command palette (nav + theme toggle).
-- Reading progress bar at the top of every page.
-- Back-to-top button after 600px scroll.
-- Search + tag filter + load-more pagination on `/journal`.
-- Featured posts surfaced at the top of the journal index.
-- Prev/next entry links at the bottom of each post.
+- **Dark mode toggle**, bottom-right. Class-based (`.dark` on `<html>`), stored
+  in `localStorage` under `senbon-theme`, defaulting to the OS preference. An
+  inline script in `<head>` (`ThemeScript`) sets the class before first paint so
+  there is no light flash. Until 2026-07-22 nothing ever set `.dark`, so the
+  whole evening palette was unreachable dead CSS.
+- Back-to-top button, appears past 600px, bottom-right beside the toggle.
 - Relative time on cards ("3 weeks ago"), absolute date on hover.
+
+**Deliberately absent** — these were listed here as features but did not exist
+in the code, and several were removed on purpose. Do not "restore" them without
+being asked:
+
+- No command palette (⌘K). Three routes do not need a launcher.
+- No reading-progress bar. Entries run a few hundred words.
+- No search, tag filter or load-more on `/journal` — deleted as blog-platform
+  furniture; see the comment at the top of `journal/page.tsx`.
+- No featured-post strip, no prev/next links, no TOC, no reading-time estimate,
+  no hero images.
 - External link arrows (↗) on links in markdown.
 - Skip-to-content link for keyboard users.
 - Guestbook signing at `/guestbook` — instant, rate-limited, honeypot-protected.
@@ -348,9 +367,9 @@ The site rebuilds on commit. Posts are sorted newest-first. Slug = filename with
 
 ## Architecture decisions worth remembering
 
-- **`React.cache` wraps `getAllPosts`, `getPostBySlug`, `getAllPostSlugs`, `getAdjacentPosts`** so the metadata and page render call the same function once per request.
+- **`React.cache` wraps `getAllPosts`, `getPostBySlug`, `getAllPostSlugs`** so the metadata and page render call the same function once per request. (`getAdjacentPosts` was also wrapped until it was deleted on 2026-07-22 as an unimported leftover of prev/next navigation.)
 - **`optimizePackageImports`** in `next.config.ts` covers `lucide-react`, `framer-motion`, `react-markdown`, `remark-gfm`, `rehype-highlight`, `date-fns`, `dayjs` — keeps bundle small even with deep barrel imports.
-- **`useSyncExternalStore`** is used in `CommandPalette` for SSR-safe dark-mode detection. Don't replace it with a `useEffect + setState` pattern — React 19's lint rule will scream and the hydration story breaks.
+- **`useSyncExternalStore`** is how `ChromeControls` reads both the theme class and scroll position. Don't replace it with a `useEffect + setState` pattern — React 19's lint rule will scream and the hydration story breaks. (This note used to name `CommandPalette`, which has never existed in this codebase.)
 - **The atmosphere is intentionally minimal.** The old SVG ribbon/river system and its seamless-loop path geometry were deleted, not broken. If a background feels too static, adjust colour and the mesh drift — do not reintroduce moving layers.
 - **fonts** use explicit `display: "swap"` + a system fallback chain. Mono is `preload: false` (saves a request).
 
