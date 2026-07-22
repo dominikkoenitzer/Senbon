@@ -18,6 +18,13 @@ const heading = Fraunces({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
+  /*
+   * Italic is loaded because the guestbook headline sets "i'll wait" in it.
+   * Without this the browser synthesises an oblique by shearing the upright,
+   * which on a serif this soft looks like a rendering fault rather than a
+   * typeface — the exact trap CLAUDE.md warns about.
+   */
+  style: ["normal", "italic"],
   axes: ["SOFT", "WONK", "opsz"],
   fallback: ["Georgia", "Cambria", "Times New Roman", "serif"],
   preload: true,
