@@ -340,8 +340,6 @@
  * precedence — moving it into `components` would make it outrank an important
  * utility rather than yield to one.
  */
-.zen-card pre,
-.zen-card code,
 pre,
 code {
   box-shadow: none !important;
@@ -560,11 +558,6 @@ code {
   background: var(--primary);
 }
 
-/* Quiet "noise-overlay" remnant (now no-op since atmosphere supplies grain) */
-.noise-overlay {
-  display: none;
-}
-
 /* ---------- Personality ---------- */
 
 /*
@@ -597,8 +590,8 @@ code {
     transform-origin: center;
   }
 
-  a.zen-card:hover,
-  label.zen-card:hover {
+  /* `a.` only — `.zen-card` is never put on a label. */
+  a.zen-card:hover {
     transform: translateY(-3px) rotate(-0.4deg);
   }
 
@@ -608,8 +601,7 @@ code {
 }
 
 /* Links in prose get a soft blush underline that fills in on hover. */
-.read-prose a,
-.markdown-body a {
+.read-prose a {
   text-decoration-color: var(--accent);
   text-underline-offset: 0.2em;
   text-decoration-thickness: 0.12em;
@@ -626,8 +618,7 @@ code {
    * than by being the more specific, later rule.
    */
   @layer components {
-    a.zen-card:hover,
-    label.zen-card:hover {
+    a.zen-card:hover {
       transform: none;
     }
   }
