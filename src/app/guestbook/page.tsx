@@ -1,3 +1,4 @@
+import { ViewTransition } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import GuestbookForm from "@/components/guestbook/GuestbookForm";
@@ -45,13 +46,15 @@ const GuestbookPage = async () => {
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-16 px-6 py-12 md:gap-20 md:px-10 md:py-20 lg:py-24">
       <header className="flex flex-col gap-10">
-        <Link
-          href="/"
-          className="group inline-flex w-fit items-center gap-2 text-xs lowercase text-foreground/70 transition-colors hover:text-primary"
-        >
-          <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
-          <span>back</span>
-        </Link>
+        <ViewTransition name="back-link">
+          <Link
+            href="/"
+            className="group inline-flex w-fit items-center gap-2 text-xs lowercase text-foreground/70 transition-colors hover:text-primary"
+          >
+            <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
+            <span>back</span>
+          </Link>
+        </ViewTransition>
 
         <div className="flex flex-col gap-6">
           <p className="kicker">guestbook</p>
