@@ -18,31 +18,10 @@ import "lenis/dist/lenis.css";
  */
 let instance: Lenis | null = null;
 
-/*
- * Set by the popstate listener and read by the scroll effect below. It has to
- * be module-level rather than a ref: popstate fires before React re-renders
- * for the new route, so the flag is written in one commit and read in the next.
- */
-let cameFromHistory = false;
-
 export const getLenis = () => instance;
 
 const SmoothScroll = () => {
   const pathname = usePathname();
-
-  /*
-   * `popstate` covers the browser's back/forward buttons, the mouse's side
-   * buttons, the trackpad swipe and Alt+Arrow — they all arrive here, which is
-   * why this is the right signal rather than trying to intercept clicks.
-   */
-  useEffect(() => {
-    const onPopState = () => {
-      cameFromHistory = true;
-    };
-
-    window.addEventListener("popstate", onPopState);
-    return () => window.removeEventListener("popstate", onPopState);
-  }, []);
 
   useEffect(() => {
     /*
@@ -53,10 +32,14 @@ const SmoothScroll = () => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const lenis = new Lenis({
-      // ~1s to settle. Long enough to read as weight, short enough that a
-      // deliberate scroll still lands where you meant it to.
-      duration: 1.0,
-      easing: (t: number) => 1 - Math.pow(1 - t, 3),
+      /*
+       * `lerp`, not `duration`. A duration restarts a fixed easing curve on
+       * every wheel event, so a real scroll — which is a burst of events —
+       * keeps interrupting and relaunching itself, and reads as steppy.
+       * Interpolating a constant fraction of the remaining distance each frame
+       * absorbs the burst into one continuous glide instead.
+       */
+      lerp: 0.1,
       // Touch devices already have momentum scrolling in the OS. Doubling it up
       // feels laggy and breaks the platform's own overscroll behaviour.
       smoothWheel: true,
@@ -80,43 +63,34 @@ const SmoothScroll = () => {
   }, []);
 
   /*
-   * Next resets scroll on navigation by calling window.scrollTo. Lenis holds
-   * its own idea of the current offset, so without this it animates back down
-   * from the previous page's position after the new one has already rendered.
-   * `immediate` makes the reset a jump, not a glide.
+   * Next already owns scroll on navigation: top for a new route, the stored
+   * offset for back/forward, the element for a hash. Lenis only has to agree
+   * with it.
    *
-   * Back and forward are the exception. Those are the one case where the user
-   * has a position they expect to return to, and Next restores it for us — so
-   * forcing 0 here is what makes the mouse's back button feel like being thrown
-   * to the top of a page you were already reading. On a history navigation we
-   * follow the restored offset instead of overriding it.
+   * This used to drive the scroll itself — forcing 0 on a push and following
+   * the restored value on a pop, tracked through a popstate flag. That meant
+   * two things moving the same scroll during the same frames as the view
+   * transition, which is exactly what made navigation feel like it lurched.
+   * Following one authority is both smoother and considerably less code.
+   *
+   * Read back over several frames because Next does not necessarily apply the
+   * offset in a single pass. Every pass is `immediate` — this is Lenis
+   * adopting a value that has already been applied, never an animation.
    */
   useEffect(() => {
     const lenis = instance;
     if (!lenis) return;
 
-    if (cameFromHistory) {
-      cameFromHistory = false;
+    let id = 0;
+    let frames = 0;
+    const sync = () => {
+      lenis.scrollTo(window.scrollY, { immediate: true, force: true });
+      frames += 1;
+      if (frames < 6) id = requestAnimationFrame(sync);
+    };
 
-      /*
-       * Next restores the offset after this effect runs, and not necessarily
-       * in one go, so read it back over a few frames rather than once. Each
-       * pass is `immediate` — this is Lenis catching up to a value that has
-       * already been applied, not an animation of its own.
-       */
-      let id = 0;
-      let frames = 0;
-      const sync = () => {
-        lenis.scrollTo(window.scrollY, { immediate: true, force: true });
-        frames += 1;
-        if (frames < 3) id = requestAnimationFrame(sync);
-      };
-      id = requestAnimationFrame(sync);
-      return () => cancelAnimationFrame(id);
-    }
-
-    if (window.location.hash) return;
-    lenis.scrollTo(0, { immediate: true });
+    id = requestAnimationFrame(sync);
+    return () => cancelAnimationFrame(id);
   }, [pathname]);
 
   return null;
