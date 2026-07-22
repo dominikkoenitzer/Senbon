@@ -327,11 +327,17 @@ first.
 
 ## Existing user-facing features
 
-- **Dark mode toggle**, bottom-right. Class-based (`.dark` on `<html>`), stored
-  in `localStorage` under `senbon-theme`, defaulting to the OS preference. An
-  inline script in `<head>` (`ThemeScript`) sets the class before first paint so
-  there is no light flash. Until 2026-07-22 nothing ever set `.dark`, so the
-  whole evening palette was unreachable dead CSS.
+- **Dark mode toggle**, bottom-right, or press **`d`**. Class-based (`.dark` on
+  `<html>`), stored in `localStorage` under `senbon-theme`. An inline script in
+  `<head>` (`ThemeScript`) sets the class before first paint so there is no
+  light flash. Until 2026-07-22 nothing ever set `.dark`, so the whole evening
+  palette was unreachable dead CSS.
+  - **The OS preference is the default and stays live.** With no stored choice,
+    changing the system theme changes the site immediately, not just on the next
+    reload. An explicit toggle wins from then on.
+  - `d` is a bare key, so the handler bails on modifiers, on IME composition and
+    on `INPUT`/`TEXTAREA`/`SELECT`/`contenteditable` targets — otherwise it
+    would fire while someone types "d" into the guestbook.
 - Back-to-top button, appears past 600px, bottom-right beside the toggle.
 - Relative time on cards ("3 weeks ago"), absolute date on hover.
 
