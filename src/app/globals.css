@@ -277,32 +277,45 @@
  * A card should feel like something resting on the page, not a pane of smoked
  * glass cut into it. Soft warm shadow does the lifting; the border is nearly
  * invisible and exists only to hold an edge where shadows overlap.
+ *
+ * In `components` on purpose. Unlayered rules outrank every layered one, and
+ * Tailwind v4 emits utilities into the `utilities` layer — so while this block
+ * sat outside a layer, a `bg-*`/`border-*` utility on a `.zen-card` element was
+ * silently discarded. Inside `components` the utility wins, which is what a
+ * call site writing `zen-card bg-muted` has always meant.
  */
-.zen-card {
-  position: relative;
-  border-radius: var(--radius);
-  background: var(--card);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-soft);
-  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 260ms ease, border-color 260ms ease;
+@layer components {
+  .zen-card {
+    position: relative;
+    border-radius: var(--radius);
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+    transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 260ms ease, border-color 260ms ease;
+  }
+
+  .zen-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+    border-color: rgba(168, 69, 92, 0.28);
+  }
+
+  .dark .zen-card:hover {
+    border-color: rgba(240, 145, 159, 0.34);
+  }
+
+  /* No double-border ring */
+  .zen-card::before {
+    content: none;
+  }
 }
 
-.zen-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lift);
-  border-color: rgba(168, 69, 92, 0.28);
-}
-
-.dark .zen-card:hover {
-  border-color: rgba(240, 145, 159, 0.34);
-}
-
-/* No double-border ring */
-.zen-card::before {
-  content: none;
-}
-
+/*
+ * Stays unlayered: it is a global reset, and `!important` reverses layer
+ * precedence — moving it into `components` would make it outrank an important
+ * utility rather than yield to one.
+ */
 .zen-card pre,
 .zen-card code,
 pre,
@@ -327,14 +340,16 @@ code {
  * Was 0.35em gold — wide metallic tracking reads as a luxury watch advert.
  * Tighter, in clay, at full opacity: quieter and considerably friendlier.
  */
-.kicker {
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.005em;
-  text-transform: lowercase;
-  color: var(--primary);
-  opacity: 1;
+@layer components {
+  .kicker {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    text-transform: lowercase;
+    color: var(--primary);
+    opacity: 1;
+  }
 }
 
 .display-balance {
@@ -553,17 +568,19 @@ code {
  * consciously, enough that the page feels like it has a pulse instead of
  * behaving like a printed document.
  */
-.zen-card {
-  transform-origin: center;
-}
+@layer components {
+  .zen-card {
+    transform-origin: center;
+  }
 
-a.zen-card:hover,
-label.zen-card:hover {
-  transform: translateY(-3px) rotate(-0.4deg);
-}
+  a.zen-card:hover,
+  label.zen-card:hover {
+    transform: translateY(-3px) rotate(-0.4deg);
+  }
 
-a.zen-card:active {
-  transform: translateY(-1px) rotate(0deg) scale(0.995);
+  a.zen-card:active {
+    transform: translateY(-1px) rotate(0deg) scale(0.995);
+  }
 }
 
 /* Links in prose get a soft blush underline that fills in on hover. */
@@ -579,9 +596,16 @@ a.zen-card:active {
     animation: none;
   }
 
-  a.zen-card:hover,
-  label.zen-card:hover {
-    transform: none;
+  /*
+   * Layered to match the tilt rules above. If this stayed unlayered while they
+   * moved, it would still win — but only by accident of layer order rather
+   * than by being the more specific, later rule.
+   */
+  @layer components {
+    a.zen-card:hover,
+    label.zen-card:hover {
+      transform: none;
+    }
   }
 }
 
