@@ -694,6 +694,37 @@ code {
   }
 }
 
+/*
+ * Theme switching reuses the same transition machinery, but it is a different
+ * gesture: nothing moved, the paint changed. So no drift on the way in, equal
+ * timing both directions, and the atmosphere crossfades instead of holding
+ * still — during a route change it is the constant, here it is the subject.
+ */
+:root.theme-switching::view-transition-old(root),
+:root.theme-switching::view-transition-new(root),
+:root.theme-switching::view-transition-old(atmosphere),
+:root.theme-switching::view-transition-new(atmosphere) {
+  animation-duration: 320ms;
+  animation-timing-function: ease;
+}
+
+:root.theme-switching::view-transition-old(root),
+:root.theme-switching::view-transition-old(atmosphere) {
+  animation-name: vt-out;
+  opacity: 1;
+}
+
+:root.theme-switching::view-transition-new(root),
+:root.theme-switching::view-transition-new(atmosphere) {
+  animation-name: vt-theme-in;
+}
+
+@keyframes vt-theme-in {
+  from {
+    opacity: 0;
+  }
+}
+
 @keyframes vt-out {
   to {
     opacity: 0;
