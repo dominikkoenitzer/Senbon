@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useSyncExternalStore } from "react";
 import { ArrowUp, Moon, Sun } from "lucide-react";
 import { THEME_STORAGE_KEY, THEME_EVENT } from "@/constants/theme";
 
@@ -65,6 +65,53 @@ const ChromeControls = () => {
     window.dispatchEvent(new Event(THEME_EVENT));
   }, []);
 
+  /*
+   * The OS preference is the default, and it stays the default: with no stored
+   * choice, flipping the system theme flips the site live rather than only on
+   * the next reload. An explicit choice from the toggle wins and is never
+   * overridden here.
+   */
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-color-scheme: dark)");
+    const onSystemChange = () => {
+      let stored: string | null = null;
+      try {
+        stored = localStorage.getItem(THEME_STORAGE_KEY);
+      } catch {
+        // Unreadable storage means no explicit choice we can honour; following
+        // the system is the right fallback.
+      }
+      if (stored !== null) return;
+      document.documentElement.classList.toggle("dark", query.matches);
+      window.dispatchEvent(new Event(THEME_EVENT));
+    };
+
+    query.addEventListener("change", onSystemChange);
+    return () => query.removeEventListener("change", onSystemChange);
+  }, []);
+
+  /* `d` toggles the theme. Bare key, so it has to stay out of the way of
+   * anyone actually typing — the guestbook form is a text field on a page that
+   * this listener also covers. */
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "d" && event.key !== "D") return;
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      // IME composition sends real keydowns mid-word.
+      if (event.isComposing) return;
+
+      const target = event.target as HTMLElement | null;
+      if (target?.isContentEditable) return;
+      if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
+
+      event.preventDefault();
+      toggleTheme();
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [toggleTheme]);
+
   const toTop = useCallback(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
@@ -86,6 +133,8 @@ const ChromeControls = () => {
         type="button"
         onClick={toggleTheme}
         aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+        aria-keyshortcuts="d"
+        title={isDark ? "light mode (d)" : "dark mode (d)"}
         className="flex size-11 items-center justify-center rounded-full border border-border bg-card text-foreground/80 shadow-[var(--shadow-soft)] transition-colors duration-200 hover:border-primary/40 hover:text-primary motion-reduce:transition-none"
       >
         {isDark ? (
