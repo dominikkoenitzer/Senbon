@@ -78,32 +78,10 @@ export const getAllPostSlugs = cache(async (): Promise<string[]> => {
   return posts.map((post) => post.slug);
 });
 
-/**
- * Return the entries immediately newer and older than `slug` in publication
- * order, for prev/next navigation at the bottom of a post.
+/*
+ * `getAdjacentPosts` lived here to feed prev/next links at the bottom of an
+ * entry. That navigation was removed as furniture (see the comment on the entry
+ * page), and the export outlived it unimported. Removed rather than kept warm
+ * — git has it if prev/next ever comes back.
  */
-export type AdjacentSummary = {
-  slug: string;
-  title: string;
-};
-
-export const getAdjacentPosts = cache(
-  async (
-    slug: string
-  ): Promise<{
-    newer: AdjacentSummary | null;
-    older: AdjacentSummary | null;
-  }> => {
-    const posts = await getAllPosts();
-    const idx = posts.findIndex((p) => p.slug === slug);
-    if (idx === -1) return { newer: null, older: null };
-    // getAllPosts is sorted newest-first.
-    const newerPost = idx > 0 ? posts[idx - 1] : null;
-    const olderPost = idx < posts.length - 1 ? posts[idx + 1] : null;
-    return {
-      newer: newerPost ? { slug: newerPost.slug, title: newerPost.title } : null,
-      older: olderPost ? { slug: olderPost.slug, title: olderPost.title } : null,
-    };
-  }
-);
 
