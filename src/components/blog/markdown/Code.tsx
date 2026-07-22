@@ -76,11 +76,11 @@ export const Pre = ({ children, className }: MarkdownPreProps) => {
       >
         {copied ? (
           <>
-            <Check className="h-3 w-3" aria-hidden="true" /> Copied
+            <Check className="size-3" aria-hidden="true" /> Copied
           </>
         ) : (
           <>
-            <Copy className="h-3 w-3" aria-hidden="true" /> Copy
+            <Copy className="size-3" aria-hidden="true" /> Copy
           </>
         )}
       </button>
