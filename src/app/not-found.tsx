@@ -8,17 +8,12 @@ export default function NotFound() {
   return (
     <div className="relative flex min-h-[80vh] items-center justify-center px-6">
       <div className="zen-card w-full max-w-xl px-8 py-12 text-center md:px-12 md:py-16">
-        <p className="kicker mb-6">404 — nothing here</p>
+        <p className="kicker mb-6">404</p>
         <h1 className="font-display mb-5 text-3xl lowercase text-foreground display-balance md:text-5xl">
-          this page does not exist. i checked.
+          nope. doesn&apos;t exist.
         </h1>
         <p className="mx-auto max-w-md text-sm leading-relaxed text-foreground/85 read-prose md:text-base">
-          either you typed it wrong or i deleted it and forgot, and i&apos;m not
-          telling you which. nothing lives at this url. one of us is embarrassed
-          and it isn&apos;t going to be me.
-        </p>
-        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-foreground/75 read-prose">
-          pick a door. all three of them work.
+          one of us typed it wrong and it wasn&apos;t me. pick a door.
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <Link
