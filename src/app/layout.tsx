@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Nunito, Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import AtmosphereBackground from "@/components/AtmosphereBackground";
+import ChromeControls from "@/components/chrome/ChromeControls";
+import ThemeScript from "@/components/chrome/ThemeScript";
 import "./globals.css";
 
 /**
@@ -69,9 +71,15 @@ export const metadata: Metadata = {
   },
 };
 
+/*
+ * `colorScheme` was "dark" while the palette rendered cream and
+ * `html { color-scheme: light }` said otherwise — a leftover from the old dark
+ * theme that told the browser to paint scrollbars and form controls dark on a
+ * light page. Both schemes are genuinely supported now that the toggle exists.
+ */
 export const viewport: Viewport = {
   themeColor: "#fbf5ec",
-  colorScheme: "dark",
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({
@@ -82,6 +90,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-background" suppressHydrationWarning>
       <head>
+        <ThemeScript />
         <meta
           name="robots"
           content="noindex, nofollow, noarchive, nosnippet, noimageindex"
@@ -102,6 +111,7 @@ export default function RootLayout({
         <main id="main-content" className="relative z-10">
           {children}
         </main>
+        <ChromeControls />
         <Analytics />
       </body>
     </html>
