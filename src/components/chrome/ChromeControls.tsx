@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useSyncExternalStore } from "react";
 import { ArrowUp, Moon, Sun } from "lucide-react";
 import { THEME_STORAGE_KEY, THEME_EVENT } from "@/constants/theme";
+import { getLenis } from "./SmoothScroll";
 
 /*
  * Both controls read live browser state, so both are `useSyncExternalStore`
@@ -113,12 +114,23 @@ const ChromeControls = () => {
   }, [toggleTheme]);
 
   const toTop = useCallback(() => {
+    /*
+     * Lenis owns the scroll position while it is running, so a native
+     * `window.scrollTo` gets fought back down mid-flight. When it is absent —
+     * reduced motion, or before it has initialised — native is correct.
+     */
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(0);
+      return;
+    }
+
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   }, []);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 print:hidden">
+    <div className="chrome-controls fixed bottom-6 right-6 z-50 flex flex-col gap-3 print:hidden">
       {scrolled && (
         <button
           type="button"
