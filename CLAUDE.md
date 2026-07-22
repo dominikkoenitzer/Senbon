@@ -163,15 +163,19 @@ it feeling warm rather than merely bright:
 - `ErrorBoundary.tsx` was **deleted** — nothing imported it, and `app/error.tsx`
   plus `app/global-error.tsx` already cover both boundary levels. Do not re-add
   a class-based boundary unless something genuinely needs one.
-- **Known latent bug — `.zen-card` and `.kicker` are unlayered CSS**, while
-  Tailwind v4 emits all utilities inside the `utilities` cascade layer.
-  Unlayered rules beat layered ones, so a `border-*` / `bg-*` utility applied to
-  a `.zen-card` element is **silently a no-op**. This already cost one admin
-  highlight that never rendered at all. Until these move into
-  `@layer components`, build emphasised surfaces from utilities alone rather
-  than stacking them onto `.zen-card`. Moving them is the real fix, but it will
-  activate previously-inert utilities across the site, so audit every call site
-  first rather than doing it blind.
+- **`.zen-card` and `.kicker` live in `@layer components`** (fixed 2026-07-22).
+  Tailwind v4 emits utilities into the later `utilities` layer, so a `bg-*` /
+  `border-*` utility on a `.zen-card` element now **wins**, which is what call
+  sites always meant. While these rules were unlayered they outranked every
+  utility and such classes were silently discarded — that cost one admin
+  highlight and one pending-row tint, both of which had to be hand-built from
+  scratch. Both are now plain `zen-card` + tint utilities. Two dead `bg-muted`
+  classes on the 404 and error cards were **removed** rather than allowed to
+  activate, so those pages look exactly as before. If you want them muted, add
+  it back deliberately — it will now render.
+  - The `pre, code { box-shadow: none !important }` reset stays **unlayered on
+    purpose**: `!important` reverses layer precedence, so layering it would make
+    it outrank an important utility instead of yielding to one.
 - For markdown overrides, edit the matching file in `src/components/blog/markdown/`.
 - For loading UI, use the streaming `loading.tsx` convention. Skeletons live in `src/components/blog/LoadingStates.tsx`.
 
