@@ -1,26 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="senbon">
-  <!--
-    An enso: the zen circle, left open. One heavy stroke and nothing else,
-    because detail turns to mush at 16px.
-
-    Colours are presentation attributes, NOT only CSS. Favicon renderers are a
-    restricted environment and several drop embedded stylesheets — when that
-    happens a CSS-only fill falls back to black and a CSS-only stroke
-    disappears, so the tab shows a black square instead of a mark. The
-    attributes always render; the media query below is a progressive
-    enhancement that follows the OS theme where it is supported, and costs
-    nothing where it is not.
-
-    Values are copies of --primary and --background: an SVG loaded as a
-    favicon cannot see the page stylesheet.
-  -->
   <style>
     @media (prefers-color-scheme: dark) {
       .plate { fill: #211a15; }
       .ring { stroke: #f0919f; }
     }
   </style>
-
   <rect class="plate" width="32" height="32" rx="7" fill="#fbf5ec" />
   <circle
     class="ring"
