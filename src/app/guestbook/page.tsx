@@ -1,4 +1,3 @@
-import { ViewTransition } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import GuestbookForm from "@/components/guestbook/GuestbookForm";
@@ -46,21 +45,16 @@ const GuestbookPage = async () => {
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-16 px-6 py-12 md:gap-20 md:px-10 md:py-20 lg:py-24">
       <header className="flex flex-col gap-10">
-        <ViewTransition name="back-link">
-          <Link
-            href="/"
-            className="group inline-flex w-fit items-center gap-2 text-xs lowercase text-foreground/70 transition-colors hover:text-primary"
-          >
-            <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
-            <span>back</span>
-          </Link>
-        </ViewTransition>
+        <Link
+          href="/"
+          className="group inline-flex w-fit items-center gap-2 text-xs lowercase text-foreground/70 transition-colors hover:text-primary"
+        >
+          <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
+          <span>back</span>
+        </Link>
 
         <div className="flex flex-col gap-6">
-          {/* Pairs with the "guestbook" card label on the home page. */}
-          <ViewTransition name="section-guestbook">
-            <p className="kicker">guestbook</p>
-          </ViewTransition>
+          <p className="kicker">guestbook</p>
           <h1 className="font-display text-5xl leading-[0.95] tracking-tight text-foreground sm:text-6xl md:text-7xl display-balance">
             sign it.
             <span className="italic text-primary"> i&apos;ll wait</span>.

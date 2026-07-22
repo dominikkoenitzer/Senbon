@@ -17,7 +17,20 @@ This file is the load-bearing context for AI agents working on the codebase. Rea
   `@config` directive, and there was none. It had been sitting there defining a
   `zen` palette with hex values that *disagreed* with the real ones in
   `globals.css`, which is a trap, not documentation.
-- **Lenis** for smooth scrolling, **View Transitions** for route changes
+- **Lenis** for smooth scrolling (gentle: `lerp: 0.2`, skipped entirely under
+  reduced motion)
+
+**Route navigation is deliberately unanimated.** It ran through React's
+`<ViewTransition>` for a few hours on 2026-07-22, with shared-element morphs
+pairing each journal card title to its entry headline. It looked good and the
+cost was unacceptable: `experimental.viewTransition` switches the whole app onto
+Next's bundled **prerelease React build**, because `<ViewTransition>` does not
+exist in stable react, and clicks stalled for seconds while server response
+stayed under 0.4s. Reverted. Do not re-enable that flag without measuring
+click-to-render in a real browser first.
+
+The **theme toggle still uses `document.startViewTransition`** — that is the
+native browser API, needs no flag and no framework support, and is unaffected.
 - **react-markdown + rehype-highlight + remark-gfm** for journal entries
 - **Vercel Analytics** for traffic stats (first-party, no third-party tracking)
 
@@ -108,7 +121,6 @@ src/
   types/
     blog.ts                   # JournalPost, PostFrontmatter, MarkdownRendererProps
     guestbook.ts              # GuestbookEntry, GuestbookFormState
-    react-canary.d.ts         # Triple-slash ref exposing <ViewTransition> types
 server/
   guestbook/                  # Self-hosted guestbook API (deployed to the VPS)
     docker-compose.yml        # Fastify API + Postgres 16, neither publishes a host port

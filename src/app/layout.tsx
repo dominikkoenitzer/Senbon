@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { ViewTransition } from "react";
 import { Fraunces, Nunito, Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import AtmosphereBackground from "@/components/AtmosphereBackground";
@@ -117,17 +116,9 @@ export default function RootLayout({
           Skip to content
         </a>
         <AtmosphereBackground />
-        {/*
-          Only the content crossfades. The atmosphere and the floating controls
-          are given their own view-transition names in globals.css and hold
-          still through the swap, which is what stops a navigation from reading
-          as "a new page loaded".
-        */}
-        <ViewTransition>
-          <main id="main-content" className="relative z-10">
-            {children}
-          </main>
-        </ViewTransition>
+        <main id="main-content" className="relative z-10">
+          {children}
+        </main>
         <SmoothScroll />
         <ChromeControls />
         <Analytics />

@@ -10,13 +10,14 @@
  * full-screen SVG plus several large blur filters to achieve. Warmth comes from
  * the colour, not from moving parts. Don't add layers back.
  *
- * All animation is pure CSS, GPU transforms only. `prefers-reduced-motion`
- * disables motion globally (see globals.css).
+ * Nothing here animates. The mesh drifted on a 38s loop until it turned out
+ * that a background which never stops moving is just a headache on a page
+ * someone came to read.
  */
 const AtmosphereBackground = () => (
   <div
     aria-hidden="true"
-    className="atmosphere-root pointer-events-none fixed inset-0 z-0 overflow-hidden"
+    className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
   >
     <div className="atmosphere-base" />
     <div className="atmosphere-mesh" />

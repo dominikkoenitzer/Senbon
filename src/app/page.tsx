@@ -1,4 +1,3 @@
-import { ViewTransition } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Github } from "lucide-react";
 
@@ -42,17 +41,9 @@ const Home = () => (
           style={{ animationDelay: `${40 + i * 40}ms` }}
         >
           <span className="flex flex-col gap-1.5">
-            {/*
-              These read "journal" and "guestbook" — the exact words those two
-              pages lead with. Naming them pairs each card label with the
-              heading it becomes, so choosing a room lifts its name out of the
-              list and grows it into the title rather than swapping documents.
-            */}
-            <ViewTransition name={`section-${link.title}`}>
-              <span className="font-display text-2xl lowercase tracking-tight text-foreground transition-colors group-hover:text-primary md:text-3xl">
-                {link.title}
-              </span>
-            </ViewTransition>
+            <span className="font-display text-2xl lowercase tracking-tight text-foreground transition-colors group-hover:text-primary md:text-3xl">
+              {link.title}
+            </span>
             <span className="text-base leading-relaxed text-foreground/75 read-prose">
               {link.blurb}
             </span>

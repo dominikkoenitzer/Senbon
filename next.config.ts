@@ -17,12 +17,14 @@ const nextConfig: NextConfig = {
   compress: true,
   experimental: {
     /*
-     * Cross-fades route changes through the View Transitions API instead of
-     * swapping the DOM outright, so navigating reads as one continuous surface
-     * rather than a new document. The atmosphere and the floating controls opt
-     * out of the animation in globals.css and stay perfectly still across it.
+     * `viewTransition` is deliberately NOT enabled. Turning it on switches the
+     * whole app onto Next's bundled prerelease React build
+     * (next/dist/compiled/react-experimental), because <ViewTransition> does
+     * not exist in the installed stable react. Route navigation stalled for
+     * several seconds with it on, while server response stayed under 0.4s, so
+     * the cost was entirely client-side. Shared-element morphs are not worth
+     * running production on a prerelease renderer.
      */
-    viewTransition: true,
     optimizePackageImports: [
       "lucide-react",
       "react-markdown",
