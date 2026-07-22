@@ -220,8 +220,12 @@
       transparent 35%
     );
   filter: blur(40px);
-  animation: drift 38s ease-in-out infinite alternate;
-  will-change: transform;
+  /*
+   * Static. This used to drift on a 38s loop, forever, on every page. Motion
+   * that never stops is not ambience — you cannot look away from it, and it is
+   * a reliable way to give someone a headache on a page they came to read.
+   * Warmth is meant to come from the colour, not from moving parts.
+   */
 }
 
 /*
@@ -254,15 +258,6 @@
       transparent 38%
     );
   filter: blur(56px);
-
-  /*
-   * Still in dark. The 38s drift is nearly invisible against cream, but on a
-   * dark field the eye tracks the moving edge of every blob and the background
-   * reads as restless rather than ambient. `will-change` goes with it — with no
-   * animation it only pins a compositor layer for nothing.
-   */
-  animation: none;
-  will-change: auto;
 }
 
 .atmosphere-grain {
@@ -286,14 +281,7 @@
   mix-blend-mode: overlay;
 }
 
-@keyframes drift {
-  0% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
-  }
-  100% {
-    transform: translate3d(2%, -2%, 0) rotate(2deg);
-  }
-}
+/* `@keyframes drift` lived here. Nothing animates the mesh any more. */
 
 /* ---------- Surfaces ---------- */
 
@@ -577,7 +565,7 @@ code {
 }
 
 .fade-up {
-  animation: fade-up 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: fade-up 340ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 /*
@@ -666,7 +654,7 @@ code {
  * so it has to lose on order rather than beat them.
  */
 ::view-transition-group(*) {
-  animation-duration: 280ms;
+  animation-duration: 160ms;
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -696,11 +684,11 @@ code {
    * reason it felt unsettled. Nothing that is staying put should move.
    */
   ::view-transition-old(root) {
-    animation: vt-out 280ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation: vt-out 160ms cubic-bezier(0.4, 0, 0.2, 1) both;
   }
 
   ::view-transition-new(root) {
-    animation: vt-in 280ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation: vt-in 160ms cubic-bezier(0.4, 0, 0.2, 1) both;
   }
 }
 
@@ -722,7 +710,7 @@ code {
 :root.theme-switching::view-transition-new(root),
 :root.theme-switching::view-transition-old(atmosphere),
 :root.theme-switching::view-transition-new(atmosphere) {
-  animation-duration: 320ms;
+  animation-duration: 180ms;
   animation-timing-function: ease;
 }
 
