@@ -254,6 +254,15 @@
       transparent 38%
     );
   filter: blur(56px);
+
+  /*
+   * Still in dark. The 38s drift is nearly invisible against cream, but on a
+   * dark field the eye tracks the moving edge of every blob and the background
+   * reads as restless rather than ambient. `will-change` goes with it — with no
+   * animation it only pins a compositor layer for nothing.
+   */
+  animation: none;
+  will-change: auto;
 }
 
 .atmosphere-grain {
