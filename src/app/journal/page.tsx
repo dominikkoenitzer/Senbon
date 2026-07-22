@@ -1,4 +1,3 @@
-import { ViewTransition } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getAllPosts } from "@/lib/blog";
@@ -22,22 +21,17 @@ const JournalPage = async () => {
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-14 px-6 py-12 md:px-8 md:py-20">
       <header className="flex flex-col gap-7">
-        <ViewTransition name="back-link">
-          <Link
-            href="/"
-            className="group inline-flex w-fit items-center gap-2 text-xs lowercase text-foreground/70 transition-colors hover:text-primary"
-          >
-            <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
-            <span>back</span>
-          </Link>
-        </ViewTransition>
+        <Link
+          href="/"
+          className="group inline-flex w-fit items-center gap-2 text-xs lowercase text-foreground/70 transition-colors hover:text-primary"
+        >
+          <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
+          <span>back</span>
+        </Link>
 
-        {/* Pairs with the "journal" card label on the home page. */}
-        <ViewTransition name="section-journal">
-          <h1 className="font-display text-6xl lowercase leading-[0.85] tracking-tight text-foreground md:text-8xl display-balance">
-            journal
-          </h1>
-        </ViewTransition>
+        <h1 className="font-display text-6xl lowercase leading-[0.85] tracking-tight text-foreground md:text-8xl display-balance">
+          journal
+        </h1>
         <p className="max-w-md text-lg leading-relaxed text-foreground/85 read-prose">
           things i thought, typed while i still meant them. no reading-time
           estimate — you have eyes.
@@ -57,30 +51,18 @@ const JournalPage = async () => {
                 href={`/journal/${post.slug}`}
                 className="zen-card group flex flex-col gap-2 p-6 md:p-7"
               >
-                {/*
-                  These two names match the entry page's headline and date, so
-                  opening a post moves this card's title into the headline
-                  position instead of fading one out and the other in. It is the
-                  difference between "a page changed" and "this thing opened".
-                  Names are per-slug because only one element may hold a given
-                  view-transition-name at a time.
-                */}
-                <ViewTransition name={`post-date-${post.slug}`}>
-                  <time
-                    dateTime={post.publishedAt}
-                    title={formatJournalDate(post.publishedAt)}
-                    className="text-xs lowercase text-foreground/70"
-                  >
-                    {formatRelativeDate(post.publishedAt).toLowerCase()}
-                  </time>
-                </ViewTransition>
+                <time
+                  dateTime={post.publishedAt}
+                  title={formatJournalDate(post.publishedAt)}
+                  className="text-xs lowercase text-foreground/70"
+                >
+                  {formatRelativeDate(post.publishedAt).toLowerCase()}
+                </time>
                 {/* Title and excerpt are author-supplied frontmatter, so a
                     single unbroken string could otherwise widen the card. */}
-                <ViewTransition name={`post-title-${post.slug}`}>
-                  <h2 className="overflow-wrap-anywhere font-display text-2xl lowercase leading-tight tracking-tight text-foreground transition-colors group-hover:text-primary md:text-3xl">
-                    {post.title}
-                  </h2>
-                </ViewTransition>
+                <h2 className="overflow-wrap-anywhere font-display text-2xl lowercase leading-tight tracking-tight text-foreground transition-colors group-hover:text-primary md:text-3xl">
+                  {post.title}
+                </h2>
                 {post.excerpt && (
                   <p className="overflow-wrap-anywhere text-base leading-relaxed text-foreground/75 read-prose">
                     {post.excerpt}

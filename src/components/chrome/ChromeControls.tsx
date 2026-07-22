@@ -70,13 +70,15 @@ const ChromeControls = () => {
     };
 
     /*
-     * Swapping every colour on the page in one frame is a flash. Running it
-     * through a view transition dissolves between the two palettes instead —
-     * the same machinery the routes use, pointed at a paint change.
+     * Swapping every colour on the page in one frame is a flash. The native
+     * View Transitions API dissolves between the two palettes instead.
      *
-     * `theme-switching` swaps the route animation for a plain crossfade: no
-     * upward drift, and the atmosphere fades rather than holding still, since
-     * here it is the thing that changed.
+     * This is `document.startViewTransition` directly — a browser API, no
+     * framework involvement and no experimental flag. Route navigation used to
+     * run through React's <ViewTransition> too, which required a prerelease
+     * React build and stalled clicks for seconds; this one survives that
+     * removal because it never depended on it. `theme-switching` scopes the
+     * crossfade rules in globals.css to this gesture.
      */
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce || !document.startViewTransition) {
@@ -153,7 +155,7 @@ const ChromeControls = () => {
   }, []);
 
   return (
-    <div className="chrome-controls fixed bottom-6 right-6 z-50 flex flex-col gap-3 print:hidden">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 print:hidden">
       {scrolled && (
         <button
           type="button"
