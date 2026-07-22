@@ -16,7 +16,7 @@
 const AtmosphereBackground = () => (
   <div
     aria-hidden="true"
-    className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+    className="atmosphere-root pointer-events-none fixed inset-0 z-0 overflow-hidden"
   >
     <div className="atmosphere-base" />
     <div className="atmosphere-mesh" />
