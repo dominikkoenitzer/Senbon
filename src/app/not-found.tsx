@@ -7,7 +7,7 @@ export const metadata = {
 export default function NotFound() {
   return (
     <div className="relative flex min-h-[80vh] items-center justify-center px-6">
-      <div className="zen-card w-full max-w-xl bg-muted px-8 py-12 text-center md:px-12 md:py-16">
+      <div className="zen-card w-full max-w-xl px-8 py-12 text-center md:px-12 md:py-16">
         <p className="kicker mb-6">404 — nothing here</p>
         <h1 className="font-display mb-5 text-3xl lowercase text-foreground display-balance md:text-5xl">
           this page does not exist. i checked.

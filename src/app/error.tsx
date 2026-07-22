@@ -18,7 +18,7 @@ export default function RouteError({
 
   return (
     <div className="relative flex min-h-[70vh] items-center justify-center px-6">
-      <div className="zen-card w-full max-w-lg bg-muted px-8 py-12 text-center md:px-12 md:py-16">
+      <div className="zen-card w-full max-w-lg px-8 py-12 text-center md:px-12 md:py-16">
         <p className="kicker mb-6">error — my fault</p>
         <h1 className="font-display mb-5 text-3xl lowercase text-foreground display-balance md:text-4xl">
           okay, that was not supposed to happen.

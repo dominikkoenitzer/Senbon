@@ -29,19 +29,16 @@ interface StatProps {
 }
 
 /*
- * `.zen-card` is unlayered CSS and Tailwind's utilities live in a cascade
- * layer, so a `bg-*`/`border-*` utility cannot override the card's own
- * background or border. The emphasised tile therefore builds its surface from
- * utilities instead of stacking them on top of `.zen-card` and losing.
+ * `.zen-card` sits in the `components` layer, below Tailwind's `utilities`, so
+ * the emphasised tile can simply tint the card. This used to be a hand-built
+ * surface because an unlayered `.zen-card` beat every utility stacked on it and
+ * the highlight rendered as an ordinary tile.
  */
 const Stat = ({ value, label, emphasis = false }: StatProps) => (
   <div
-    style={emphasis ? { boxShadow: "var(--shadow-soft)" } : undefined}
     className={cn(
-      "flex flex-col gap-2 p-4 md:p-5",
-      emphasis
-        ? "rounded-[var(--radius)] border border-primary/50 bg-primary/10"
-        : "zen-card",
+      "zen-card flex flex-col gap-2 p-4 md:p-5",
+      emphasis && "border-primary/50 bg-primary/10",
     )}
   >
     <span
