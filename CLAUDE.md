@@ -11,11 +11,19 @@ This file is the load-bearing context for AI agents working on the codebase. Rea
 - **Next.js 16** (App Router, Turbopack, RSC)
 - **React 19**
 - **TypeScript 5**
-- **Tailwind CSS 4** with `@theme inline` tokens
-- **shadcn/ui** primitives (Radix-backed)
-- **Framer Motion** for entrance animations
+- **Tailwind CSS 4** with `@theme inline` tokens, configured **entirely in
+  `globals.css`**. There is no JS config — `tailwind.config.ts` was deleted on
+  2026-07-22 because nothing loaded it: v4 only reads a JS config through an
+  `@config` directive, and there was none. It had been sitting there defining a
+  `zen` palette with hex values that *disagreed* with the real ones in
+  `globals.css`, which is a trap, not documentation.
+- **Lenis** for smooth scrolling, **View Transitions** for route changes
 - **react-markdown + rehype-highlight + remark-gfm** for journal entries
 - **Vercel Analytics** for traffic stats (first-party, no third-party tracking)
+
+No **Framer Motion** (not installed; entrance animation is the CSS `.fade-up`),
+no **shadcn/ui** primitives and no **Radix** (see Components below). Both were
+listed here long after they were removed.
 
 Package manager: **Bun**. Never use `npm`/`pnpm` here — it creates a competing lockfile that breaks Vercel's `--frozen-lockfile`. The Bun version is pinned in `.bun-version`.
 
@@ -40,10 +48,13 @@ Always run `bun run lint && bun run build` before declaring work done. Vercel ru
 ```
 content/
   journal/                 # Markdown entries (frontmatter + body)
-public/                    # Static assets (currently sparse)
+                           # NOTE: no public/ directory exists. It is not
+                           # "sparse", it is absent — create it before
+                           # referencing any static asset path.
 src/
   app/
-    layout.tsx             # Root layout: fonts, atmosphere, metadata, analytics
+    layout.tsx             # Root layout: fonts, atmosphere, theme script,
+                           # view transitions, Lenis, metadata, analytics
     page.tsx               # Home (editorial hero + two nav cards)
     error.tsx              # Route-segment error boundary (themed)
     global-error.tsx       # Root error boundary (re-declares <html>/<body>)
@@ -65,10 +76,10 @@ src/
     AtmosphereBackground.tsx  # Single ambient layer (three CSS layers, no SVG)
     chrome/
       ChromeControls.tsx      # Client: theme toggle + back-to-top, fixed bottom-right
+      SmoothScroll.tsx        # Client: Lenis instance + getLenis(); route scroll reset
       ThemeScript.tsx         # Inline pre-paint script that sets .dark on <html>
     blog/
       MarkdownRenderer.tsx
-      index.ts
       markdown/               # ReactMarkdown component overrides
         Heading.tsx           # H1-H4 with slug anchors
         Text.tsx              # P, Link (external ↗), Strong, Em, Hr, Blockquote
@@ -86,20 +97,18 @@ src/
       AutoApproveToggle.tsx   # Client: auto-publish switch (useOptimistic)
       EntryRow.tsx            # Client: one signature + approve / two-step delete
   constants/
-    blog.ts                   # BLOG_CONFIG
+    blog.ts                   # BLOG_CONFIG (content dir + file extensions only)
     theme.ts                  # localStorage key + toggle event name
     guestbook.ts              # GUESTBOOK_CONFIG (length caps, honeypot field name)
-  hooks/
-    useSmoothScroll.ts          # ID-targeted scroll with reduced-motion respect
   lib/
     blog.ts                   # getAllPosts, getPostBySlug, getAllPostSlugs (all React.cache wrapped)
     guestbook.ts              # getGuestbookEntries (React.cache) + API config helpers
     guestbook-admin.ts        # Server-only moderation client + HMAC session cookie
     utils.ts                  # cn() + formatJournalDate + formatRelativeDate
   types/
-    blog.ts                   # JournalPost, BlogCardProps, etc.
+    blog.ts                   # JournalPost, PostFrontmatter, MarkdownRendererProps
     guestbook.ts              # GuestbookEntry, GuestbookFormState
-    index.ts
+    react-canary.d.ts         # Triple-slash ref exposing <ViewTransition> types
 server/
   guestbook/                  # Self-hosted guestbook API (deployed to the VPS)
     docker-compose.yml        # Fastify API + Postgres 16, neither publishes a host port
@@ -118,7 +127,13 @@ server/
 
 ### Colors
 - Use **semantic tokens** (`bg-background`, `text-foreground`, `text-primary`, `border-border`) wherever possible.
-- The custom palette tokens (`zen-clay`, `zen-gold`, `zen-mist`, `zen-rose`, `zen-sage`) are defined in `tailwind.config.ts` and `globals.css`. Use them when the semantic name doesn't fit.
+- The custom palette tokens (`--zen-clay`, `--zen-gold`, `--zen-gold-warm`,
+  `--zen-mist`, `--zen-rose`, `--zen-sage`, `--zen-ink`, `--zen-ink-warm`) live
+  in `globals.css` only, in both `:root` and `.dark`. **Nothing currently uses
+  them** — they are not mapped into the `@theme inline` block, so there is no
+  `bg-zen-clay` utility; reaching one means `var(--zen-clay)` or adding it to
+  `@theme` first. They are kept as the written-down palette, not because
+  anything reads them.
 - **Never** hardcode raw color literals (`#a54d30`, `rgba(...)`). Add a token if the design needs a new one.
 
 **The palette is warm and light by default.** It was redesigned away from a
@@ -141,7 +156,9 @@ it feeling warm rather than merely bright:
   anything a person actually reads — below that it fails WCAG AA on the cream
   background (`/40` measured 2.26:1). Only `aria-hidden` ornaments may go lower.
   Build hierarchy with size and weight instead of fading text out.
-- Headlines use `font-display` (Playfair Display).
+- Headlines use `font-display`, which is **Fraunces** — not Playfair Display.
+  Playfair was replaced because it read as solemn; this file claimed both in two
+  different places for a while.
 - Kicker labels use the `.kicker` utility: **body face (Nunito), lowercase,
   semibold, ~0.95rem, near-zero tracking**, in the primary rose-plum at full
   opacity. It has been walked back twice — first from 0.35em metallic gold at
@@ -216,11 +233,19 @@ See `env.example`.
 - `NEXT_PUBLIC_SITE_URL` — canonical site URL
 - `GUESTBOOK_API_URL` — base URL of the self-hosted guestbook API
 - `GUESTBOOK_API_TOKEN` — bearer token for that API
+- `GUESTBOOK_ADMIN_TOKEN` — bearer token for the moderation endpoints, and the
+  HMAC key backing the admin session cookie. Rotating it invalidates every
+  session.
+- `GUESTBOOK_ADMIN_PASSWORD` — what you type at `/guestbook/admin`
 
-The two guestbook vars are **server-only**. Never give them a `NEXT_PUBLIC_`
-prefix — the token grants write access. If either is missing, `/guestbook`
-degrades to the old "paused" notice instead of erroring, which is why preview
-deployments without them still build fine.
+All four guestbook vars are **server-only**. Never give them a `NEXT_PUBLIC_`
+prefix — the tokens grant write and moderation access. If the API URL or token
+is missing, `/guestbook` degrades to the old "paused" notice instead of
+erroring, which is why preview deployments without them still build fine.
+
+(This section listed only the first three for a long time, while the Guestbook
+section below referred to `GUESTBOOK_ADMIN_TOKEN` as though it had been
+introduced here.)
 
 ---
 
@@ -374,7 +399,7 @@ being asked:
 ## Architecture decisions worth remembering
 
 - **`React.cache` wraps `getAllPosts`, `getPostBySlug`, `getAllPostSlugs`** so the metadata and page render call the same function once per request. (`getAdjacentPosts` was also wrapped until it was deleted on 2026-07-22 as an unimported leftover of prev/next navigation.)
-- **`optimizePackageImports`** in `next.config.ts` covers `lucide-react`, `framer-motion`, `react-markdown`, `remark-gfm`, `rehype-highlight`, `date-fns`, `dayjs` — keeps bundle small even with deep barrel imports.
+- **`optimizePackageImports`** in `next.config.ts` covers exactly `lucide-react`, `react-markdown`, `remark-gfm`, `rehype-highlight`, `dayjs` — keeps bundle small even with deep barrel imports. (It never covered `framer-motion` or `date-fns`; neither package is installed.)
 - **`useSyncExternalStore`** is how `ChromeControls` reads both the theme class and scroll position. Don't replace it with a `useEffect + setState` pattern — React 19's lint rule will scream and the hydration story breaks. (This note used to name `CommandPalette`, which has never existed in this codebase.)
 - **The atmosphere is intentionally minimal.** The old SVG ribbon/river system and its seamless-loop path geometry were deleted, not broken. If a background feels too static, adjust colour and the mesh drift — do not reintroduce moving layers.
 - **fonts** use explicit `display: "swap"` + a system fallback chain. Mono is `preload: false` (saves a request).
@@ -392,7 +417,10 @@ The project has these agent skills under `.agents/skills/`:
 - `web-design-guidelines` — Vercel's UI review checklist
 - `next-best-practices` — file conventions, RSC, fonts, metadata, etc.
 
-These were applied in commits during the spring 2026 polish pass. Refer to the journal entries `skills-as-companions.md` and adjacent posts for context.
+These were applied in commits during the spring 2026 polish pass. This section
+used to point at a journal entry `skills-as-companions.md` "and adjacent posts"
+for context — there is exactly one entry in `content/journal/`, and it is the
+one explaining that the previous sixteen were deleted with no archive.
 
 ---
 
