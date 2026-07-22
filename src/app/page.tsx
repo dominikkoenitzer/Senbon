@@ -39,7 +39,7 @@ const Home = () => (
           key={link.href}
           href={link.href}
           className="zen-card group flex items-center justify-between gap-6 p-6 fade-up md:p-7"
-          style={{ animationDelay: `${120 + i * 90}ms` }}
+          style={{ animationDelay: `${40 + i * 40}ms` }}
         >
           <span className="flex flex-col gap-1.5">
             {/*
@@ -67,7 +67,7 @@ const Home = () => (
 
     <footer
       className="flex flex-col gap-3 fade-up"
-      style={{ animationDelay: "300ms" }}
+      style={{ animationDelay: "120ms" }}
     >
       <p className="max-w-md text-sm leading-relaxed text-foreground/75 read-prose">
         that&apos;s the whole site. no about page. you know enough.
