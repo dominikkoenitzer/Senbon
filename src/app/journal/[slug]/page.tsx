@@ -1,4 +1,3 @@
-import { ViewTransition } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
@@ -47,34 +46,27 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
   return (
     <article className="relative z-10 mx-auto flex max-w-2xl flex-col gap-10 px-6 py-12 md:px-8 md:py-20">
       <header className="flex flex-col gap-6">
-        <ViewTransition name="back-link">
-          <Link
-            href="/journal"
-            className="group inline-flex w-fit items-center gap-2 text-xs lowercase text-foreground/70 transition-colors hover:text-primary"
-          >
-            <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
-            <span>journal</span>
-          </Link>
-        </ViewTransition>
+        <Link
+          href="/journal"
+          className="group inline-flex w-fit items-center gap-2 text-xs lowercase text-foreground/70 transition-colors hover:text-primary"
+        >
+          <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
+          <span>journal</span>
+        </Link>
 
         {/* Title is author-supplied frontmatter — one unbroken string must not
-            push the column sideways. The name pairs with the matching card on
-            /journal so the title travels between the two. */}
-        <ViewTransition name={`post-title-${slug}`}>
-          <h1 className="overflow-wrap-anywhere font-display text-4xl lowercase leading-[0.95] tracking-tight text-foreground md:text-6xl display-balance">
-            {post.title}
-          </h1>
-        </ViewTransition>
+            push the column sideways. */}
+        <h1 className="overflow-wrap-anywhere font-display text-4xl lowercase leading-[0.95] tracking-tight text-foreground md:text-6xl display-balance">
+          {post.title}
+        </h1>
 
-        <ViewTransition name={`post-date-${slug}`}>
-          <time
-            dateTime={post.publishedAt}
-            title={formatJournalDate(post.publishedAt)}
-            className="text-xs lowercase text-foreground/70"
-          >
-            {formatRelativeDate(post.publishedAt).toLowerCase()}
-          </time>
-        </ViewTransition>
+        <time
+          dateTime={post.publishedAt}
+          title={formatJournalDate(post.publishedAt)}
+          className="text-xs lowercase text-foreground/70"
+        >
+          {formatRelativeDate(post.publishedAt).toLowerCase()}
+        </time>
       </header>
 
       <MarkdownRenderer content={post.content} />
