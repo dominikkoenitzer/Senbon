@@ -642,3 +642,76 @@ code {
   overflow-wrap: anywhere;
   word-break: break-word;
 }
+
+/* ---------- Navigation ---------- */
+
+/*
+ * The whole trick of the seamless feel is what does NOT move. The atmosphere
+ * and the floating controls are named, so the browser treats each as the same
+ * element on both sides of the navigation and leaves it alone; only the content
+ * crossfades underneath them. Without this the fixed background would fade out
+ * and back in on every click, which announces "new page" louder than a reload.
+ *
+ * Old is hidden outright rather than left at `animation: none` — otherwise both
+ * snapshots render on top of each other for the duration and the layer ghosts.
+ */
+.atmosphere-root {
+  view-transition-name: atmosphere;
+}
+
+.chrome-controls {
+  view-transition-name: chrome;
+}
+
+::view-transition-group(atmosphere),
+::view-transition-group(chrome) {
+  animation: none;
+}
+
+::view-transition-old(atmosphere),
+::view-transition-old(chrome) {
+  animation: none;
+  opacity: 0;
+}
+
+::view-transition-new(atmosphere),
+::view-transition-new(chrome) {
+  animation: none;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /*
+   * Out is quicker than in, and they overlap. Equal-length crossfades read as a
+   * dissolve; letting the incoming content run longer on an ease-out reads as
+   * the page settling.
+   */
+  ::view-transition-old(root) {
+    animation: vt-out 200ms cubic-bezier(0.4, 0, 1, 1) both;
+  }
+
+  ::view-transition-new(root) {
+    animation: vt-in 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+/* A navigation still happens — it just happens instantly. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}

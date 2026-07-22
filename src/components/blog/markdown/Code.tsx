@@ -3,12 +3,12 @@
 import { useRef, useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { MarkdownCodeProps, MarkdownPreProps } from "./types";
+import type { MarkdownComponentProps } from "./types";
 
 /**
  * Inline and block code component
  */
-export const Code = ({ className, children }: MarkdownCodeProps) => {
+export const Code = ({ className, children }: MarkdownComponentProps) => {
   const isInline = !className || !className.includes("language-");
 
   return (
@@ -28,7 +28,7 @@ export const Code = ({ className, children }: MarkdownCodeProps) => {
 /**
  * Pre/code block wrapper with one-click copy
  */
-export const Pre = ({ children, className }: MarkdownPreProps) => {
+export const Pre = ({ children, className }: MarkdownComponentProps) => {
   const ref = useRef<HTMLPreElement>(null);
   const [copied, setCopied] = useState(false);
 
