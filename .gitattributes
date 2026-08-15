@@ -1,0 +1,5 @@
+# Shell scripts must stay LF. A CRLF
+# checkout on Windows produces `bad interpreter: /usr/bin/env bash^M`, and the
+# breakage only shows up at runtime, so pin them to LF whatever the local
+# core.autocrlf says.
+*.sh text eol=lf
