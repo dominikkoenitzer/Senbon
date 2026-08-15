@@ -298,14 +298,18 @@ Key facts:
     as **whole words only**). Collapsing them back into one substring list
     re-breaks "raccoon", "cocoon", "flame retardant" and "a chink in the
     armour" — this was live for hours.
-- **The API hostname uses <redacted>** (`senbon.<ip>.<redacted>`), which resolves any
-  hostname containing an IP to that IP. It needs **no DNS records** — `senbon.ch`
-  DNS is untouched — and gives Caddy a real hostname to get a Let's Encrypt cert
-  for, which a bare IP cannot. Only Vercel's server ever calls it; it never
-  appears in HTML. **Trade-off:** it is a third-party dependency. If <redacted>
-  stops resolving, signing degrades to the "it's down" card. Swapping to a real
-  `api.senbon.ch` A record is a five-minute change (record, Caddyfile hostname,
-  `GUESTBOOK_API_URL`).
+- **The API hostname is `api.senbon.ch`** — an A record on `senbon.ch` pointing
+  at the VPS, managed in Vercel DNS. Only Vercel's server ever calls it; it never
+  appears in HTML.
+  - It was `senbon.<ip>.<redacted>` until **2026-08-15**. <redacted> resolves any
+    hostname containing an IP to that IP, which gave Caddy a real hostname to get
+    a Let's Encrypt cert for (a bare IP cannot) with no DNS records to manage.
+    The cost was a third party in the critical path of every signature, and it
+    was swapped out for that reason. Do not reintroduce it.
+  - `senbon.ch` carries a `*` ALIAS to Vercel, so a missing `api` A record does
+    **not** fail loudly — it falls through to the wildcard and returns Vercel's
+    `DEPLOYMENT_NOT_FOUND` 404. A 404 from the API is a DNS symptom, not an API
+    one. CAA on the domain permits `letsencrypt.org` and `sectigo.com`.
 - **Length caps live in two places** — `src/constants/guestbook.ts` and the API's
   `server.js`. Keep them in sync or the client counter will promise something the
   server rejects.

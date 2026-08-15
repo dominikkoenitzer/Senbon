@@ -21,13 +21,29 @@ caddy-proxy  ──►  senbon-guestbook-api  ──►  senbon-guestbook-db
  (TLS, shared)     (Fastify, no host port)    (Postgres 16, no host port)
 ```
 
-Neither container publishes a host port. The only way in is through Caddy,
-which routes `<redacted-api-host>` to the API over the `senbon_net`
-Docker network.
+Neither container publishes a host port. The only way in is through Caddy, which
+routes `api.senbon.ch` to the API over the `senbon_net` Docker network.
 
-The hostname uses [<redacted>](https://<redacted>), which resolves any
-`*.<ip>.<redacted>` name to that IP — so the stack gets a real Let's Encrypt
-certificate with **no DNS records to manage**. `senbon.ch` DNS is untouched.
+That hostname is an **A record on `senbon.ch`** (`api` → `<vps-ip>`),
+managed in Vercel DNS alongside the site.
+
+It used to be `<redacted-api-host>`. [<redacted>](https://<redacted>)
+resolves any `*.<ip>.<redacted>` name to that IP, which bought a real Let's
+Encrypt certificate with no DNS records to manage — Let's Encrypt will not
+issue for a bare IP, and Caddy needed *some* hostname to ask for. It worked, but
+it put a third party in the critical path of every signature: if <redacted> ever
+stopped resolving, signing broke and nothing on this infrastructure could fix
+it. Replaced 2026-08-15.
+
+Two things worth knowing about the replacement:
+
+- `senbon.ch` has a `*` ALIAS record pointing at Vercel. If the `api` A record
+  is ever deleted, `api.senbon.ch` will **not** fail loudly — it falls through
+  to that wildcard and returns Vercel's `DEPLOYMENT_NOT_FOUND` 404, which reads
+  like an API bug rather than a DNS one.
+- The CAA records on `senbon.ch` allow `letsencrypt.org` and `sectigo.com`.
+  Adding a further subdomain works; switching Caddy to a CA outside that list
+  would fail issuance.
 
 ---
 
@@ -66,12 +82,12 @@ than for gating.
 > ```bash
 > # read
 > curl -s -H "Authorization: Bearer $ADMIN" \
->   https://<redacted-api-host>/admin/settings
+>   https://api.senbon.ch/admin/settings
 >
 > # hold new signatures for review
 > curl -s -X POST -H "Authorization: Bearer $ADMIN" \
 >   -H 'Content-Type: application/json' -d '{"autoApprove":false}' \
->   https://<redacted-api-host>/admin/settings
+>   https://api.senbon.ch/admin/settings
 > ```
 
 ```bash
@@ -81,15 +97,15 @@ ADMIN=$(grep '^ADMIN_TOKEN=' .env | cut -d= -f2)
 
 # See what is waiting
 curl -s -H "Authorization: Bearer $ADMIN" \
-  https://<redacted-api-host>/admin/entries | jq
+  https://api.senbon.ch/admin/entries | jq
 
 # Publish one
 curl -s -X POST -H "Authorization: Bearer $ADMIN" \
-  https://<redacted-api-host>/admin/entries/<id>/approve
+  https://api.senbon.ch/admin/entries/<id>/approve
 
 # Delete one
 curl -s -X DELETE -H "Authorization: Bearer $ADMIN" \
-  https://<redacted-api-host>/admin/entries/<id>
+  https://api.senbon.ch/admin/entries/<id>
 ```
 
 The `.env` value is still worth keeping accurate — it is what a rebuilt database
@@ -153,7 +169,7 @@ ssh <vps-host> 'chmod +x /opt/scripts/senbon-guestbook-health.sh'
 ssh <vps-host> 'cat /var/log/senbon-guestbook-health.log'
 
 # exercise the failure branch without waiting for an outage
-URL=https://<redacted-api-host>/nope /opt/scripts/senbon-guestbook-health.sh
+URL=https://api.senbon.ch/nope /opt/scripts/senbon-guestbook-health.sh
 ```
 
 It writes **only failures**, so an empty log means an unbroken run and the first
@@ -166,7 +182,7 @@ outage that actually happened.
 
 **This is a recorder, not an alarm.** It notifies nobody; the host has no mail
 or webhook setup. For push alerts, point any external uptime monitor at
-`https://<redacted-api-host>/health` — it needs no token and returns
+`https://api.senbon.ch/health` — it needs no token and returns
 `{"ok":true}`.
 
 ---
@@ -236,9 +252,31 @@ that container briefly drops six unrelated production sites. Caddy re-resolves
 upstreams at dial time, so the connect alone is enough.
 
 Always validate before reloading — a bad config rejected at validate time
-leaves the running config untouched:
+leaves the running config untouched. **Pipe the host file in over stdin rather
+than naming the container's path:**
 
 ```bash
-docker exec caddy-proxy caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
-docker exec caddy-proxy caddy reload   --config /etc/caddy/Caddyfile --adapter caddyfile
+docker exec -i caddy-proxy caddy validate --config - --adapter caddyfile < /srv/caddy/Caddyfile
+docker exec -i caddy-proxy caddy reload   --config - --adapter caddyfile < /srv/caddy/Caddyfile
 ```
+
+### Why stdin, and not `--config /etc/caddy/Caddyfile`
+
+The Caddyfile is bind-mounted as a **single file**, so Docker pins the mount to
+that file's *inode*. `sed -i` does not edit in place — it writes a temp file and
+renames it over the original, producing a new inode. The host path then has your
+edit while the running container still sees the old file, and
+
+```bash
+docker exec caddy-proxy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+```
+
+answers **`"config is unchanged"`** and silently does nothing. Worse, `caddy
+validate` against that path cheerfully reports `Valid configuration` — it is
+validating the stale file. This cost a confusing detour on 2026-08-15.
+
+Reading the config from stdin sidesteps the mount entirely. The divergence
+itself lasts until the container is next recreated, at which point Docker
+re-resolves the path and picks up the current file — so the on-disk Caddyfile is
+always the thing that survives. Editing with a redirect (`cat new > Caddyfile`)
+preserves the inode and avoids the whole trap.
