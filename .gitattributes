@@ -1,0 +1,5 @@
+# Shell scripts here are deployed to the Linux VPS and executed there. A CRLF
+# checkout on Windows produces `bad interpreter: /usr/bin/env bash^M`, and the
+# breakage only shows up on the server, so pin them to LF whatever the local
+# core.autocrlf says.
+*.sh text eol=lf

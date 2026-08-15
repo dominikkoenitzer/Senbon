@@ -40,12 +40,21 @@ export const guestbookAuthHeader = (): Record<string, string> => ({
  * Fetch approved signatures. Wrapped in React.cache so metadata and the page
  * body share one request, matching the pattern in lib/blog.ts.
  *
- * A guestbook that fails to load should never take the page down — on any
- * error we render an empty wall and log server-side.
+ * A guestbook that fails to load should never take the page down, so every
+ * failure is caught. It must not be caught *silently*, though: this returned
+ * `[]` for both "nobody has signed" and "the API never answered", and those two
+ * render identically — the coy empty-wall card. On 2026-08-08 the reverse proxy
+ * lost its route to the API and every request 502'd for seven days, while
+ * /guestbook kept answering 200 with a wall that looked merely unpopular. The
+ * outage was invisible on the one surface guaranteed to be looked at.
+ *
+ * So the two cases are now distinct: `[]` means the API answered and had
+ * nothing, `null` means it could not be reached (or was never configured) and
+ * nothing about the wall is known. Callers must render those differently.
  */
 export const getGuestbookEntries = cache(
-  async (): Promise<GuestbookEntry[]> => {
-    if (!isGuestbookConfigured()) return [];
+  async (): Promise<GuestbookEntry[] | null> => {
+    if (!isGuestbookConfigured()) return null;
 
     try {
       const response = await fetch(
@@ -62,14 +71,14 @@ export const getGuestbookEntries = cache(
         console.error(
           `[guestbook] fetch failed: ${response.status} ${response.statusText}`,
         );
-        return [];
+        return null;
       }
 
       const data = (await response.json()) as { entries?: GuestbookEntry[] };
       return data.entries ?? [];
     } catch (error) {
       console.error("[guestbook] fetch threw:", error);
-      return [];
+      return null;
     }
   },
 );

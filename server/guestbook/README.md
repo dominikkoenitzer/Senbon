@@ -117,6 +117,39 @@ same "one failure and it's gone" shape that killed the previous guestbook.
 
 ---
 
+## Health log
+
+`healthcheck.sh` in this directory, deployed to
+`/opt/scripts/senbon-guestbook-health.sh` and run every 5 minutes by
+`/etc/cron.d/senbon-guestbook-health`.
+
+```bash
+scp server/guestbook/healthcheck.sh \
+  <vps-host>:/opt/scripts/senbon-guestbook-health.sh
+ssh <vps-host> 'chmod +x /opt/scripts/senbon-guestbook-health.sh'
+
+# was it ever down, and when?
+ssh <vps-host> 'cat /var/log/senbon-guestbook-health.log'
+
+# exercise the failure branch without waiting for an outage
+URL=https://<redacted-api-host>/nope /opt/scripts/senbon-guestbook-health.sh
+```
+
+It writes **only failures**, so an empty log means an unbroken run and the first
+line of any block is the moment it broke. Each failure line also records
+Caddy's current network list, which is usually the entire diagnosis.
+
+It checks the public URL rather than the container, so it covers DNS, TLS, Caddy
+and the API together — a container-level check stays green through exactly the
+outage that actually happened.
+
+**This is a recorder, not an alarm.** It notifies nobody; the host has no mail
+or webhook setup. For push alerts, point any external uptime monitor at
+`https://<redacted-api-host>/health` — it needs no token and returns
+`{"ok":true}`.
+
+---
+
 ## Hardening
 
 - Both containers have `mem_limit`, `cpus`, and `pids_limit` set, so a leak or
@@ -153,6 +186,33 @@ ssh <vps-host> 'cd /srv/senbon-guestbook && docker compose up -d --build'
 The stack added exactly one site block to `/srv/caddy/Caddyfile`, and joined
 `caddy-proxy` to `senbon_net`. Nothing else on that host was modified.
 Timestamped backups of the Caddyfile sit beside it as `Caddyfile.bak-*`.
+
+### `senbon_net` must be declared in Caddy's own compose
+
+That network join used to be a bare `docker network connect`, which lives only
+in the running container. On **2026-08-08** `caddy-proxy` was recreated, came
+back on its five declared networks and not on `senbon_net`, and every request
+502'd for seven days:
+
+```
+dial tcp: lookup senbon-guestbook-api on 127.0.0.11:53: no such host
+```
+
+Note the shape — **"no such host" is a DNS failure, not a dead upstream.** Both
+containers were `Up (healthy)` the whole time and no data was ever at risk.
+"Connection refused" would mean the opposite: network fine, container down.
+
+`senbon_net` is now declared in `/srv/caddy/docker-compose.yml` (as
+`external: true`, exactly like the other stacks), so a recreate reattaches it.
+If it ever regresses, the live fix needs no restart and no Caddyfile change:
+
+```bash
+docker network connect senbon_net caddy-proxy
+```
+
+**Never `docker compose up -d` in `/srv/caddy` just to fix this** — recreating
+that container briefly drops six unrelated production sites. Caddy re-resolves
+upstreams at dial time, so the connect alone is enough.
 
 Always validate before reloading — a bad config rejected at validate time
 leaves the running config untouched:

@@ -31,9 +31,15 @@ const GuestbookPage = async () => {
 
   // Only the boolean crosses into the markup — resolveAutoPublish runs on the
   // server and GUESTBOOK_ADMIN_TOKEN stays there.
-  const [entries, autoPublish]: [GuestbookEntry[], boolean | null] = configured
-    ? await Promise.all([getGuestbookEntries(), resolveAutoPublish()])
-    : [[], null];
+  //
+  // `entries` is null when the API could not be reached at all, which is a
+  // different page from an API that answered with nothing. Signing is hidden in
+  // that case rather than offered and then failed on submit: if the wall could
+  // not be read, there is no reason to believe a write would land.
+  const [entries, autoPublish]: [GuestbookEntry[] | null, boolean | null] =
+    configured
+      ? await Promise.all([getGuestbookEntries(), resolveAutoPublish()])
+      : [null, null];
 
   const publishClaim =
     autoPublish === null
@@ -69,7 +75,7 @@ const GuestbookPage = async () => {
         <div className="zen-rule" />
       </header>
 
-      {configured ? (
+      {entries !== null ? (
         <>
           <GuestbookForm autoPublish={autoPublish} />
           <GuestbookWall entries={entries} />
