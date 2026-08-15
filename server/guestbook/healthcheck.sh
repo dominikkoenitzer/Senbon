@@ -28,7 +28,7 @@ set -uo pipefail
 
 # Overridable so the failure branch can be exercised on demand without waiting
 # for a real outage: URL=https://example.invalid /opt/scripts/senbon-guestbook-health.sh
-URL=${URL:-https://<redacted-api-host>/health}
+URL=${URL:-https://api.senbon.ch/health}
 
 # Only failures are written. A healthy guestbook should produce an empty log,
 # so anything in the file at all is a finding, and the first line of a run is
