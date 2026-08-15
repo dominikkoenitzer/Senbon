@@ -305,11 +305,14 @@ Key facts:
     in Vercel (`npx vercel dns ls senbon.ch --scope izanagi` — the scope flag is
     required). Adding a record in Hostpoint's panel does nothing while that
     delegation stands.
-  - It was `senbon.<ip>.<redacted>` until **2026-08-15**. <redacted> resolves any
-    hostname containing an IP to that IP, which gave Caddy a real hostname to get
-    a Let's Encrypt cert for (a bare IP cannot) with no DNS records to manage.
-    The cost was a third party in the critical path of every signature, and it
-    was swapped out for that reason. Do not reintroduce it.
+  - Until **2026-08-15** this went through a third-party wildcard-DNS hostname
+    instead, which gave Caddy something it could get a Let's Encrypt cert for (a
+    bare IP cannot) with no DNS records to manage. The cost was an outside
+    dependency in the critical path of every signature, and it was swapped out
+    for that reason. Do not reintroduce that pattern.
+  - **This repo is public.** Host names, IPs and SSH targets do not belong in it
+    — use `<vps-host>` / `<vps-ip>` placeholders and keep the real values in the
+    deploy notes.
   - `senbon.ch` carries a `*` ALIAS to Vercel, so a missing `api` A record does
     **not** fail loudly — it falls through to the wildcard and returns Vercel's
     `DEPLOYMENT_NOT_FOUND` 404. A 404 from the API is a DNS symptom, not an API

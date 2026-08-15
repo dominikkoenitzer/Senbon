@@ -42,13 +42,16 @@ delegation points at Vercel. If the nameservers are ever moved back to
 Hostpoint, the `api` record must be recreated there or the guestbook loses its
 API hostname.
 
-It used to be `<redacted-api-host>`. [<redacted>](https://<redacted>)
-resolves any `*.<ip>.<redacted>` name to that IP, which bought a real Let's
-Encrypt certificate with no DNS records to manage — Let's Encrypt will not
-issue for a bare IP, and Caddy needed *some* hostname to ask for. It worked, but
-it put a third party in the critical path of every signature: if <redacted> ever
-stopped resolving, signing broke and nothing on this infrastructure could fix
-it. Replaced 2026-08-15.
+Until **2026-08-15** this ran through a third-party wildcard-DNS hostname
+instead. Let's Encrypt will not issue a certificate for a bare IP, and that
+service gave Caddy a certifiable hostname with no DNS records to manage. It
+worked, but it put an outside dependency in the critical path of every
+signature — if it stopped resolving, signing broke and nothing on this
+infrastructure could fix it. Replaced with the record above. Do not reintroduce
+that pattern.
+
+Concrete host and address values are deliberately kept out of this repo, which
+is public. They live in the deploy notes and in `.env.local`.
 
 Two things worth knowing about the replacement:
 
