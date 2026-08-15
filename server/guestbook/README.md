@@ -40,6 +40,8 @@ All routes require `Authorization: Bearer <token>`.
 | `GET`    | `/health`                     | none  | Liveness + DB ping               |
 | `GET`    | `/entries?limit=`             | API   | Approved signatures, newest first |
 | `POST`   | `/sign`                       | API   | Submit a signature (goes to `pending`) |
+| `GET`    | `/admin/settings`             | ADMIN | Read the auto-publish switch     |
+| `POST`   | `/admin/settings`             | ADMIN | Flip the auto-publish switch     |
 | `GET`    | `/admin/entries?status=`      | ADMIN | Moderation queue                 |
 | `POST`   | `/admin/entries/:id/approve`  | ADMIN | Publish a signature              |
 | `DELETE` | `/admin/entries/:id`          | ADMIN | Remove a signature               |
@@ -48,10 +50,29 @@ All routes require `Authorization: Bearer <token>`.
 
 ## Moderation
 
-Currently **`AUTO_APPROVE=true`** — signatures publish the moment they are
+Auto-publish is currently **on** — signatures appear the moment they are
 submitted, and the endpoints below are for cleaning up after the fact rather
-than for gating. Set `AUTO_APPROVE=false` and `docker compose up -d` to hold
-new entries as `pending` until approved.
+than for gating.
+
+> **The switch is a row in Postgres, not an env var.** It lives in `settings`
+> under `auto_approve`. `AUTO_APPROVE` in `/srv/senbon-guestbook/.env` seeds
+> that row **only the first time it is created** (`ON CONFLICT DO NOTHING`);
+> from then on the database wins and the API loads it at boot. Editing `.env`
+> and running `docker compose up -d` therefore does **nothing** — this README
+> told you to do exactly that for a while.
+>
+> Flip it at `/guestbook/admin`, or directly:
+>
+> ```bash
+> # read
+> curl -s -H "Authorization: Bearer $ADMIN" \
+>   https://<redacted-api-host>/admin/settings
+>
+> # hold new signatures for review
+> curl -s -X POST -H "Authorization: Bearer $ADMIN" \
+>   -H 'Content-Type: application/json' -d '{"autoApprove":false}' \
+>   https://<redacted-api-host>/admin/settings
+> ```
 
 ```bash
 ssh <vps-host>
@@ -71,8 +92,8 @@ curl -s -X DELETE -H "Authorization: Bearer $ADMIN" \
   https://<redacted-api-host>/admin/entries/<id>
 ```
 
-To publish signatures instantly instead, set `AUTO_APPROVE=true` in
-`/srv/senbon-guestbook/.env` and run `docker compose up -d`.
+The `.env` value is still worth keeping accurate — it is what a rebuilt database
+would start from.
 
 ---
 
