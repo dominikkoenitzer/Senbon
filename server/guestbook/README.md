@@ -24,8 +24,23 @@ caddy-proxy  ──►  senbon-guestbook-api  ──►  senbon-guestbook-db
 Neither container publishes a host port. The only way in is through Caddy, which
 routes `api.senbon.ch` to the API over the `senbon_net` Docker network.
 
-That hostname is an **A record on `senbon.ch`** (`api` → `<vps-ip>`),
-managed in Vercel DNS alongside the site.
+That hostname is an **A record on `senbon.ch`** (`api` → `<vps-ip>`).
+
+**Registrar and DNS host are different places.** `senbon.ch` is registered at
+**Hostpoint**, but its nameservers are delegated to **Vercel**
+(`ns1/ns2.vercel-dns.com`, confirmed at the `.ch` registry). Vercel answers
+every lookup, so this record is managed there — Vercel dashboard under
+Domains → senbon.ch, or:
+
+```bash
+npx vercel dns ls senbon.ch --scope izanagi
+```
+
+The `--scope izanagi` is required; without it the CLI reports a permission
+error. **A record added in Hostpoint's DNS panel has no effect** while the
+delegation points at Vercel. If the nameservers are ever moved back to
+Hostpoint, the `api` record must be recreated there or the guestbook loses its
+API hostname.
 
 It used to be `<redacted-api-host>`. [<redacted>](https://<redacted>)
 resolves any `*.<ip>.<redacted>` name to that IP, which bought a real Let's

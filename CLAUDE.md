@@ -299,8 +299,12 @@ Key facts:
     re-breaks "raccoon", "cocoon", "flame retardant" and "a chink in the
     armour" — this was live for hours.
 - **The API hostname is `api.senbon.ch`** — an A record on `senbon.ch` pointing
-  at the VPS, managed in Vercel DNS. Only Vercel's server ever calls it; it never
-  appears in HTML.
+  at the VPS. Only Vercel's server ever calls it; it never appears in HTML.
+  - **The domain is registered at Hostpoint, but its DNS is not there.**
+    `senbon.ch` is delegated to `ns1/ns2.vercel-dns.com`, so records are managed
+    in Vercel (`npx vercel dns ls senbon.ch --scope izanagi` — the scope flag is
+    required). Adding a record in Hostpoint's panel does nothing while that
+    delegation stands.
   - It was `senbon.<ip>.<redacted>` until **2026-08-15**. <redacted> resolves any
     hostname containing an IP to that IP, which gave Caddy a real hostname to get
     a Let's Encrypt cert for (a bare IP cannot) with no DNS records to manage.
