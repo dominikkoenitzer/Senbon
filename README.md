@@ -4,7 +4,7 @@
 
 ### A digital garden. One thousand entries. The story remains untold.
 
-A quiet, zen-themed personal **journal** — markdown entries, an ambient flowing background, and an unhurried reading experience.
+A quiet, zen-themed personal **journal** — markdown entries, a warm ambient background, and an unhurried reading experience.
 
 [![CI](https://github.com/dominikkoenitzer/Senbon/actions/workflows/ci.yml/badge.svg)](https://github.com/dominikkoenitzer/Senbon/actions/workflows/ci.yml)
 [![Live](https://img.shields.io/badge/live-senbon.ch-1f2937?logo=vercel&logoColor=white)](https://senbon.ch)
@@ -18,9 +18,13 @@ A quiet, zen-themed personal **journal** — markdown entries, an ambient flowin
 ---
 
 > [!NOTE]
-> Senbon is **deliberately un-indexed**. The live site asks search engines and AI crawlers not to index it (`robots.ts` + `noindex` headers), and it carries no OG/SEO metadata. It's a private garden that happens to be open source.
+> Senbon is **deliberately un-indexed**. Crawlers are allowed to *fetch* the site
+> precisely so they can see its `noindex` directives — a blanket `disallow` would
+> leave search engines indexing the bare URL from external links. AI crawlers are
+> blocked outright. There is no OG or SEO metadata anywhere. It's a private garden
+> that happens to be open source.
 
-## Table of contents
+## Contents
 
 - [About](#about)
 - [Features](#features)
@@ -29,68 +33,89 @@ A quiet, zen-themed personal **journal** — markdown entries, an ambient flowin
 - [Scripts](#scripts)
 - [Writing a journal entry](#writing-a-journal-entry)
 - [Project structure](#project-structure)
+- [Guestbook](#guestbook)
+- [Design notes](#design-notes)
 - [Privacy](#privacy)
-- [Deployment & CI/CD](#deployment--cicd)
+- [Deployment](#deployment)
 - [Author](#author)
 
 ## About
 
-Senbon (千本, "one thousand") is a personal digital garden: a place to publish long-form journal entries. It leans into atmosphere — an aurora-and-river background, editorial typography, and unhurried motion — while staying fast and accessible.
+Senbon (千本, "one thousand") is a personal digital garden: a place to publish
+long-form journal entries. It leans into atmosphere — warm pigment colours,
+editorial typography, unhurried motion — while staying fast and accessible.
 
-Journal entries are plain markdown files committed to the repo. There is no CMS and no third-party tracking.
+Entries are plain markdown files committed to this repo. There is no CMS, no
+third-party tracking, and no comment system.
 
-> The site also has a **guestbook** page, but signing is **currently paused** — the page shows a short notice while its backend is being re-tended.
+Much of the work here has been **subtraction**. A command palette, full-text
+search, tag filters, load-more pagination, a featured strip, prev/next links, a
+table of contents, reading-time estimates and a canvas particle background were
+all built and then deliberately removed. Three routes do not need a launcher, and
+a few hundred words do not need a progress bar. What remains is what earns its
+place.
 
 ## Features
 
-- **Journal** — markdown entries with frontmatter, a featured strip, search across titles, excerpts, and tags, tag filtering, and load-more pagination.
-- **Reading experience** — auto-generated table of contents, a reading-progress hairline, reading-time estimates, prev/next navigation, relative dates ("3 weeks ago"), and copy buttons on code blocks.
-- **Command palette** — <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>K</kbd> (or <kbd>/</kbd>) to jump between pages.
-- **Guestbook** — a quiet wall for visitors to sign (currently paused — the page shows a "resting" notice).
-- **Atmosphere** — a single ambient aurora + flowing-river background (CSS + SVG), with `prefers-reduced-motion` respected.
-- **Polish** — themed 404 and error boundaries, back-to-top, per-route scroll restoration, and a skip-to-content link.
+- **Journal** — markdown entries with frontmatter, newest first, relative dates
+  ("3 weeks ago") with the absolute date on hover.
+- **Guestbook** — visitors sign a wall at `/guestbook`. Rate-limited,
+  honeypot-protected, with moderation behind a password gate.
+- **Dark mode** — bottom-right toggle or press <kbd>d</kbd>. Follows your OS
+  preference until you choose, then remembers. No flash on first paint.
+- **Reading polish** — copy buttons on code blocks, external-link markers,
+  heading anchors, a skip-to-content link, themed 404 and error boundaries.
+- **Atmosphere** — one warm ambient background built from three CSS layers, no
+  SVG and no canvas. `prefers-reduced-motion` is respected throughout.
 
 ## Tech stack
 
 - **[Next.js 16](https://nextjs.org/)** — App Router, Turbopack, React Server Components
 - **[React 19](https://react.dev/)** + **[TypeScript 5](https://www.typescriptlang.org/)**
-- **[Tailwind CSS 4](https://tailwindcss.com/)** with `@theme inline` tokens + **[shadcn/ui](https://ui.shadcn.com/)** (Radix-backed) primitives
-- **[Framer Motion](https://www.framer.com/motion/)** for entrance animations
-- **[react-markdown](https://github.com/remarkjs/react-markdown)** + `rehype-highlight` + `remark-gfm` for entry rendering
+- **[Tailwind CSS 4](https://tailwindcss.com/)** — configured entirely in `globals.css`
+  via `@theme inline`; there is no JS config file
+- **[Lenis](https://lenis.darkroom.engineering/)** for gentle smooth scrolling, skipped
+  under reduced motion
+- **[react-markdown](https://github.com/remarkjs/react-markdown)** + `remark-gfm` +
+  `rehype-highlight` for entry rendering
+- **[Fastify](https://fastify.dev/)** + **PostgreSQL 16** for the self-hosted guestbook API
 - **[Vercel](https://vercel.com/)** hosting + first-party `@vercel/analytics`
 
-Package manager: **Bun** (do not introduce an `npm`/`yarn`/`pnpm` lockfile).
+No Framer Motion, no shadcn/ui, no Radix — entrance animation is a CSS class, and
+the nine unused shadcn primitives were removed along with their Radix
+dependencies.
+
+Package manager: **Bun**. Please don't introduce an `npm`/`yarn`/`pnpm` lockfile —
+Vercel installs with `--frozen-lockfile` and a competing lockfile breaks the build.
 
 ## Getting started
 
-**Prerequisites:** [Bun](https://bun.sh/) 1.1.39+ (this repo pins `1.3.14` via `.bun-version`). Bun is the runtime and package manager.
+**Prerequisites:** [Bun](https://bun.sh/) — the version is pinned in `.bun-version`.
 
 ```bash
-# Clone
 git clone https://github.com/dominikkoenitzer/Senbon.git
 cd Senbon
 
-# Install dependencies
 bun install
-
-# Start the dev server → http://localhost:3000
-bun run dev
+bun run dev          # → http://localhost:3000
 ```
 
-No configuration is required to run the journal locally — entries are read from `content/journal/`. The only optional environment variable is `NEXT_PUBLIC_SITE_URL` (see `env.example`).
+No configuration is needed to run the journal locally; entries are read from
+`content/journal/`. The guestbook degrades to an "offline" notice unless its
+environment variables are set — see [`env.example`](env.example).
 
 ## Scripts
 
 | Command | Description |
 |---|---|
-| `bun run dev` | Start the Next.js dev server on [http://localhost:3000](http://localhost:3000) |
+| `bun run dev` | Dev server on [localhost:3000](http://localhost:3000) |
 | `bun run build` | Production build |
 | `bun run start` | Serve the production build |
 | `bun run lint` | Run ESLint |
 
 ## Writing a journal entry
 
-Create a markdown file at `content/journal/<slug>.md` with frontmatter:
+Create `content/journal/<slug>.md`:
 
 ```yaml
 ---
@@ -100,45 +125,76 @@ publishedAt: "2026-05-26"
 tags:
   - design
   - performance
-featured: true                          # optional — surfaces on the /journal featured strip
-hero: "/images/journal/your-image.jpg"  # optional — only rendered if the file exists in public/
 ---
 ```
 
-The slug is the filename without its extension. Posts sort newest-first, the table of contents is generated from `H1`–`H4` headings, and a missing `hero` image degrades silently. The site rebuilds on commit.
+Those four keys are the entire schema. The slug is the filename without its
+extension, posts sort newest-first, and heading anchors are generated from H2–H4.
+The site rebuilds on commit.
 
 ## Project structure
 
 ```
-content/journal/        # Markdown journal entries (frontmatter + body)
+content/journal/          # Markdown entries (frontmatter + body)
+server/guestbook/         # Self-hosted guestbook API (Fastify + Postgres)
 src/
-├── app/                # App Router: home, journal, guestbook, robots
-│   └── journal/        # Index + [slug] entry pages (server components)
-├── components/         # AtmosphereBackground, CommandPalette, blog/, ui/
-├── constants/          # blog + animation config
-├── hooks/              # intersection observer (TOC scroll-spy), smooth scroll
-├── lib/                # blog (posts), toc, utils
-└── types/              # JournalPost and friends
+├── app/                  # App Router: home, journal, guestbook, admin, robots
+├── components/
+│   ├── blog/markdown/    # ReactMarkdown component overrides
+│   ├── chrome/           # Theme toggle, back-to-top, smooth scroll
+│   └── guestbook/        # Sign form, wall, moderation UI
+├── constants/            # Blog, theme and guestbook config
+├── lib/                  # Post loading, guestbook clients, utils
+└── types/                # JournalPost, GuestbookEntry and friends
 ```
+
+## Guestbook
+
+Signing is backed by a **self-hosted API** — a small Fastify service and a
+Postgres database running on a VPS, rather than a managed backend that can lapse.
+The previous guestbook died exactly that way, which is why this one's source
+lives in [`server/guestbook/`](server/guestbook/) instead of only on a server.
+
+It defends itself with a honeypot, per-IP rate limiting that fails closed, a link
+filter, invisible-character stripping, and optional moderation. Visitor IPs are
+never stored raw — they are HMAC-hashed before they reach the database.
+
+See [`server/guestbook/README.md`](server/guestbook/README.md) for the API surface
+and operational notes.
+
+## Design notes
+
+The palette is warm and light by default — terracotta, honey, dusty rose, sage —
+and dark mode is *evening*, a warm brown-black, never a blue-black. Shadows are
+brown, because black shadows on cream read as grime. Headlines are Fraunces;
+everything else is Nunito. There are no uppercase wide-tracked micro-labels, and
+no metallic gold: both made it feel like a luxury watch advert rather than a
+garden.
+
+Body copy never drops below `text-foreground/70`, which is the contrast floor on
+the cream background. Hierarchy comes from size and weight instead.
 
 ## Privacy
 
-Senbon is built to stay out of the public index:
+- Search engines may crawl so that `noindex` is actually seen; AI crawlers
+  (GPTBot, ClaudeBot, Google-Extended, PerplexityBot, CCBot, Bytespider and
+  others) are disallowed.
+- `X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex` on every
+  response, plus root metadata and redundant meta tags.
+- No OG images, sitemap, or structured data.
+- The only telemetry is first-party Vercel Analytics.
 
-- `robots.ts` denies all search engines and AI crawlers (GPTBot, ClaudeBot, Google-Extended, PerplexityBot, CCBot, and others), reinforced by `noindex` response headers and root metadata.
-- No OG images, sitemap, or structured data — the site is intentionally not optimized for discovery.
-- The only telemetry is **first-party Vercel Analytics** (no third-party trackers).
+## Deployment
 
-## Deployment & CI/CD
+Deploys to **[Vercel](https://vercel.com/)** from `master` via the Git
+integration — live at **[senbon.ch](https://senbon.ch)**.
 
-Senbon deploys on **[Vercel](https://vercel.com/)** (live at **[senbon.ch](https://senbon.ch)**).
+- [`ci.yml`](.github/workflows/ci.yml) — lint and build on every push and PR.
+- [`deploy.yml`](.github/workflows/deploy.yml) — optional CLI deploy, gated on
+  repository secrets; a no-op when they're absent, since the Git integration
+  already handles deploys.
 
-GitHub Actions:
-
-- **[`ci.yml`](.github/workflows/ci.yml)** — on every push and pull request to `master`: install, **lint**, and **build**.
-- **[`deploy.yml`](.github/workflows/deploy.yml)** — optional production deploy via the Vercel CLI, gated on the `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` secrets; a no-op otherwise (Vercel's Git integration handles deploys by default).
-
-[Dependabot](.github/dependabot.yml) keeps npm and GitHub Actions dependencies current weekly.
+[Dependabot](.github/dependabot.yml) keeps dependencies and Actions current.
 
 ## Author
 
