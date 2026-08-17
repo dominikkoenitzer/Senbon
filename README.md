@@ -186,7 +186,7 @@ the cream background. Hierarchy comes from size and weight instead.
 
 ## Deployment
 
-Deploys to **[Vercel](https://vercel.com/)** from `master` via the Git
+Deploys to **[Vercel](https://vercel.com/)** from `main` via the Git
 integration — live at **[senbon.ch](https://senbon.ch)**.
 
 - [`ci.yml`](.github/workflows/ci.yml) — lint and build on every push and PR.
