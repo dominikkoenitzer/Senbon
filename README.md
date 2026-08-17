@@ -2,7 +2,7 @@
 
 # 千本 · Senbon Garden
 
-### A digital garden. One thousand entries. The story remains untold.
+### A quiet personal journal. The story remains untold.
 
 A quiet, zen-themed personal **journal** — markdown entries, a warm ambient background, and an unhurried reading experience.
 
@@ -41,9 +41,10 @@ A quiet, zen-themed personal **journal** — markdown entries, a warm ambient ba
 
 ## About
 
-Senbon (千本, "one thousand") is a personal digital garden: a place to publish
-long-form journal entries. It leans into atmosphere — warm pigment colours,
-editorial typography, unhurried motion — while staying fast and accessible.
+Senbon (千本, "one thousand") is a personal journal: a place to publish
+long-form entries, newest first. The name is an aspiration, not an entry count.
+It leans into atmosphere — warm pigment colours, editorial typography,
+unhurried motion — while staying fast and accessible.
 
 Entries are plain markdown files committed to this repo. There is no CMS, no
 third-party tracking, and no comment system.
