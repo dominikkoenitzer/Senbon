@@ -13,6 +13,9 @@ A quiet, zen-themed personal **journal** — markdown entries, a warm ambient ba
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8?logo=tailwindcss&logoColor=white)
 
+
+<img src="docs/screenshot.jpg" alt="Senbon — the journal index" width="880" />
+
 </div>
 
 ---
