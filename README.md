@@ -202,4 +202,6 @@ integration — live at **[senbon.ch](https://senbon.ch)**.
 
 ## Author
 
-Made by **[dominikkoenitzer](https://github.com/dominikkoenitzer)** · [senbon.ch](https://senbon.ch)
+**dominikkoenitzer** — software engineer in Zürich, Switzerland.
+
+[dk.punds.ch](https://dk.punds.ch) · [CV](https://dk.punds.ch/cv) · [@dominikkoenitzer](https://github.com/dominikkoenitzer) · [dominikkoenitzer@users.noreply.github.com](mailto:dominikkoenitzer@users.noreply.github.com)
