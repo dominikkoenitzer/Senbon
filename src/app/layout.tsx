@@ -4,7 +4,6 @@ import { Analytics } from "@vercel/analytics/next";
 import AtmosphereBackground from "@/components/AtmosphereBackground";
 import ChromeControls from "@/components/chrome/ChromeControls";
 import SmoothScroll from "@/components/chrome/SmoothScroll";
-import ThemeScript from "@/components/chrome/ThemeScript";
 import "./globals.css";
 
 /**
@@ -80,14 +79,13 @@ export const metadata: Metadata = {
 };
 
 /*
- * `colorScheme` was "dark" while the palette rendered cream and
- * `html { color-scheme: light }` said otherwise — a leftover from the old dark
- * theme that told the browser to paint scrollbars and form controls dark on a
- * light page. Both schemes are genuinely supported now that the toggle exists.
+ * `colorScheme` has to agree with the palette: it is what tells the browser
+ * which way to paint the controls it draws itself — scrollbars, form widgets,
+ * the caret. Declaring anything else here paints them against the page.
  */
 export const viewport: Viewport = {
   themeColor: "#fbf5ec",
-  colorScheme: "light dark",
+  colorScheme: "light",
 };
 
 export default function RootLayout({
@@ -96,9 +94,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-background" suppressHydrationWarning>
+    <html lang="en" className="bg-background">
       <head>
-        <ThemeScript />
         <meta
           name="robots"
           content="noindex, nofollow, noarchive, nosnippet, noimageindex"

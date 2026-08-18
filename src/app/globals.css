@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -89,46 +87,6 @@
     0 20px 44px -16px rgba(120, 82, 55, 0.22);
 }
 
-/*
- * Evening, not night. The old dark mode was #07060a — a blue-black that read
- * as cold and empty. This is a warm brown-black, lit like a room with a lamp
- * on rather than a room with the lights off.
- */
-.dark {
-  --background: #211a15;
-  --foreground: #f3e7d8;
-  --card: #2b221b;
-  --card-foreground: #f3e7d8;
-  --popover: #2b221b;
-  --popover-foreground: #f3e7d8;
-  --primary: #f0919f;
-  --primary-foreground: #2b1a12;
-  --secondary: #8fae8c;
-  --secondary-foreground: #211a15;
-  --muted: rgba(243, 231, 216, 0.07);
-  --muted-foreground: rgba(243, 231, 216, 0.68);
-  --accent: #e0a892;
-  --accent-foreground: #211a15;
-  --destructive: #e0705f;
-  --destructive-foreground: #2b1a12;
-  --border: rgba(243, 231, 216, 0.12);
-  --input: rgba(243, 231, 216, 0.16);
-  --ring: rgba(240, 145, 159, 0.45);
-
-  --zen-gold: #e0a85f;
-  --zen-gold-warm: #e8bb7d;
-  --zen-rose: #e0a892;
-  --zen-sage: #8fae8c;
-  --zen-clay: #f0919f;
-  --zen-ink: #f3e7d8;
-  --zen-ink-warm: #d9c6ae;
-
-  --shadow-soft: 0 2px 6px -2px rgba(0, 0, 0, 0.34),
-    0 12px 28px -12px rgba(0, 0, 0, 0.44);
-  --shadow-lift: 0 4px 10px -3px rgba(0, 0, 0, 0.40),
-    0 20px 44px -16px rgba(0, 0, 0, 0.52);
-}
-
 @layer base {
   * {
     @apply border-border;
@@ -137,10 +95,6 @@
   html {
     color-scheme: light;
     background-color: var(--background);
-  }
-
-  html.dark {
-    color-scheme: dark;
   }
 
   body {
@@ -179,26 +133,6 @@
     linear-gradient(180deg, #fdf8f1 0%, #fbf5ec 45%, #f7eee1 100%);
 }
 
-.dark .atmosphere-base {
-  background:
-    radial-gradient(
-      ellipse 90% 70% at 15% -10%,
-      rgba(224, 138, 99, 0.16),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 80% 60% at 100% 0%,
-      rgba(224, 168, 146, 0.12),
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 70% 60% at 50% 110%,
-      rgba(143, 174, 140, 0.14),
-      transparent 60%
-    ),
-    linear-gradient(180deg, #251d17 0%, #211a15 45%, #1d1712 100%);
-}
-
 .atmosphere-mesh {
   position: absolute;
   inset: -20%;
@@ -228,38 +162,6 @@
    */
 }
 
-/*
- * Dark had no mesh rule, so it inherited the light one wholesale: blobs mixed
- * to sit on cream, at 0.55 opacity, over a brown-black base. They read as
- * blotches rather than atmosphere. Dimmer, using the dark palette's own hues,
- * and blurred further — banding across a wide gradient is far more visible on
- * a dark field than on paper.
- *
- * Values are the .dark palette: --zen-gold #e0a85f, --zen-sage #8fae8c,
- * --zen-clay #f0919f. Written as rgba to match every other atmosphere layer,
- * which needs per-stop alpha.
- */
-.dark .atmosphere-mesh {
-  opacity: 0.32;
-  background:
-    radial-gradient(
-      circle at 20% 30%,
-      rgba(224, 168, 95, 0.10) 0%,
-      transparent 38%
-    ),
-    radial-gradient(
-      circle at 80% 70%,
-      rgba(143, 174, 140, 0.08) 0%,
-      transparent 42%
-    ),
-    radial-gradient(
-      circle at 60% 20%,
-      rgba(240, 145, 159, 0.10) 0%,
-      transparent 38%
-    );
-  filter: blur(56px);
-}
-
 .atmosphere-grain {
   position: absolute;
   inset: 0;
@@ -275,11 +177,6 @@
  * from eleven to three. Deleted as dead CSS, not as a design change — there is
  * still no vignette, which is the point.
  */
-
-.dark .atmosphere-grain {
-  opacity: 0.07;
-  mix-blend-mode: overlay;
-}
 
 /* `@keyframes drift` lived here. Nothing animates the mesh any more. */
 
@@ -311,10 +208,6 @@
     transform: translateY(-2px);
     box-shadow: var(--shadow-lift);
     border-color: rgba(168, 69, 92, 0.28);
-  }
-
-  .dark .zen-card:hover {
-    border-color: rgba(240, 145, 159, 0.34);
   }
 
   /* No double-border ring */
@@ -383,16 +276,6 @@ code {
   );
 }
 
-.dark .zen-rule {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(240, 145, 159, 0.34) 30%,
-    rgba(240, 145, 159, 0.34) 70%,
-    transparent
-  );
-}
-
 /* ---------- A11y + polish ---------- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -409,9 +292,8 @@ code {
 }
 
 /*
- * Was --zen-gold on --zen-ink: 4.38:1 in light and 1.73:1 in dark (light ink on
- * a light gold plate), and this is 0.75rem/0.2em small text needing 4.5:1. The
- * primary pair is the only token pair guaranteed to be legible in both themes.
+ * Was --zen-gold on --zen-ink: 4.38:1, and this is 0.75rem/0.2em small text
+ * needing 4.5:1. The primary pair is the one pair that clears it.
  */
 .skip-link {
   position: fixed;
@@ -446,8 +328,7 @@ code {
  * Was rgba(230, 194, 129, 0.6) — leftover metallic gold that composites to
  * #eed6ac on cream: 1.30:1 against the page, 1.35:1 against a card. That is the
  * site's only focus indicator, so keyboard users had none. --primary is the one
- * accent that clears 1.4.11's 3:1 in both themes, and the token indirection
- * means the .dark block gets the fix for free.
+ * accent that clears 1.4.11's 3:1 against both the page and a card.
  */
 :focus-visible {
   outline: 2px solid var(--primary);
@@ -462,11 +343,6 @@ code {
  */
 ::selection {
   background: color-mix(in srgb, var(--primary) 28%, transparent);
-  color: var(--foreground);
-}
-
-.dark ::selection {
-  background: color-mix(in srgb, var(--primary) 35%, transparent);
   color: var(--foreground);
 }
 
@@ -503,10 +379,9 @@ code {
 }
 
 /*
- * Was gold@0.75 text on a near-black chip left over from the deleted dark
- * palette: 2.56:1 resting, 3.33:1 on hover, on 0.65rem text that needs 4.5:1.
- * Clay on the card surface with a solid clay border gives 5.63:1 text and a
- * 4.84:1 boundary against the code block, in both themes.
+ * Was gold@0.75 text on a near-black chip: 2.56:1 resting, 3.33:1 on hover, on
+ * 0.65rem text that needs 4.5:1. Clay on the card surface with a solid clay
+ * border gives 5.63:1 text and a 4.84:1 boundary against the code block.
  */
 .code-block-wrap .copy-code-btn {
   position: absolute;
@@ -622,49 +497,3 @@ code {
   word-break: break-word;
 }
 
-/* ---------- Theme transition ---------- */
-
-/*
- * Route navigation is a plain client-side render with no animation. It ran
- * through the View Transitions API for a while, which required Next's
- * prerelease React build and made clicks stall for seconds; the morphs were
- * not worth that, so the whole route-transition layer is gone.
- *
- * This is the native `document.startViewTransition`, called directly by the
- * theme toggle. It needs no framework support and no experimental flag: it is
- * a browser API animating a paint change, which is the one case here where a
- * transition is genuinely cheap. Everything below only ever runs on a theme
- * switch, because that is now the only transition the site starts.
- */
-:root.theme-switching::view-transition-old(root),
-:root.theme-switching::view-transition-new(root) {
-  animation-duration: 180ms;
-  animation-timing-function: ease;
-}
-
-:root.theme-switching::view-transition-old(root) {
-  animation-name: vt-out;
-}
-
-:root.theme-switching::view-transition-new(root) {
-  animation-name: vt-in;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  :root.theme-switching::view-transition-old(root),
-  :root.theme-switching::view-transition-new(root) {
-    animation: none;
-  }
-}
-
-@keyframes vt-out {
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes vt-in {
-  from {
-    opacity: 0;
-  }
-}

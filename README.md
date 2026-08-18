@@ -65,8 +65,6 @@ place.
   ("3 weeks ago") with the absolute date on hover.
 - **Guestbook** — visitors sign a wall at `/guestbook`. Rate-limited,
   honeypot-protected, with moderation behind a password gate.
-- **Dark mode** — bottom-right toggle or press <kbd>d</kbd>. Follows your OS
-  preference until you choose, then remembers. No flash on first paint.
 - **Reading polish** — copy buttons on code blocks, external-link markers,
   heading anchors, a skip-to-content link, themed 404 and error boundaries.
 - **Atmosphere** — one warm ambient background built from three CSS layers, no
@@ -145,9 +143,9 @@ src/
 ├── app/                  # App Router: home, journal, guestbook, admin, robots
 ├── components/
 │   ├── blog/markdown/    # ReactMarkdown component overrides
-│   ├── chrome/           # Theme toggle, back-to-top, smooth scroll
+│   ├── chrome/           # Back-to-top, smooth scroll
 │   └── guestbook/        # Sign form, wall, moderation UI
-├── constants/            # Blog, theme and guestbook config
+├── constants/            # Blog and guestbook config
 ├── lib/                  # Post loading, guestbook clients, utils
 └── types/                # JournalPost, GuestbookEntry and friends
 ```
@@ -168,9 +166,8 @@ and operational notes.
 
 ## Design notes
 
-The palette is warm and light by default — terracotta, honey, dusty rose, sage —
-and dark mode is *evening*, a warm brown-black, never a blue-black. Shadows are
-brown, because black shadows on cream read as grime. Headlines are Fraunces;
+The palette is warm — terracotta, honey, dusty rose, sage, on cream. Shadows
+are brown, because black shadows on cream read as grime. Headlines are Fraunces;
 everything else is Nunito. There are no uppercase wide-tracked micro-labels, and
 no metallic gold: both made it feel like a luxury watch advert rather than a
 garden.
