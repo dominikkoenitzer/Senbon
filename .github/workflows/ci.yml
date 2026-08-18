@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   quality:
-    name: Lint & build
+    name: Lint, test & build
     runs-on: ubuntu-latest
 
     steps:
@@ -30,6 +30,9 @@ jobs:
 
       - name: Lint
         run: bun run lint
+
+      - name: Test
+        run: bun run test
 
       - name: Build
         run: bun run build
