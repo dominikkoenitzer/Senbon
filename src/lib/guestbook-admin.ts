@@ -96,19 +96,29 @@ const pruneAttempts = (now: number): void => {
 
   // Still over the cap after pruning: evict whatever expires soonest, which is
   // the record with the least time left to serve.
+  //
+  // A record that is currently serving a block is spared while any idle record
+  // remains, because eviction returns a client to zero failures. Without that
+  // preference the cap became a way through the throttle: a blocked client's
+  // record is older than the traffic that follows it, so 512 forged addresses
+  // pushed it out and cleared the block.
   while (signInAttempts.size > MAX_TRACKED_CLIENTS) {
-    let oldestKey: string | null = null;
-    let oldestExpiry = Number.POSITIVE_INFINITY;
+    let victimKey: string | null = null;
+    let victimBlocked = true;
+    let victimExpiry = Number.POSITIVE_INFINITY;
 
     for (const [key, record] of signInAttempts) {
-      if (record.expiresAt < oldestExpiry) {
-        oldestExpiry = record.expiresAt;
-        oldestKey = key;
-      }
+      const blocked = record.blockedUntil > now;
+      if (blocked && !victimBlocked) continue;
+      if (blocked === victimBlocked && record.expiresAt >= victimExpiry) continue;
+
+      victimKey = key;
+      victimBlocked = blocked;
+      victimExpiry = record.expiresAt;
     }
 
-    if (oldestKey === null) break;
-    signInAttempts.delete(oldestKey);
+    if (victimKey === null) break;
+    signInAttempts.delete(victimKey);
   }
 };
 
