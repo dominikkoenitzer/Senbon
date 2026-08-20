@@ -99,8 +99,8 @@ const EntryRow = ({ entry }: EntryRowProps) => {
           The pending badge is solid, not a tint. It used to be `bg-primary/15
           text-primary` sitting inside a row that is itself `bg-primary/10`, so
           the two clay washes stacked and the label landed at 3.78:1 — under
-          AA for 10px text. Filling the badge takes it to 5.51:1 in light and
-          7.35:1 in dark, and it no longer depends on what is underneath it.
+          AA for 10px text. Filling the badge takes it to 5.51:1, and it
+          no longer depends on what is underneath it.
         */}
         <span
           className={cn(

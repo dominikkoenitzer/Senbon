@@ -9,13 +9,6 @@
   <style>
     .plate { fill: #a8455c; }
     .vein { stroke: #ce8498; }
-
-    @media (prefers-color-scheme: dark) {
-      .plate { fill: #2b1a12; }
-      .vein { stroke: #c4707f; }
-      .s-in { stop-color: #e5808f; }
-      .s-out { stop-color: #f7c4cc; }
-    }
   </style>
 
   <rect class="plate" width="32" height="32" rx="8" fill="#a8455c" />
