@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowUpRight, Github } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import { GithubMark } from "@/components/icons/GithubMark";
 
 /**
  * Server component on purpose.
@@ -69,7 +70,7 @@ const Home = () => (
         rel="noopener noreferrer"
         className="group inline-flex items-center gap-2 text-sm lowercase text-foreground/70 transition-colors hover:text-primary"
       >
-        <Github className="size-4" aria-hidden="true" />
+        <GithubMark className="size-4" aria-hidden="true" />
         <span>github</span>
         <ArrowUpRight className="size-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
       </a>
