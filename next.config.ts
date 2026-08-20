@@ -1,14 +1,20 @@
 import type { NextConfig } from "next";
 
-const noIndexHeaders = [
+const responseHeaders = [
   {
     key: "X-Robots-Tag",
     value:
       "noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai",
   },
   { key: "Referrer-Policy", value: "no-referrer" },
-  { key: "Permissions-Policy", value: "interest-cohort=()" },
+  {
+    key: "Permissions-Policy",
+    value: "geolocation=(), microphone=(), camera=(), interest-cohort=()",
+  },
   { key: "X-Content-Type-Options", value: "nosniff" },
+  // The guestbook posts a form, so it is worth saying it may not be framed.
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
 ];
 
 const nextConfig: NextConfig = {
@@ -37,7 +43,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/:path*",
-        headers: noIndexHeaders,
+        headers: responseHeaders,
       },
     ];
   },
