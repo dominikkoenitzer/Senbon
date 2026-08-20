@@ -5,7 +5,14 @@ import matter from "gray-matter";
 import type { JournalPost, PostFrontmatter } from "@/types/blog";
 import { BLOG_CONFIG } from "@/constants/blog";
 
-const contentDir = path.join(process.cwd(), BLOG_CONFIG.CONTENT_DIR);
+/*
+ * Written out as literals on purpose. Turbopack resolves filesystem access
+ * statically, and a directory it cannot follow — a constant imported from
+ * another module counts — makes it trace the *whole project* into the server
+ * bundle rather than just this folder. Keep the segments inline; moving them
+ * back behind a constant reintroduces three build warnings and the weight.
+ */
+const contentDir = path.join(process.cwd(), "content", "journal");
 
 /**
  * Sort posts by publication date (newest first)
