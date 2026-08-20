@@ -124,14 +124,14 @@ const AutoApproveToggle = ({ initialAutoApprove }: AutoApproveToggleProps) => {
 
         {/*
           The knob has to be findable, not merely present. It was `bg-card` on
-          a `bg-muted` track — 1.09:1 in light, 1.21:1 in dark, which is to say
+          a `bg-muted` track — 1.09:1, which is to say
           a white dot on a white groove. Someone with low vision could not tell
           which end it was sitting at, and the ON/OFF word beside it is
           `aria-hidden`: still painted, but it is a caption, not a fix.
 
           So the knob inverts with the state instead of holding one colour:
-          ink on the pale OFF track (11.80:1 light / 10.61:1 dark), cream on
-          the red ON track (5.67:1 / 5.28:1). Both clear 3:1 for non-text
+          ink on the pale OFF track (11.80:1), cream on the red ON track
+          (5.67:1). Both clear 3:1 for non-text
           contrast with room to spare, and the colour flip is a second cue that
           works even if the travel of the knob is missed.
         */}
