@@ -35,7 +35,7 @@ export const generateMetadata = async ({
  *
  * This page used to wrap a short post in a table of contents rendered twice
  * (mobile and desktop), prev/next navigation, a reading-time estimate and a
- * hero image slot. Entries here are a few hundred words — none of that earned
+ * hero image slot. Entries here are a few hundred words, and none of that earned
  * its place.
  */
 const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {

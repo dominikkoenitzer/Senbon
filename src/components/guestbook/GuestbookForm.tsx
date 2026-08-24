@@ -12,7 +12,7 @@ const INITIAL_STATE: GuestbookFormState = { status: "idle", message: "" };
 /**
  * What the form promises before anything has been submitted. It has to match
  * the hero on the same screen, so both read the one boolean the page resolved
- * — and when that boolean is unknown, neither of them claims a timing.
+ * and when that boolean is unknown, neither of them claims a timing.
  */
 const IDLE_COPY = {
   published:
@@ -33,7 +33,7 @@ const idleCopy = (autoPublish: boolean | null): string =>
 /**
  * The visible counter is decorative and aria-hidden, so its warning never
  * reaches assistive tech. This announces a literal count instead, and only at
- * these thresholds — a number read out on every keystroke is unusable.
+ * these thresholds, because a number read out on every keystroke is unusable.
  */
 const COUNTDOWN_THRESHOLDS = [20, 10, 5];
 
@@ -48,7 +48,7 @@ interface GuestbookFormProps {
   /**
    * Whether a signature sent right now publishes immediately. `null` means the
    * site could not find out, in which case nothing is claimed about timing.
-   * Resolved on the server in page.tsx — only the boolean crosses to the
+   * Resolved on the server in page.tsx, so only the boolean crosses to the
    * client, never the admin token that read it.
    */
   autoPublish: boolean | null;
@@ -69,7 +69,7 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
 
   // Clear the fields once a signature lands, so the form is ready for the next
   // visitor rather than showing a stale draft. Adjusting state during render is
-  // React's documented alternative to a reset effect — an effect here trips
+  // React's documented alternative to a reset effect. An effect here trips
   // react-hooks/set-state-in-effect and costs an extra render pass.
   if (state !== handledState) {
     setHandledState(state);

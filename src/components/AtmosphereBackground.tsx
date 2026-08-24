@@ -4,7 +4,7 @@
  * Deliberately three layers: a warm base, a slowly drifting gradient mesh, and
  * a little grain so it reads as paper rather than screen.
  *
- * It used to carry eleven layers — three SVG aurora ribbons, a two-wave river,
+ * It used to carry eleven layers: three SVG aurora ribbons, a two-wave river,
  * and a black vignette. That machinery was most of what made the site feel
  * mysterious and watched, which was the opposite of the intent, and it cost a
  * full-screen SVG plus several large blur filters to achieve. Warmth comes from

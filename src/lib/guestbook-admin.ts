@@ -1,8 +1,8 @@
-// Poison pill — see the note in lib/guestbook.ts. This module holds the
+// Poison pill. See the note in lib/guestbook.ts. This module holds the
 // moderation password and the admin bearer token.
 //
 // Here it genuinely is belt and braces: node:crypto and next/headers already
-// break a client build. But they do so by naming *those* imports, which sends
+// break a client build. But they do so by naming those imports, which sends
 // you looking at the crypto call rather than at the fact that a secret-bearing
 // module was imported from the browser at all. This says that directly.
 import "server-only";
@@ -44,7 +44,7 @@ const constantTimeEqual = (a: string, b: string): boolean => {
 
 /**
  * The session cookie is an HMAC over a fixed label, keyed by the admin token.
- * It carries no data — it only proves the holder knew the password once. An
+ * It carries no data. It only proves the holder knew the password once. An
  * attacker cannot forge it without the token, and it changes if the token is
  * rotated, which invalidates every outstanding session for free.
  */
@@ -60,11 +60,11 @@ export const passwordMatches = (candidate: string): boolean =>
  * Honest about what this is: a module-level Map lives in ONE serverless
  * instance's memory. Vercel runs several in parallel and recycles them
  * whenever it likes, so an attacker routed to a cold instance starts from
- * zero, and a deploy wipes every counter. This is best-effort — a speed bump
- * that turns a tight guessing loop into a slow one — not a guarantee.
+ * zero, and a deploy wipes every counter. This is best-effort, a speed bump
+ * that turns a tight guessing loop into a slow one, not a guarantee.
  *
  * It is worth having anyway because the fixed delay on a wrong password only
- * slows *sequential* guesses; ten parallel requests each waited 600ms and then
+ * slows sequential guesses; ten parallel requests each waited 600ms and then
  * all returned. What actually keeps this door shut is the password itself
  * (12 random alphanumerics). A real distributed limiter belongs in the API,
  * where there is one process and a database to count in.
@@ -126,7 +126,7 @@ const pruneAttempts = (now: number): void => {
  * An opaque per-client key. The address is HMAC'd with the admin token for the
  * same reason the API hashes visitor IPs: nothing here should hold a raw one.
  *
- * Fails closed, like the public rate limiter — a request with no usable
+ * Fails closed, like the public rate limiter: a request with no usable
  * address shares a single bucket rather than skipping the limit entirely.
  */
 export const signInClientKey = async (): Promise<string> => {
@@ -202,8 +202,8 @@ const adminHeaders = (): Record<string, string> => ({
 });
 
 /**
- * The API's status column is wider than this app's union — it also permits
- * "rejected" — and nothing stops it widening again. Only the exact string
+ * The API's status column is wider than this app's union, since it also permits
+ * "rejected", and nothing stops it widening again. Only the exact string
  * "approved" is treated as published; everything else, known or not, falls
  * into the review queue.
  *
@@ -261,7 +261,7 @@ export const approveEntry = async (id: string): Promise<void> => {
   }
 };
 
-/** Whether new signatures publish unreviewed. Defaults closed-mouthed on failure — callers decide the fallback. */
+/** Whether new signatures publish unreviewed. Stays closed-mouthed on failure, so callers decide the fallback. */
 export const fetchAutoApprove = async (): Promise<boolean> => {
   const response = await fetch(guestbookApi("/admin/settings"), {
     headers: adminHeaders(),

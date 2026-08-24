@@ -35,7 +35,7 @@
   /*
    * Warmth comes from pigment, not brightness. Rose-plum leads, with honey and
    * blush around it and a single sage counterpoint near 130deg so the warmth
-   * reads as deliberate rather than monotonous. Nothing here is metallic — gold
+   * reads as deliberate rather than monotonous. Nothing here is metallic: gold
    * shimmer photographs cold and distant, which is what made the original
    * palette feel ghostly.
    *
@@ -61,7 +61,7 @@
   --accent: #e8a0b0;
   --accent-foreground: #3b2e24;
 
-  /* Neutrals stay warm — grey neutrals would drain the whole thing */
+  /* Neutrals stay warm; grey neutrals would drain the whole thing */
   --muted: rgba(140, 100, 70, 0.07);
   --muted-foreground: rgba(59, 46, 36, 0.72);
   --destructive: #b23b32;
@@ -156,7 +156,7 @@
   filter: blur(40px);
   /*
    * Static. This used to drift on a 38s loop, forever, on every page. Motion
-   * that never stops is not ambience — you cannot look away from it, and it is
+   * that never stops is not ambience. You cannot look away from it, and it is
    * a reliable way to give someone a headache on a page they came to read.
    * Warmth is meant to come from the colour, not from moving parts.
    */
@@ -174,7 +174,7 @@
 /*
  * `.atmosphere-vignette` lived here in two variants until 2026-07-22, styling
  * an element `AtmosphereBackground` stopped rendering when the layer count went
- * from eleven to three. Deleted as dead CSS, not as a design change — there is
+ * from eleven to three. Deleted as dead CSS, not as a design change; there is
  * still no vignette, which is the point.
  */
 
@@ -188,7 +188,7 @@
  * invisible and exists only to hold an edge where shadows overlap.
  *
  * In `components` on purpose. Unlayered rules outrank every layered one, and
- * Tailwind v4 emits utilities into the `utilities` layer — so while this block
+ * Tailwind v4 emits utilities into the `utilities` layer, so while this block
  * sat outside a layer, a `bg-*`/`border-*` utility on a `.zen-card` element was
  * silently discarded. Inside `components` the utility wins, which is what a
  * call site writing `zen-card bg-muted` has always meant.
@@ -218,7 +218,7 @@
 
 /*
  * Stays unlayered: it is a global reset, and `!important` reverses layer
- * precedence — moving it into `components` would make it outrank an important
+ * precedence. Moving it into `components` would make it outrank an important
  * utility rather than yield to one.
  */
 pre,
@@ -230,7 +230,7 @@ code {
 
 /*
  * Fraunces ships SOFT and WONK axes. Turned up, the serifs round off and a few
- * letters tilt — it keeps looking expensive but stops looking solemn, which is
+ * letters tilt. It keeps looking expensive but stops looking solemn, which is
  * the whole reason it replaced Playfair Display.
  */
 .font-display {
@@ -240,7 +240,7 @@ code {
 
 
 /*
- * Was 0.35em gold — wide metallic tracking reads as a luxury watch advert.
+ * Was 0.35em gold. Wide metallic tracking reads as a luxury watch advert.
  * Tighter, in clay, at full opacity: quieter and considerably friendlier.
  */
 @layer components {
@@ -325,7 +325,7 @@ code {
 }
 
 /*
- * Was rgba(230, 194, 129, 0.6) — leftover metallic gold that composites to
+ * Was rgba(230, 194, 129, 0.6), leftover metallic gold that composites to
  * #eed6ac on cream: 1.30:1 against the page, 1.35:1 against a card. That is the
  * site's only focus indicator, so keyboard users had none. --primary is the one
  * accent that clears 1.4.11's 3:1 against both the page and a card.
@@ -337,7 +337,7 @@ code {
 }
 
 /*
- * Was gold@0.35 with a #f6efe2 text literal — selected text composited to
+ * Was gold@0.35 with a #f6efe2 text literal, so selected text composited to
  * 1.10:1 and effectively disappeared. Selection now keeps the normal foreground
  * and the highlight darkens underneath it instead.
  */
@@ -407,8 +407,8 @@ code {
 }
 
 /*
- * Hover never fires on touch, so the copy button was permanently invisible —
- * and unreachable — on phones and tablets. There it is simply always on.
+ * Hover never fires on touch, so the copy button was permanently invisible,
+ * and unreachable, on phones and tablets. There it is simply always on.
  */
 @media (hover: none) {
   .code-block-wrap .copy-code-btn {
@@ -426,7 +426,7 @@ code {
 /*
  * Entrance animation in CSS so pages that only needed a fade can stay server
  * components. Framer Motion is still available for anything genuinely
- * interactive — it just shouldn't be imported to move something 12px.
+ * interactive. It just shouldn't be imported to move something 12px.
  */
 @keyframes fade-up {
   from {
@@ -444,7 +444,7 @@ code {
 }
 
 /*
- * Cards lean when you touch them. It is two degrees — not enough to notice
+ * Cards lean when you touch them. It is two degrees, not enough to notice
  * consciously, enough that the page feels like it has a pulse instead of
  * behaving like a printed document.
  */
@@ -453,7 +453,7 @@ code {
     transform-origin: center;
   }
 
-  /* `a.` only — `.zen-card` is never put on a label. */
+  /* `a.` only, since `.zen-card` is never put on a label. */
   a.zen-card:hover {
     transform: translateY(-3px) rotate(-0.4deg);
   }
@@ -477,7 +477,7 @@ code {
 
   /*
    * Layered to match the tilt rules above. If this stayed unlayered while they
-   * moved, it would still win — but only by accident of layer order rather
+   * moved, it would still win, but only by accident of layer order rather
    * than by being the more specific, later rule.
    */
   @layer components {
@@ -489,7 +489,7 @@ code {
 
 /*
  * Visitor-supplied text can be a single 280-character word. Without this it
- * escapes its card and stretches the page sideways — which is exactly what a
+ * escapes its card and stretches the page sideways, which is exactly what a
  * spammer did within an hour of the guestbook going live.
  */
 .overflow-wrap-anywhere {

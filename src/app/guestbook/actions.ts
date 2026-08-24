@@ -16,7 +16,7 @@ import { fetchAutoApprove, isAdminConfigured } from "@/lib/guestbook-admin";
  * signature is on the wall, or it is holding for review and the public
  * `/entries` feed filters it out. Saying the first when the second happened
  * sends someone to look for a name that is not there and conclude the wall is
- * broken. `null` is a third case — we could not establish which mode is on, so
+ * broken. `null` is a third case: we could not establish which mode is on, so
  * nothing is promised about timing.
  */
 const SIGNED = {
@@ -37,7 +37,7 @@ const signedCopy = (published: boolean | null): string =>
 
 /**
  * Every string here lands under the sign form, in a real person's face, right
- * after they were rejected. Each one has to say what to change — the tone is
+ * after they were rejected. Each one has to say what to change. The tone is
  * free, the instruction is not.
  */
 const COPY = {
@@ -67,7 +67,7 @@ const COPY = {
  * The API returns one flat `error` string, so the reason a signature bounced is
  * recovered by matching it. Ordered: the first pattern that matches wins, and
  * anything unrecognised (an older API build, a proxy error page) falls back to
- * COPY.rejected rather than guessing wrong — telling someone to remove a link
+ * COPY.rejected instead of guessing wrong. Telling someone to remove a link
  * they never wrote is worse than saying nothing specific.
  */
 const REJECTION_COPY: ReadonlyArray<readonly [RegExp, string]> = [
@@ -101,7 +101,7 @@ const rejectionCopy = async (response: Response): Promise<string> => {
 
 /**
  * The rate-limit window is RATE_LIMIT_SECONDS, a server-side env var, and it
- * has been changed since this copy was written — the old line promised "about
+ * has been changed since this copy was written. The old line promised "about
  * thirty seconds" against a 120 second window, wrong by 4x. A mirrored copy of
  * the number here would drift again the next time it is tuned, so the API's own
  * 429 body is passed through instead: it names the real figure, in the same
@@ -117,8 +117,8 @@ const rateLimitCopy = async (response: Response): Promise<string> => {
 /**
  * A signature that was accepted answers 201 for both outcomes and separates
  * them in the body: `status: "approved"` went straight to the wall,
- * `status: "pending"` is holding for review. Anything else — an older API
- * build, a proxy rewriting the body — is unknown rather than assumed.
+ * `status: "pending"` is holding for review. Anything else, an older API build
+ * or a proxy rewriting the body, is unknown rather than assumed.
  */
 const publishedFromBody = async (
   response: Response,
@@ -141,7 +141,7 @@ const publishedFromBody = async (
  * Whether a signature sent right now lands on the wall immediately.
  *
  * The switch lives in Postgres and only the admin token can read it, so this
- * runs on the server and hands back a plain boolean — GUESTBOOK_ADMIN_TOKEN
+ * runs on the server and hands back a plain boolean. GUESTBOOK_ADMIN_TOKEN
  * never leaves it. `null` means unknown: no admin credentials (preview
  * deployments) or the settings call failed. Callers must then say nothing
  * about timing rather than guess, since guessing is the bug this fixes.
@@ -169,7 +169,7 @@ const fail = (message: string): GuestbookFormState => ({
 /**
  * Best-effort visitor IP. The request to the guestbook API originates from
  * Vercel's infrastructure, so the real client address has to be forwarded
- * explicitly — the API hashes it and never stores it raw.
+ * explicitly. The API hashes it and never stores it raw.
  */
 const visitorIp = async (): Promise<string> => {
   const headerList = await headers();
@@ -188,7 +188,7 @@ export const signGuestbook = async (
   // Bots fill hidden fields; humans never see this one. Report success so the
   // bot has no signal to adapt to, but write nothing. The wording must stay
   // byte-identical to what a real signature would have produced *in the
-  // current mode*, or the difference is the signal — hence the lookup rather
+  // current mode*, or the difference is the signal, hence the lookup rather
   // than a hardcoded one of the two. If the mode cannot be read, assume
   // publishing: it is the deployed default, and it is the only mode that makes
   // sense when the moderation queue is unreachable anyway.

@@ -34,8 +34,8 @@ const ChromeControls = () => {
   const toTop = useCallback(() => {
     /*
      * Lenis owns the scroll position while it is running, so a native
-     * `window.scrollTo` gets fought back down mid-flight. When it is absent —
-     * reduced motion, or before it has initialised — native is correct.
+     * `window.scrollTo` gets fought back down mid-flight. When it is absent,
+     * under reduced motion or before it has initialised, native is correct.
      */
     const lenis = getLenis();
     if (lenis) {

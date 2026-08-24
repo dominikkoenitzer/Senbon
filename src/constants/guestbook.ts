@@ -1,7 +1,7 @@
 /**
  * Guestbook-related constants.
  *
- * The length caps mirror the validation in the guestbook API — keep the two in
+ * The length caps mirror the validation in the guestbook API, so keep the two in
  * sync, so the client-side counter never promises something the server rejects.
  */
 export const GUESTBOOK_CONFIG = {

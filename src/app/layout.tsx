@@ -7,7 +7,7 @@ import SmoothScroll from "@/components/chrome/SmoothScroll";
 import "./globals.css";
 
 /**
- * Fraunces over Playfair Display. Playfair is a literary-quarterly serif — it
+ * Fraunces over Playfair Display. Playfair is a literary-quarterly serif, and it
  * made every headline read as solemn, which fought the voice. Fraunces is a
  * soft serif with SOFT and WONK axes: it still looks expensive, but it has a
  * grin in it. Set the axes in `.font-display` in globals.css.
@@ -20,7 +20,7 @@ const heading = Fraunces({
    * Italic is loaded because the guestbook headline sets "i'll wait" in it.
    * Without this the browser synthesises an oblique by shearing the upright,
    * which on a serif this soft looks like a rendering fault rather than a
-   * typeface — the exact trap CLAUDE.md warns about.
+   * typeface, the exact trap the project notes warn about.
    */
   style: ["normal", "italic"],
   axes: ["SOFT", "WONK", "opsz"],
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
 
 /*
  * `colorScheme` has to agree with the palette: it is what tells the browser
- * which way to paint the controls it draws itself — scrollbars, form widgets,
+ * which way to paint the controls it draws itself: scrollbars, form widgets,
  * the caret. Declaring anything else here paints them against the page.
  */
 export const viewport: Viewport = {

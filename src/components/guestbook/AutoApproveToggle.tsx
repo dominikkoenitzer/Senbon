@@ -15,8 +15,8 @@ interface AutoApproveToggleProps {
  * ambiguous: the switch position, the literal ON/OFF word, the colour, a
  * headline and a full sentence of consequence all move together.
  *
- * A silent failure here would be worse than no switch at all — the owner would
- * believe the wall was guarded when it wasn't — so the optimistic flip reverts
+ * A silent failure here would be worse than no switch at all, since the owner
+ * would believe the wall was guarded when it wasn't, so the optimistic flip reverts
  * itself and says so out loud when the write doesn't land.
  */
 const AutoApproveToggle = ({ initialAutoApprove }: AutoApproveToggleProps) => {
@@ -31,7 +31,7 @@ const AutoApproveToggle = ({ initialAutoApprove }: AutoApproveToggleProps) => {
   const descriptionId = useId();
 
   // Every successful write revalidates this route, and a second tab may have
-  // flipped the switch meanwhile — a changed prop always beats our own memory.
+  // flipped the switch meanwhile; a changed prop always beats our own memory.
   // Adjusting state during render is React's documented alternative here; an
   // effect would trip react-hooks/set-state-in-effect and cost a render pass.
   if (initialAutoApprove !== lastProp) {
