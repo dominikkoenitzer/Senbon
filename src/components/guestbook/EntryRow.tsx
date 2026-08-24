@@ -22,7 +22,7 @@ const idPayload = (id: string): FormData => {
 /**
  * One signature in the moderation list.
  *
- * Visitor-supplied name and message are hostile input by default — both get
+ * Visitor-supplied name and message are hostile input by default, so both get
  * `.overflow-wrap-anywhere` so a single unbroken 280-character string can't
  * push the card, and the page, sideways again.
  *
@@ -41,7 +41,7 @@ const EntryRow = ({ entry }: EntryRowProps) => {
   const disarmTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Cleanup only. This effect never writes state, which is the thing
-  // react-hooks/set-state-in-effect actually forbids — the disarm timer is
+  // react-hooks/set-state-in-effect actually forbids; the disarm timer is
   // started from a click handler, where a later setState is perfectly fine.
   useEffect(
     () => () => {

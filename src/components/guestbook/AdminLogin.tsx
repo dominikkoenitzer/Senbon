@@ -8,7 +8,7 @@ const INITIAL_STATE: AdminFormState = { status: "idle", message: "" };
 
 /**
  * The whole signed-out surface. It looks identical whether moderation is
- * configured or not, and says nothing of its own about why an attempt failed —
+ * configured or not, and says nothing of its own about why an attempt failed,
  * the action's message is rendered verbatim and is the only thing allowed to
  * distinguish "wrong password" from "not configured" from "slow down".
  */

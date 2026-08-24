@@ -29,7 +29,7 @@ const PUBLISH_CLAIM = {
 const GuestbookPage = async () => {
   const configured = isGuestbookConfigured();
 
-  // Only the boolean crosses into the markup — resolveAutoPublish runs on the
+  // Only the boolean crosses into the markup; resolveAutoPublish runs on the
   // server and GUESTBOOK_ADMIN_TOKEN stays there.
   //
   // `entries` is null when the API could not be reached at all, which is a

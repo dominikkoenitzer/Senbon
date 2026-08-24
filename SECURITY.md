@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-Please report security issues **privately** — do not open a public GitHub issue for anything security-sensitive.
+Please report security issues **privately**. Don't open a public GitHub issue for anything security-sensitive.
 
 - Preferred: open a [private security advisory](https://github.com/dominikkoenitzer/Senbon/security/advisories/new) on this repository.
 - Alternatively: email **dominikkoenitzer@users.noreply.github.com** with the details.
@@ -28,9 +28,9 @@ Two halves, with very different surfaces.
 **The guestbook API** is the real surface. It is where a report is most likely to matter:
 
 - **Session forgery.** Admin sessions are HMAC-signed and compared with `timingSafeEqual` behind a length guard (`lib/auth.js`). Anything that forges a session, or that leaks the signing secret, is the highest-severity bug in this repository.
-- **Rate limiting that fails open.** `lib/rate-limit.js` is deliberately written so a missing or spoofed client-IP header cannot switch limiting off — every caller lands in a bucket, unknown ones share `UNKNOWN_IP_BUCKET`. A path that escapes a bucket, or that lets one visitor exhaust another's, is in scope.
+- **Rate limiting that fails open.** `lib/rate-limit.js` is deliberately written so a missing or spoofed client-IP header cannot switch limiting off. Every caller lands in a bucket, and unknown ones share `UNKNOWN_IP_BUCKET`. A path that escapes a bucket, or that lets one visitor exhaust another's, is in scope.
 - **Stored injection through an entry.** Entries are visitor-authored and rendered back to every reader; anything that survives `lib/validation.js` and `lib/text.js` into another visitor's page is in scope.
 - **SQL injection, or any query built by concatenation.**
 - **Moderation bypass** that publishes an entry without approval when auto-approve is off.
 
-Out of scope: the moderation word list is a judgement call, not a vulnerability — open a normal issue for a false positive or a gap.
+Out of scope: the moderation word list is a judgement call, not a vulnerability. Open a normal issue for a false positive or a gap.

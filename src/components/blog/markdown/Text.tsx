@@ -6,8 +6,8 @@ import type { MarkdownComponentProps, MarkdownLinkProps } from "./types";
 
 /**
  * `.overflow-wrap-anywhere` for the same reason the guestbook card needs it: a
- * single unbroken string — a long URL pasted into an entry, a stack trace, a
- * hash — otherwise escapes the column and stretches the page sideways.
+ * single unbroken string (a long URL pasted into an entry, a stack trace, a
+ * hash) otherwise escapes the column and stretches the page sideways.
  */
 export const Paragraph = ({ className, children }: MarkdownComponentProps) => (
   <p

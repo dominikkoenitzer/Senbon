@@ -12,7 +12,7 @@ import "lenis/dist/lenis.css";
  * a long, heavy glide is the thing that makes smooth-scroll libraries feel like
  * a gimmick and makes people fight the page to read it.
  *
- * Held in a module-level ref rather than context — one instance exists for the
+ * Held in a module-level ref instead of context, since one instance exists for the
  * app's lifetime, and the only other consumer (the back-to-top button) wants to
  * ask for it imperatively inside an event handler, not subscribe to it.
  */
@@ -34,13 +34,13 @@ const SmoothScroll = () => {
     const lenis = new Lenis({
       /*
        * `lerp`, not `duration`. A duration restarts a fixed easing curve on
-       * every wheel event, so a real scroll — which is a burst of events —
+       * every wheel event, and a real scroll is a burst of events,
        * keeps interrupting and relaunching itself, and reads as steppy.
        * Interpolating a constant fraction of the remaining distance each frame
        * absorbs the burst into one continuous glide instead.
        *
        * 0.2, not the usual 0.1. Smooth scrolling buys its feel with lag, and
-       * past a certain point the page visibly trails the wheel — which is a
+       * past a certain point the page visibly trails the wheel, which is a
        * headache, not a flourish. This is close enough to native to stay out
        * of the way while still taking the edge off.
        */
@@ -72,14 +72,14 @@ const SmoothScroll = () => {
    * offset for back/forward, the element for a hash. Lenis only has to agree
    * with it.
    *
-   * This used to drive the scroll itself — forcing 0 on a push and following
+   * This used to drive the scroll itself, forcing 0 on a push and following
    * the restored value on a pop, tracked through a popstate flag. That meant
    * two things moving the same scroll during the same frames as the view
    * transition, which is exactly what made navigation feel like it lurched.
    * Following one authority is both smoother and considerably less code.
    *
    * Read back over several frames because Next does not necessarily apply the
-   * offset in a single pass. Every pass is `immediate` — this is Lenis
+   * offset in a single pass. Every pass is `immediate`; this is Lenis
    * adopting a value that has already been applied, never an animation.
    */
   useEffect(() => {

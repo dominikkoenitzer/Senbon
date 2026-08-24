@@ -2,10 +2,10 @@
 // write-capable secret.
 //
 // Unlike guestbook-admin, nothing else here enforced that. This module imports
-// only react/cache, a type and a constant — no next/headers, no node:crypto —
+// only react/cache, a type and a constant, with no next/headers and no node:crypto,
 // so a "use client" file importing it compiled clean, and the failure surfaced
 // only at runtime, in the worst possible shape: Next blanks non-NEXT_PUBLIC_
-// env vars in the browser, so the token is *not* inlined (verified against the
+// env vars in the browser, so the token is not inlined (verified against the
 // built chunks), it is simply undefined. guestbookAuthHeader() would send
 // "Bearer undefined" and isGuestbookConfigured() would report false, making a
 // misplaced import look like a deploy with missing env vars.
@@ -20,7 +20,7 @@ import type { GuestbookEntry } from "@/types/guestbook";
 import { GUESTBOOK_CONFIG } from "@/constants/guestbook";
 
 /**
- * The guestbook API is external. Both values are server-only — never
+ * The guestbook API is external. Both values are server-only, so never
  * expose them with a NEXT_PUBLIC_ prefix, since the token grants write access.
  */
 const API_URL = process.env.GUESTBOOK_API_URL;
@@ -41,9 +41,9 @@ export const guestbookAuthHeader = (): Record<string, string> => ({
  * body share one request, matching the pattern in lib/blog.ts.
  *
  * A guestbook that fails to load should never take the page down, so every
- * failure is caught. It must not be caught *silently*, though: this returned
+ * failure is caught. It must not be caught silently, though: this returned
  * `[]` for both "nobody has signed" and "the API never answered", and those two
- * render identically — the coy empty-wall card. On 2026-08-08 the reverse proxy
+ * render identically, as the coy empty-wall card. On 2026-08-08 the reverse proxy
  * lost its route to the API and every request 502'd for seven days, while
  * /guestbook kept answering 200 with a wall that looked merely unpopular. The
  * outage was invisible on the one surface guaranteed to be looked at.

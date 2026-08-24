@@ -2,7 +2,7 @@
 
 /**
  * The root boundary re-declares <html>/<body>, so it may render before (or
- * without) the stylesheet. Every value here is inlined as a literal on purpose —
+ * without) the stylesheet. Every value here is inlined as a literal on purpose,
  * this is the one file where the semantic-token rule cannot apply, because a
  * Tailwind class that never loads leaves an unreadable page.
  *

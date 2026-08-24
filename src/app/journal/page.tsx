@@ -11,7 +11,7 @@ export const metadata = {
  * A plain list, on purpose.
  *
  * This page used to run search, tag filtering and load-more pagination over a
- * handful of short entries — blog-platform furniture that made a personal
+ * handful of short entries: blog-platform furniture that made a personal
  * journal read like a corporate content hub. If the list ever gets genuinely
  * long, add scrolling before you add search.
  */

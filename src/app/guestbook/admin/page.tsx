@@ -88,7 +88,7 @@ const AdminPage = async () => {
     }
   }
 
-  // Pending first, always — a stranger's unreviewed text is the whole reason
+  // Pending first, always. A stranger's unreviewed text is the whole reason
   // this page exists. Published history can wait below the fold.
   const pending = entries
     .filter((entry) => entry.status === "pending")

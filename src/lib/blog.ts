@@ -7,8 +7,8 @@ import { BLOG_CONFIG } from "@/constants/blog";
 
 /*
  * Written out as literals on purpose. Turbopack resolves filesystem access
- * statically, and a directory it cannot follow — a constant imported from
- * another module counts — makes it trace the *whole project* into the server
+ * statically, and a directory it cannot follow (a constant imported from
+ * another module counts) makes it trace the whole project into the server
  * bundle rather than just this folder. Keep the segments inline; moving them
  * back behind a constant reintroduces three build warnings and the weight.
  */
@@ -89,6 +89,6 @@ export const getAllPostSlugs = cache(async (): Promise<string[]> => {
  * `getAdjacentPosts` lived here to feed prev/next links at the bottom of an
  * entry. That navigation was removed as furniture (see the comment on the entry
  * page), and the export outlived it unimported. Removed rather than kept warm
- * — git has it if prev/next ever comes back.
+ * git has it if prev/next ever comes back.
  */
 

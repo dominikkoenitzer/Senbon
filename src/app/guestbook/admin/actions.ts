@@ -26,7 +26,7 @@ export interface AdminFormState {
  * it; a wrong attempt should not distinguish "no such password" from anything
  * else, and should not be free to retry in a tight loop.
  *
- * The 600ms delay only slows *sequential* guessing — ten parallel requests all
+ * The 600ms delay only slows sequential guessing. Ten parallel requests all
  * wait the same 600ms and all answer. So the per-client throttle in
  * `guestbook-admin` runs first, before the password is even read. It is
  * best-effort by construction; see the comment there.
@@ -91,7 +91,7 @@ export const removeEntry = async (formData: FormData): Promise<void> => {
 };
 
 export const approveSignature = async (formData: FormData): Promise<void> => {
-  // Same re-check as removeEntry — the session cookie is the only gate.
+  // Same re-check as removeEntry; the session cookie is the only gate.
   if (!(await isSignedIn())) return;
 
   const id = String(formData.get("id") ?? "");
@@ -110,7 +110,7 @@ export interface UpdateAutoApproveResult {
 
 /**
  * Called directly from the toggle component (not via a <form>), since a
- * switch fires on click rather than on submit. Re-checks the session itself —
+ * switch fires on click rather than on submit. It re-checks the session itself,
  * the page having rendered the control once is never proof the click came
  * from a live, still-authenticated admin.
  */
