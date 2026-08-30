@@ -1,10 +1,10 @@
 <div align="center">
 
-# 千本 · Senbon Garden
+# 千本 · Senbon
 
 ### A quiet personal journal. The story remains untold.
 
-A quiet, zen-themed personal **journal**: markdown entries, a warm ambient background, and an unhurried reading experience.
+A quiet personal **journal**: markdown entries, a warm ambient background, and an unhurried reading experience.
 
 [![CI](https://github.com/dominikkoenitzer/Senbon/actions/workflows/ci.yml/badge.svg)](https://github.com/dominikkoenitzer/Senbon/actions/workflows/ci.yml)
 [![Live](https://img.shields.io/badge/live-senbon.ch-1f2937?logo=vercel&logoColor=white)](https://senbon.ch)
@@ -24,7 +24,7 @@ A quiet, zen-themed personal **journal**: markdown entries, a warm ambient backg
 > Senbon is **deliberately un-indexed**. Crawlers are allowed to *fetch* the site
 > precisely so they can see its `noindex` directives; a blanket `disallow` would
 > leave search engines indexing the bare URL from external links. AI crawlers are
-> blocked outright. There is no OG or SEO metadata anywhere. It's a private garden
+> blocked outright. There is no OG or SEO metadata anywhere. It's a private site
 > that happens to be open source.
 
 ## Contents
@@ -170,7 +170,7 @@ The palette is warm: terracotta, honey, dusty rose and sage, on cream. Shadows
 are brown, because black shadows on cream read as grime. Headlines are Fraunces;
 everything else is Nunito. There are no uppercase wide-tracked micro-labels, and
 no metallic gold: both made it feel like a luxury watch advert rather than a
-garden.
+quiet journal.
 
 Body copy never drops below `text-foreground/70`, which is the contrast floor on
 the cream background. Hierarchy comes from size and weight instead.

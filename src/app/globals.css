@@ -71,14 +71,14 @@
   --ring: rgba(168, 69, 92, 0.45);
 
   /* Brand accents - exposed for use in components */
-  --zen-gold: #c9873c;
-  --zen-gold-warm: #d9a05a;
-  --zen-rose: #e8a0b0;
-  --zen-sage: #7e9a7c;
-  --zen-clay: #a8455c;
-  --zen-mist: #fbf5ec;
-  --zen-ink: #3b2e24;
-  --zen-ink-warm: #574335;
+  --senbon-gold: #c9873c;
+  --senbon-gold-warm: #d9a05a;
+  --senbon-rose: #e8a0b0;
+  --senbon-sage: #7e9a7c;
+  --senbon-clay: #a8455c;
+  --senbon-mist: #fbf5ec;
+  --senbon-ink: #3b2e24;
+  --senbon-ink-warm: #574335;
 
   /* Shadows are brown, never black. Black on cream reads as grime. */
   --shadow-soft: 0 2px 6px -2px rgba(120, 82, 55, 0.10),
@@ -189,12 +189,12 @@
  *
  * In `components` on purpose. Unlayered rules outrank every layered one, and
  * Tailwind v4 emits utilities into the `utilities` layer, so while this block
- * sat outside a layer, a `bg-*`/`border-*` utility on a `.zen-card` element was
+ * sat outside a layer, a `bg-*`/`border-*` utility on a `.card` element was
  * silently discarded. Inside `components` the utility wins, which is what a
- * call site writing `zen-card bg-muted` has always meant.
+ * call site writing `card bg-muted` has always meant.
  */
 @layer components {
-  .zen-card {
+  .card {
     position: relative;
     border-radius: var(--radius);
     background: var(--card);
@@ -204,14 +204,14 @@
       box-shadow 260ms ease, border-color 260ms ease;
   }
 
-  .zen-card:hover {
+  .card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-lift);
     border-color: rgba(168, 69, 92, 0.28);
   }
 
   /* No double-border ring */
-  .zen-card::before {
+  .card::before {
     content: none;
   }
 }
@@ -264,7 +264,7 @@ code {
 }
 
 /* Hairline ornament */
-.zen-rule {
+.rule {
   width: 100%;
   height: 1px;
   background: linear-gradient(
@@ -292,7 +292,7 @@ code {
 }
 
 /*
- * Was --zen-gold on --zen-ink: 4.38:1, and this is 0.75rem/0.2em small text
+ * Was --senbon-gold on --senbon-ink: 4.38:1, and this is 0.75rem/0.2em small text
  * needing 4.5:1. The primary pair is the one pair that clears it.
  */
 .skip-link {
@@ -449,16 +449,16 @@ code {
  * behaving like a printed document.
  */
 @layer components {
-  .zen-card {
+  .card {
     transform-origin: center;
   }
 
-  /* `a.` only, since `.zen-card` is never put on a label. */
-  a.zen-card:hover {
+  /* `a.` only, since `.card` is never put on a label. */
+  a.card:hover {
     transform: translateY(-3px) rotate(-0.4deg);
   }
 
-  a.zen-card:active {
+  a.card:active {
     transform: translateY(-1px) rotate(0deg) scale(0.995);
   }
 }
@@ -481,7 +481,7 @@ code {
    * than by being the more specific, later rule.
    */
   @layer components {
-    a.zen-card:hover {
+    a.card:hover {
       transform: none;
     }
   }

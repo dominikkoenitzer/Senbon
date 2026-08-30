@@ -83,7 +83,7 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
   const hasError = state.status === "error";
 
   return (
-    <form action={formAction} className="zen-card flex flex-col gap-6 p-7 md:p-9">
+    <form action={formAction} className="card flex flex-col gap-6 p-7 md:p-9">
       <div className="flex flex-col gap-2">
         <label
           htmlFor={nameId}

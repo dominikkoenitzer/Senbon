@@ -6,7 +6,7 @@ const JournalLoading = () => (
     </div>
     <div className="flex flex-col gap-3">
       {[0, 1, 2].map((i) => (
-        <div key={i} className="zen-card h-32 animate-pulse" />
+        <div key={i} className="card h-32 animate-pulse" />
       ))}
     </div>
   </div>
