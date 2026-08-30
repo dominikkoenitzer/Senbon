@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     default: "senbon · journal and guestbook",
   },
   description:
-    "dominik könitzer's journal, and a guestbook you're going to sign. yes, you.",
+    "a quiet journal, and a guestbook you're going to sign. yes, you.",
   robots: {
     index: false,
     follow: false,
