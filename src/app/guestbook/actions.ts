@@ -1,5 +1,6 @@
 "use server";
 
+import { cache } from "react";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import type { GuestbookFormState } from "@/types/guestbook";
@@ -150,7 +151,10 @@ const publishedFromBody = async (
  * one read. The value is one the page already says out loud in prose, so
  * reaching it through a server action discloses nothing new.
  */
-export const resolveAutoPublish = async (): Promise<boolean | null> => {
+// Wrapped in React.cache so a single request that reads the mode more than once
+// (the page, then the honeypot branch of a submission) makes one call to the
+// admin-settings endpoint rather than several with the admin credential.
+const readAutoPublish = cache(async (): Promise<boolean | null> => {
   if (!isAdminConfigured()) return null;
 
   try {
@@ -159,7 +163,10 @@ export const resolveAutoPublish = async (): Promise<boolean | null> => {
     console.error("[guestbook] auto-publish lookup failed:", error);
     return null;
   }
-};
+});
+
+export const resolveAutoPublish = async (): Promise<boolean | null> =>
+  readAutoPublish();
 
 const fail = (message: string): GuestbookFormState => ({
   status: "error",

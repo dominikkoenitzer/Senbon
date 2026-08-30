@@ -37,8 +37,9 @@ export const guestbookAuthHeader = (): Record<string, string> => ({
 });
 
 /**
- * Fetch approved signatures. Wrapped in React.cache so metadata and the page
- * body share one request, matching the pattern in lib/blog.ts.
+ * Fetch approved signatures. Wrapped in React.cache to dedupe within a single
+ * request; the guestbook page has one caller today, but the wrapper keeps that
+ * true for free if a second (e.g. metadata) is ever added, matching lib/blog.ts.
  *
  * A guestbook that fails to load should never take the page down, so every
  * failure is caught. It must not be caught silently, though: this returned

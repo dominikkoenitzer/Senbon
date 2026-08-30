@@ -62,6 +62,9 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [handledState, setHandledState] = useState(state);
+  // Once the visitor starts fixing a rejected field, stop announcing it as
+  // invalid; a screen reader shouldn't keep saying "invalid" mid-correction.
+  const [editedSinceError, setEditedSinceError] = useState(false);
 
   const nameId = useId();
   const messageId = useId();
@@ -73,6 +76,7 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
   // react-hooks/set-state-in-effect and costs an extra render pass.
   if (state !== handledState) {
     setHandledState(state);
+    setEditedSinceError(false);
     if (state.status === "success") {
       setName("");
       setMessage("");
@@ -81,6 +85,7 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
 
   const remaining = GUESTBOOK_CONFIG.MESSAGE_MAX - message.length;
   const hasError = state.status === "error";
+  const showInvalid = hasError && !editedSinceError;
 
   return (
     <form action={formAction} className="card flex flex-col gap-6 p-7 md:p-9">
@@ -97,7 +102,10 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
           type="text"
           required
           value={name}
-          onChange={(event) => setName(event.target.value)}
+          onChange={(event) => {
+            setName(event.target.value);
+            setEditedSinceError(true);
+          }}
           // Kept read-only in flight: a success clears both fields, so edits
           // made while the previous submission was still pending would be
           // silently discarded.
@@ -107,7 +115,7 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
           // The rejection reason lives in the status line at the bottom of the
           // form. Without this pairing a screen reader user is told the field
           // is invalid and never told why.
-          aria-invalid={hasError}
+          aria-invalid={showInvalid}
           aria-describedby={statusId}
           placeholder="a name. yours, ideally."
           className="w-full rounded-md border border-input bg-muted px-4 py-3 text-base text-foreground/90 outline-none transition-colors placeholder:text-foreground/70 focus-visible:border-primary/40"
@@ -127,10 +135,13 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
           required
           rows={4}
           value={message}
-          onChange={(event) => setMessage(event.target.value)}
+          onChange={(event) => {
+            setMessage(event.target.value);
+            setEditedSinceError(true);
+          }}
           readOnly={isPending}
           maxLength={GUESTBOOK_CONFIG.MESSAGE_MAX}
-          aria-invalid={hasError}
+          aria-invalid={showInvalid}
           aria-describedby={statusId}
           placeholder="say something. anything. one word. one letter. i will take one letter."
           className="w-full resize-none rounded-md border border-input bg-muted px-4 py-3 text-base leading-relaxed text-foreground/90 outline-none transition-colors placeholder:text-foreground/70 focus-visible:border-primary/40"

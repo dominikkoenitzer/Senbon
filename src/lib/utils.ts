@@ -21,7 +21,8 @@ export const formatRelativeDate = (
   const diffDays = today.startOf("day").diff(target.startOf("day"), "day");
   if (diffDays === 0) return "Today";
   if (diffDays === 1) return "Yesterday";
-  if (diffDays > 0 && diffDays < 365) return target.from(today);
-  if (diffDays < 0 && diffDays > -365) return target.from(today);
+  // Within a year either side (past or future), use the relative phrasing;
+  // anything older or further out reads better as an absolute date.
+  if (Math.abs(diffDays) < 365) return target.from(today);
   return target.format("MMM D, YYYY");
 };

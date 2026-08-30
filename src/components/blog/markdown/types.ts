@@ -13,6 +13,11 @@ import type { ReactNode } from "react";
 export interface MarkdownComponentProps {
   className?: string;
   children?: ReactNode;
+  /**
+   * Heading id, computed once per document by the renderer so repeated heading
+   * text gets distinct anchors. Falls back to a slug of the text when absent.
+   */
+  id?: string;
 }
 
 export interface MarkdownLinkProps extends MarkdownComponentProps {
