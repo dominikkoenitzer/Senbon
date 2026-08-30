@@ -99,7 +99,7 @@ git clone https://github.com/dominikkoenitzer/Senbon.git
 cd Senbon
 
 bun install
-bun run dev          # → http://localhost:3000
+bun run dev          # → http://localhost:1000
 ```
 
 No configuration is needed to run the journal locally; entries are read from
@@ -110,7 +110,7 @@ environment variables are set. See [`env.example`](env.example).
 
 | Command | Description |
 |---|---|
-| `bun run dev` | Dev server on [localhost:3000](http://localhost:3000) |
+| `bun run dev` | Dev server on [localhost:1000](http://localhost:1000) |
 | `bun run build` | Production build |
 | `bun run start` | Serve the production build |
 | `bun run lint` | Run ESLint |
