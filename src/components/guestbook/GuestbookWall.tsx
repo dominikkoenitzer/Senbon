@@ -40,7 +40,7 @@ const GuestbookWall = ({ entries }: GuestbookWallProps) => {
             <p className="overflow-wrap-anywhere text-base leading-relaxed text-foreground/80 read-prose">
               {entry.message}
             </p>
-            <div className="flex items-center justify-between gap-4 border-t border-foreground/5 pt-4">
+            <div className="flex items-center justify-between gap-4 border-t border-border pt-4">
               <span className="overflow-wrap-anywhere min-w-0 font-display text-lg tracking-tight text-foreground/90">
                 {entry.name}
               </span>
