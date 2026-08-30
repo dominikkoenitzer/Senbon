@@ -4,7 +4,6 @@ excerpt: "sixteen entries with my name on top of them. never read one. turns out
 publishedAt: "2026-07-21"
 tags:
   - senbon
-featured: true
 ---
 
 sixteen entries. thousands of words. my name at the top of every single one. never read them. not one. couldn't tell you what's in them if you held me at gunpoint.
