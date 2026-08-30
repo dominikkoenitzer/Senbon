@@ -8,7 +8,7 @@ Requires [bun](https://bun.sh).
 
 ```bash
 bun install
-bun run dev        # http://localhost:3000
+bun run dev        # http://localhost:1000
 ```
 
 Copy `env.example` to `.env.local` for the guestbook. The guestbook API is an external service.
