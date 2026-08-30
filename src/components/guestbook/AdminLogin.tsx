@@ -48,7 +48,7 @@ const AdminLogin = () => {
           aria-describedby={statusId}
           autoComplete="current-password"
           autoFocus
-          className="w-full rounded-md border border-border bg-background/60 px-4 py-3 text-base text-foreground outline-none transition-colors focus-visible:border-primary/50"
+          className="w-full rounded-md border border-input bg-muted px-4 py-3 text-base text-foreground outline-none transition-colors focus-visible:border-primary/50"
         />
       </div>
 

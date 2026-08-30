@@ -15,6 +15,25 @@ const responseHeaders = [
   // The guestbook posts a form, so it is worth saying it may not be framed.
   { key: "X-Frame-Options", value: "SAMEORIGIN" },
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+  // HSTS: senbon.ch and api.senbon.ch are both HTTPS, so pinning the scheme is
+  // safe. Two years with preload is the submission-eligible baseline.
+  {
+    key: "Strict-Transport-Security",
+    value: "max-age=63072000; includeSubDomains; preload",
+  },
+  /*
+   * A baseline CSP for defense-in-depth. No script-src nonce policy yet: Next's
+   * inline bootstrap makes that fiddly and there is no known injection today
+   * (react-markdown runs without rehype-raw, everything else is auto-escaped).
+   * These four directives are the cheap, safe wins: frame-ancestors is the
+   * spoof-resistant successor to X-Frame-Options, and the rest lock down base
+   * href, plugins, and form targets.
+   */
+  {
+    key: "Content-Security-Policy",
+    value:
+      "frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self'",
+  },
 ];
 
 const nextConfig: NextConfig = {

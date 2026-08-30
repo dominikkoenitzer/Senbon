@@ -131,8 +131,18 @@ const pruneAttempts = (now: number): void => {
  */
 export const signInClientKey = async (): Promise<string> => {
   const head = await headers();
-  const forwarded = head.get("x-forwarded-for")?.split(",")[0]?.trim();
-  const address = forwarded || head.get("x-real-ip")?.trim() || "unknown";
+  // Prefer the platform-set x-real-ip; fall back to the right-most (trusted)
+  // forwarded hop. The left-most x-forwarded-for entry is client-controllable,
+  // so keying the throttle off it would let an attacker rotate it for a fresh
+  // bucket on every guess.
+  const realIp = head.get("x-real-ip")?.trim();
+  const hops =
+    head
+      .get("x-forwarded-for")
+      ?.split(",")
+      .map((hop) => hop.trim())
+      .filter(Boolean) ?? [];
+  const address = realIp || hops[hops.length - 1] || "unknown";
 
   return createHmac("sha256", ADMIN_TOKEN ?? "")
     .update(`signin:${address}`)

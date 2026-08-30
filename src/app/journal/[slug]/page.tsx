@@ -26,7 +26,7 @@ export const generateMetadata = async ({
   if (!post) return { title: "not found" };
 
   // Deliberately no OpenGraph block. The site is deindexed on purpose, and the
-  // old one here contradicted that (see the privacy posture in CLAUDE.md).
+  // old one here contradicted that (see the Privacy section in the README).
   return { title: post.title, description: post.excerpt };
 };
 

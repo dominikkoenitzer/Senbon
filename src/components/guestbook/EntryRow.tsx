@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { Check, Loader2, Trash2 } from "lucide-react";
 import { approveSignature, removeEntry } from "@/app/guestbook/admin/actions";
-import { cn, formatJournalDate, formatRelativeDate } from "@/lib/utils";
+import { cn } from "@/lib/cn";
+import { formatJournalDate, formatRelativeDate } from "@/lib/utils";
 import type { AdminGuestbookEntry } from "@/types/guestbook";
 
 interface EntryRowProps {
@@ -36,6 +37,7 @@ const EntryRow = ({ entry }: EntryRowProps) => {
 
   const [armed, setArmed] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [expired, setExpired] = useState(false);
   const [isApproving, startApprove] = useTransition();
   const [isDeleting, startDelete] = useTransition();
   const disarmTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -54,9 +56,14 @@ const EntryRow = ({ entry }: EntryRowProps) => {
 
   const approve = () => {
     setFailed(false);
+    setExpired(false);
     startApprove(async () => {
       try {
-        await approveSignature(idPayload(entry.id));
+        const result = await approveSignature(idPayload(entry.id));
+        if (!result.ok) {
+          setFailed(true);
+          setExpired(result.reason === "expired");
+        }
       } catch {
         setFailed(true);
       }
@@ -74,9 +81,14 @@ const EntryRow = ({ entry }: EntryRowProps) => {
 
     setArmed(false);
     setFailed(false);
+    setExpired(false);
     startDelete(async () => {
       try {
-        await removeEntry(idPayload(entry.id));
+        const result = await removeEntry(idPayload(entry.id));
+        if (!result.ok) {
+          setFailed(true);
+          setExpired(result.reason === "expired");
+        }
       } catch {
         setFailed(true);
       }
@@ -141,7 +153,9 @@ const EntryRow = ({ entry }: EntryRowProps) => {
           )}
         >
           {failed
-            ? "that didn't go through. the api may be restarting. try again."
+            ? expired
+              ? "your session ran out. sign in again and it'll work."
+              : "that didn't go through. the api may be restarting. try again."
             : armed
               ? "press it again and it's gone. permanently. there is no undo."
               : ""}

@@ -1,6 +1,4 @@
-"use client";
-
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import type { MarkdownComponentProps } from "./types";
 
 export const Ul = ({ className, children }: MarkdownComponentProps) => (

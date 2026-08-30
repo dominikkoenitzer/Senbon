@@ -234,6 +234,7 @@ code {
  * the whole reason it replaced Playfair Display.
  */
 .font-display {
+  font-family: var(--font-heading), Georgia, Cambria, "Times New Roman", serif;
   font-variation-settings: "SOFT" 60, "WONK" 1, "opsz" 60;
   letter-spacing: -0.015em;
 }
@@ -304,9 +305,8 @@ code {
   padding: 0.5rem 1rem;
   background: var(--primary);
   color: var(--primary-foreground);
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0;
   border-radius: 0 0 0.5rem 0.5rem;
   transition: top 0.2s ease;
 }
@@ -388,9 +388,8 @@ code {
   top: 0.5rem;
   right: 0.5rem;
   padding: 0.35rem 0.6rem;
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0;
   color: var(--primary);
   background: var(--card);
   border: 1px solid var(--primary);

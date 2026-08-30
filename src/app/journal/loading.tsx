@@ -5,7 +5,7 @@ const JournalLoading = () => (
       <div className="h-20 w-64 animate-pulse rounded-2xl bg-muted md:h-28" />
     </div>
     <div className="flex flex-col gap-3">
-      {[0, 1, 2].map((i) => (
+      {[0, 1].map((i) => (
         <div key={i} className="card h-32 animate-pulse" />
       ))}
     </div>

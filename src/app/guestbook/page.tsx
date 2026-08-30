@@ -7,8 +7,8 @@ import { resolveAutoPublish } from "@/app/guestbook/actions";
 import { getGuestbookEntries, isGuestbookConfigured } from "@/lib/guestbook";
 
 export const metadata = {
-  title: "Guestbook",
-  description: "The Senbon guestbook.",
+  title: "guestbook",
+  description: "sign it. i'll wait.",
 };
 
 // Signatures land either the moment they are sent or once they are approved,

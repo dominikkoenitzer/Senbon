@@ -193,7 +193,7 @@ describe("signInClientKey", () => {
     expect(await signInClientKey()).not.toBe(first);
   });
 
-  it("takes the first entry of a forwarded chain", async () => {
+  it("takes the last (trusted) entry of a forwarded chain", async () => {
     const { signInClientKey } = await load();
 
     requestHeaders = new Headers({
@@ -201,8 +201,21 @@ describe("signInClientKey", () => {
     });
     const chained = await signInClientKey();
 
-    requestHeaders = new Headers({ "x-forwarded-for": "203.0.113.7" });
+    requestHeaders = new Headers({ "x-forwarded-for": "70.41.3.18" });
     expect(chained).toBe(await signInClientKey());
+  });
+
+  it("prefers x-real-ip over a spoofable forwarded chain", async () => {
+    const { signInClientKey } = await load();
+
+    requestHeaders = new Headers({
+      "x-real-ip": "203.0.113.7",
+      "x-forwarded-for": "9.9.9.9, 8.8.8.8",
+    });
+    const viaReal = await signInClientKey();
+
+    requestHeaders = new Headers({ "x-real-ip": "203.0.113.7" });
+    expect(viaReal).toBe(await signInClientKey());
   });
 
   it("falls back to x-real-ip", async () => {

@@ -173,8 +173,19 @@ const fail = (message: string): GuestbookFormState => ({
  */
 const visitorIp = async (): Promise<string> => {
   const headerList = await headers();
-  const forwarded = headerList.get("x-forwarded-for");
-  return forwarded?.split(",")[0]?.trim() ?? "";
+  const realIp = headerList.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
+  // Fall back to the right-most x-forwarded-for hop. The platform appends the
+  // real client address on the right; the left-most entries are client-supplied,
+  // so keying the abuse bucket off them lets a script send a fresh spoofed value
+  // per request and slip the rate limit entirely.
+  const hops =
+    headerList
+      .get("x-forwarded-for")
+      ?.split(",")
+      .map((hop) => hop.trim())
+      .filter(Boolean) ?? [];
+  return hops[hops.length - 1] ?? "";
 };
 
 export const signGuestbook = async (

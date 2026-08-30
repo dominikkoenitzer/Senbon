@@ -1,6 +1,4 @@
-"use client";
-
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import { generateHeadingId } from "./utils";
 import { getTextContent } from "./utils";
 import type { MarkdownComponentProps } from "./types";
