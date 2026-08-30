@@ -54,7 +54,7 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
           <span>journal</span>
         </Link>
 
-        {/* Title is author-supplied frontmatter — one unbroken string must not
+        {/* Title is author-supplied frontmatter; one unbroken string must not
             push the column sideways. */}
         <h1 className="overflow-wrap-anywhere font-display text-4xl lowercase leading-[0.95] tracking-tight text-foreground md:text-6xl display-balance">
           {post.title}

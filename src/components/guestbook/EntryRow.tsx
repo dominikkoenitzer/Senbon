@@ -98,7 +98,7 @@ const EntryRow = ({ entry }: EntryRowProps) => {
         {/*
           The pending badge is solid, not a tint. It used to be `bg-primary/15
           text-primary` sitting inside a row that is itself `bg-primary/10`, so
-          the two clay washes stacked and the label landed at 3.78:1 — under
+          the two clay washes stacked and the label landed at 3.78:1, under
           AA for 10px text. Filling the badge takes it to 5.51:1, and it
           no longer depends on what is underneath it.
         */}
@@ -179,7 +179,7 @@ const EntryRow = ({ entry }: EntryRowProps) => {
               user says what they can see. "yes, delete" used to map to an
               accessible name beginning "Confirm:", so the spoken command
               matched nothing and the armed button could not be pressed by
-              voice at all. Keep the visible string as the literal prefix — and
+              voice at all. Keep the visible string as the literal prefix, and
               keep the word "delete" in it, so nobody is ever unsure what the
               button does.
             */

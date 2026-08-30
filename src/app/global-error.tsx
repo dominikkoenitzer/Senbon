@@ -49,7 +49,7 @@ export default function GlobalError({
               marginBottom: "1.5rem",
             }}
           >
-            error — all of it
+            error. all of it
           </p>
           <h1
             style={{
@@ -67,10 +67,10 @@ export default function GlobalError({
               marginBottom: "2rem",
             }}
           >
-            not one page — everything, at once, in front of you specifically.
+            not one page. everything, at once, in front of you specifically.
             hit try again. if that does nothing, take the home link next to it,
             and if that does nothing either, close the tab and come back in ten
-            minutes — this one is entirely my fault and i am already annoyed
+            minutes. this one is entirely my fault and i am already annoyed
             about it.
           </p>
           {error.digest && (

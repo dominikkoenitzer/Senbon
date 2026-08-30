@@ -66,7 +66,7 @@ const GuestbookPage = async () => {
             <span className="italic text-primary"> i&apos;ll wait</span>.
           </h1>
           <p className="max-w-2xl text-base leading-relaxed text-foreground/85 read-prose md:text-lg">
-            no account, no email, no hoops. name, thing, sign — nine seconds.{" "}
+            no account, no email, no hoops. name, thing, sign. nine seconds.{" "}
             {publishClaim ? `${publishClaim} ` : ""}and people still scroll all
             the way down and leave. i can see that, you know.
           </p>
@@ -84,7 +84,7 @@ const GuestbookPage = async () => {
         <div className="card flex flex-col items-center gap-4 p-10 text-center md:p-14">
           <p className="kicker">briefly, humiliatingly, down</p>
           <p className="max-w-md text-base leading-relaxed text-foreground/85 read-prose">
-            not &quot;paused&quot;, not &quot;resting&quot; — broken. on the one day you
+            not &quot;paused&quot;, not &quot;resting&quot;. broken. on the one day you
             came, obviously. i&apos;m fixing it. stop looking at me.
           </p>
         </div>

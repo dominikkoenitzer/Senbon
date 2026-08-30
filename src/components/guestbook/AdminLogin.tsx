@@ -67,7 +67,7 @@ const AdminLogin = () => {
 
       {/*
         Rendered exactly as the action returned it. Do not decorate this with
-        hints, retry counts, or a friendlier rewrite — every extra word here is
+        hints, retry counts, or a friendlier rewrite: every extra word here is
         another thing a stranger learns about the door.
       */}
       <p
