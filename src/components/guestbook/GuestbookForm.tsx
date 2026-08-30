@@ -5,7 +5,7 @@ import { Loader2, PenLine } from "lucide-react";
 import { signGuestbook } from "@/app/guestbook/actions";
 import type { GuestbookFormState } from "@/types/guestbook";
 import { GUESTBOOK_CONFIG } from "@/constants/guestbook";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 
 const INITIAL_STATE: GuestbookFormState = { status: "idle", message: "" };
 
@@ -110,7 +110,7 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
           aria-invalid={hasError}
           aria-describedby={statusId}
           placeholder="a name. yours, ideally."
-          className="w-full rounded-md border border-foreground/10 bg-background/40 px-4 py-3 text-base text-foreground/90 outline-none transition-colors placeholder:text-foreground/70 focus-visible:border-primary/40"
+          className="w-full rounded-md border border-input bg-muted px-4 py-3 text-base text-foreground/90 outline-none transition-colors placeholder:text-foreground/70 focus-visible:border-primary/40"
         />
       </div>
 
@@ -133,7 +133,7 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
           aria-invalid={hasError}
           aria-describedby={statusId}
           placeholder="say something. anything. one word. one letter. i will take one letter."
-          className="w-full resize-none rounded-md border border-foreground/10 bg-background/40 px-4 py-3 text-base leading-relaxed text-foreground/90 outline-none transition-colors placeholder:text-foreground/70 focus-visible:border-primary/40"
+          className="w-full resize-none rounded-md border border-input bg-muted px-4 py-3 text-base leading-relaxed text-foreground/90 outline-none transition-colors placeholder:text-foreground/70 focus-visible:border-primary/40"
         />
         <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
           {countdownAnnouncement(remaining)}

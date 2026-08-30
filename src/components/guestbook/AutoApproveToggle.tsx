@@ -3,7 +3,7 @@
 import { useId, useOptimistic, useState, useTransition } from "react";
 import { Loader2 } from "lucide-react";
 import { updateAutoApprove } from "@/app/guestbook/admin/actions";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 
 interface AutoApproveToggleProps {
   initialAutoApprove: boolean;

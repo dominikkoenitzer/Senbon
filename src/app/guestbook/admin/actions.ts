@@ -77,30 +77,43 @@ export const signOut = async (): Promise<void> => {
   revalidatePath("/guestbook/admin");
 };
 
-export const removeEntry = async (formData: FormData): Promise<void> => {
+export interface ModerationResult {
+  ok: boolean;
+  /** `expired` means the session lapsed, so the row can say so specifically. */
+  reason?: "expired";
+}
+
+export const removeEntry = async (
+  formData: FormData,
+): Promise<ModerationResult> => {
   // Re-check on every call: the session cookie is the only thing standing
-  // between a stranger and the delete button.
-  if (!(await isSignedIn())) return;
+  // between a stranger and the delete button. Report the lapse back rather than
+  // returning silently, or the button just dies with no explanation.
+  if (!(await isSignedIn())) return { ok: false, reason: "expired" };
 
   const id = String(formData.get("id") ?? "");
-  if (!/^\d+$/.test(id)) return;
+  if (!/^\d+$/.test(id)) return { ok: false };
 
   await deleteEntry(id);
   revalidatePath("/guestbook/admin");
   revalidatePath("/guestbook");
+  return { ok: true };
 };
 
-export const approveSignature = async (formData: FormData): Promise<void> => {
+export const approveSignature = async (
+  formData: FormData,
+): Promise<ModerationResult> => {
   // Same re-check as removeEntry; the session cookie is the only gate.
-  if (!(await isSignedIn())) return;
+  if (!(await isSignedIn())) return { ok: false, reason: "expired" };
 
   const id = String(formData.get("id") ?? "");
-  if (!/^\d+$/.test(id)) return;
+  if (!/^\d+$/.test(id)) return { ok: false };
 
   await approveEntry(id);
   revalidatePath("/guestbook/admin");
   // A newly-approved signature should appear on the public wall immediately.
   revalidatePath("/guestbook");
+  return { ok: true };
 };
 
 export interface UpdateAutoApproveResult {

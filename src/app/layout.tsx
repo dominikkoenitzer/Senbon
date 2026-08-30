@@ -54,11 +54,11 @@ const mono = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s • senbon",
+    template: "%s · senbon",
     default: "senbon · journal and guestbook",
   },
   description:
-    "The personal journal and guestbook of dominikkoenitzer. Please sign it.",
+    "dominik könitzer's journal, and a guestbook you're going to sign. yes, you.",
   robots: {
     index: false,
     follow: false,
@@ -110,10 +110,10 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <a href="#main-content" className="skip-link">
-          Skip to content
+          skip to content
         </a>
         <AtmosphereBackground />
-        <main id="main-content" className="relative z-10">
+        <main id="main-content" tabIndex={-1} className="relative z-10">
           {children}
         </main>
         <SmoothScroll />

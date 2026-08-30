@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import type { MarkdownImageProps } from "./types";
 
 /**
@@ -14,7 +14,7 @@ export const Image = ({ className, src, alt }: MarkdownImageProps) => (
   // eslint-disable-next-line @next/next/no-img-element
   <img
     src={src}
-    alt={alt}
+    alt={alt ?? ""}
     loading="lazy"
     className={cn(
       "fade-up my-6 w-full rounded-2xl border border-border md:my-8 lg:my-10",

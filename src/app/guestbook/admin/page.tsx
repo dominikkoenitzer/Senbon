@@ -9,11 +9,11 @@ import {
   fetchAutoApprove,
   isSignedIn,
 } from "@/lib/guestbook-admin";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import type { AdminGuestbookEntry } from "@/types/guestbook";
 
 export const metadata = {
-  title: "Guestbook moderation",
+  title: "the back room",
 };
 
 export const dynamic = "force-dynamic";

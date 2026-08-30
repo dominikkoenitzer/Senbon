@@ -1,7 +1,5 @@
-"use client";
-
 import { ArrowUpRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import type { MarkdownComponentProps, MarkdownLinkProps } from "./types";
 
 /**
@@ -35,7 +33,7 @@ export const Link = ({ className, children, href }: MarkdownLinkProps) => {
       {children}
       {isExternal && (
         <ArrowUpRight
-          className="ml-0.5 inline h-[0.85em] w-[0.85em] translate-y-[0.1em] text-primary/60"
+          className="ml-0.5 inline size-[0.85em] translate-y-[0.1em] text-primary/60"
           aria-hidden="true"
         />
       )}
