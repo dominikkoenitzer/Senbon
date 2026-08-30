@@ -64,7 +64,7 @@ const AutoApproveToggle = ({ initialAutoApprove }: AutoApproveToggleProps) => {
   };
 
   return (
-    <div className="zen-card flex flex-col gap-5 p-6 md:flex-row md:items-center md:justify-between md:gap-8 md:p-7">
+    <div className="card flex flex-col gap-5 p-6 md:flex-row md:items-center md:justify-between md:gap-8 md:p-7">
       <div className="flex min-w-0 flex-col gap-2">
         <p className="kicker">auto-publish</p>
 

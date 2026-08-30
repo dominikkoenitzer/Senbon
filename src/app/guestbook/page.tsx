@@ -72,7 +72,7 @@ const GuestbookPage = async () => {
           </p>
         </div>
 
-        <div className="zen-rule" />
+        <div className="rule" />
       </header>
 
       {entries !== null ? (
@@ -81,7 +81,7 @@ const GuestbookPage = async () => {
           <GuestbookWall entries={entries} />
         </>
       ) : (
-        <div className="zen-card flex flex-col items-center gap-4 p-10 text-center md:p-14">
+        <div className="card flex flex-col items-center gap-4 p-10 text-center md:p-14">
           <p className="kicker">briefly, humiliatingly, down</p>
           <p className="max-w-md text-base leading-relaxed text-foreground/85 read-prose">
             not &quot;paused&quot;, not &quot;resting&quot; — broken. on the one day you

@@ -20,7 +20,7 @@ const AdminLogin = () => {
   return (
     <form
       action={formAction}
-      className="zen-card mx-auto flex w-full max-w-md flex-col gap-6 p-6 sm:p-8 md:p-10"
+      className="card mx-auto flex w-full max-w-md flex-col gap-6 p-6 sm:p-8 md:p-10"
     >
       <div className="flex flex-col gap-3">
         <p className="kicker">moderation</p>

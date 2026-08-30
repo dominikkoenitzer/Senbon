@@ -72,7 +72,7 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
       <MarkdownRenderer content={post.content} />
 
       <footer className="flex flex-col gap-5">
-        <div className="zen-rule" />
+        <div className="rule" />
         <p className="text-base leading-relaxed text-foreground/85 read-prose">
           you read the whole thing. i watched the scrollbar go all the way
           down. now go put your name in the guestbook.

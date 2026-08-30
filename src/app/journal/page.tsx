@@ -49,7 +49,7 @@ const JournalPage = async () => {
             <li key={post.slug}>
               <Link
                 href={`/journal/${post.slug}`}
-                className="zen-card group flex flex-col gap-2 p-6 md:p-7"
+                className="card group flex flex-col gap-2 p-6 md:p-7"
               >
                 <time
                   dateTime={post.publishedAt}

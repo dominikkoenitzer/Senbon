@@ -38,7 +38,7 @@ const Home = () => (
         <Link
           key={link.href}
           href={link.href}
-          className="zen-card group flex items-center justify-between gap-6 p-6 fade-up md:p-7"
+          className="card group flex items-center justify-between gap-6 p-6 fade-up md:p-7"
           style={{ animationDelay: `${40 + i * 40}ms` }}
         >
           <span className="flex flex-col gap-1.5">

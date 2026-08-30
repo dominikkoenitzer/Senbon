@@ -29,15 +29,15 @@ interface StatProps {
 }
 
 /*
- * `.zen-card` sits in the `components` layer, below Tailwind's `utilities`, so
+ * `.card` sits in the `components` layer, below Tailwind's `utilities`, so
  * the emphasised tile can simply tint the card. This used to be a hand-built
- * surface because an unlayered `.zen-card` beat every utility stacked on it and
+ * surface because an unlayered `.card` beat every utility stacked on it and
  * the highlight rendered as an ordinary tile.
  */
 const Stat = ({ value, label, emphasis = false }: StatProps) => (
   <div
     className={cn(
-      "zen-card flex flex-col gap-2 p-4 md:p-5",
+      "card flex flex-col gap-2 p-4 md:p-5",
       emphasis && "border-primary/50 bg-primary/10",
     )}
   >
@@ -172,7 +172,7 @@ const AdminPage = async () => {
       ) : (
         <div className="flex flex-col gap-10">
           {autoApprove === null ? (
-            <div className="zen-card flex flex-col gap-2 p-6">
+            <div className="card flex flex-col gap-2 p-6">
               <p className="kicker">auto-publish</p>
               <p className="text-sm leading-relaxed text-foreground/85 read-prose">
                 couldn&apos;t read the setting, so you don&apos;t get a switch
@@ -184,7 +184,7 @@ const AdminPage = async () => {
           )}
 
           {loadError ? (
-            <div className="zen-card flex flex-col items-center gap-4 p-8 text-center md:p-12">
+            <div className="card flex flex-col items-center gap-4 p-8 text-center md:p-12">
               <p className="kicker">can&apos;t reach it</p>
               <p className="max-w-md text-base leading-relaxed text-foreground/85 read-prose">
                 the api isn&apos;t answering. it does this sometimes, usually
@@ -192,7 +192,7 @@ const AdminPage = async () => {
               </p>
             </div>
           ) : entries.length === 0 ? (
-            <div className="zen-card flex flex-col items-center gap-4 p-8 text-center md:p-12">
+            <div className="card flex flex-col items-center gap-4 p-8 text-center md:p-12">
               <p className="kicker">nothing. not one</p>
               <p className="max-w-md text-base leading-relaxed text-foreground/85 read-prose">
                 nobody has signed anything, so there is nothing here to moderate.

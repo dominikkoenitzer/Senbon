@@ -4,7 +4,7 @@ import { formatJournalDate, formatRelativeDate } from "@/lib/utils";
 const GuestbookWall = ({ entries }: GuestbookWallProps) => {
   if (entries.length === 0) {
     return (
-      <div className="zen-card flex flex-col items-center gap-4 p-10 text-center md:p-14">
+      <div className="card flex flex-col items-center gap-4 p-10 text-center md:p-14">
         <p className="kicker">still nobody</p>
         <p className="max-w-md text-base leading-relaxed text-foreground/85 read-prose">
           nobody has signed this. you&apos;re going to read the whole page and
@@ -35,7 +35,7 @@ const GuestbookWall = ({ entries }: GuestbookWallProps) => {
         {entries.map((entry) => (
           <li
             key={entry.id}
-            className="zen-card flex flex-col gap-4 p-6 md:p-7"
+            className="card flex flex-col gap-4 p-6 md:p-7"
           >
             <p className="overflow-wrap-anywhere text-base leading-relaxed text-foreground/80 read-prose">
               {entry.message}

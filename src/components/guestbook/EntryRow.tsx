@@ -86,8 +86,8 @@ const EntryRow = ({ entry }: EntryRowProps) => {
   return (
     <li
       className={cn(
-        "zen-card flex flex-col gap-4 p-5 md:p-6",
-        // `.zen-card` lives in the `components` layer, so these utilities do
+        "card flex flex-col gap-4 p-5 md:p-6",
+        // `.card` lives in the `components` layer, so these utilities do
         // override the card's own border and background. Before it moved, they
         // lost silently and a pending row had to rebuild the surface by hand.
         awaitingReview && "border-primary/50 bg-primary/10",
