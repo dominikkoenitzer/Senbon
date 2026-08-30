@@ -55,7 +55,7 @@ const mono = Space_Grotesk({
 export const metadata: Metadata = {
   title: {
     template: "%s • senbon",
-    default: "senbon — journal and guestbook",
+    default: "senbon · journal and guestbook",
   },
   description:
     "The personal journal and guestbook of dominikkoenitzer. Please sign it.",

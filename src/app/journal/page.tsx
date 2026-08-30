@@ -34,7 +34,7 @@ const JournalPage = async () => {
         </h1>
         <p className="max-w-md text-lg leading-relaxed text-foreground/85 read-prose">
           things i thought, typed while i still meant them. no reading-time
-          estimate — you have eyes.
+          estimate. you have eyes.
         </p>
       </header>
 

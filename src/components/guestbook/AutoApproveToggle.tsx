@@ -124,7 +124,7 @@ const AutoApproveToggle = ({ initialAutoApprove }: AutoApproveToggleProps) => {
 
         {/*
           The knob has to be findable, not merely present. It was `bg-card` on
-          a `bg-muted` track — 1.09:1, which is to say
+          a `bg-muted` track: 1.09:1, which is to say
           a white dot on a white groove. Someone with low vision could not tell
           which end it was sitting at, and the ON/OFF word beside it is
           `aria-hidden`: still painted, but it is a caption, not a fix.

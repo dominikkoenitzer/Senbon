@@ -23,7 +23,7 @@ const SIGNED = {
   published:
     "there. you're on the wall. top of the list, your name on it. i checked twice already. i'm normal.",
   held:
-    "saved. it isn't on the wall yet — i read every signature before it goes up. yours is next. i'm reading it now.",
+    "saved. it isn't on the wall yet. i read every signature before it goes up. yours is next. i'm reading it now.",
   unknown:
     "saved. yours is in. when it turns up on the wall is between me and the wall, but it turns up.",
 } as const;

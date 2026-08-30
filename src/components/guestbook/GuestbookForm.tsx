@@ -149,7 +149,7 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
         </span>
       </div>
 
-      {/* Honeypot — hidden from humans, irresistible to bots. */}
+      {/* Honeypot: hidden from humans, irresistible to bots. */}
       <div aria-hidden="true" className="hidden">
         <label htmlFor={GUESTBOOK_CONFIG.HONEYPOT_FIELD}>
           Leave this field empty

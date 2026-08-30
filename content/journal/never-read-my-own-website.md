@@ -13,7 +13,7 @@ anyway one of them explains what "senbon" means. apparently it's *"a swarm of qu
 
 gorgeous. genuinely. also completely fabricated.
 
-i picked it because it sounds nice. that's the lore. that's the whole thing. meditation-y, peaceful, feels good in the mouth — done, next.
+i picked it because it sounds nice. that's the lore. that's the whole thing. meditation-y, peaceful, feels good in the mouth. done, next.
 
 so this website has been confidently telling strangers a story about *my own name* that i would have failed a quiz on. humiliating, and specifically for me.
 
