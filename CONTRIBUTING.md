@@ -23,7 +23,7 @@ bun run test
 bun run build
 ```
 
-The guestbook API has its own tests beside its modules (`lib/*.test.js`). Anything touching auth, rate limiting, validation or moderation needs a test that pins the new behaviour; those four files are the security boundary and are covered on purpose.
+The guestbook API is a separate external service and its source is not in this repo; its tests live with it. In this repo, anything touching the admin session, the sign-in throttle, or the guestbook client needs a test that pins the new behaviour (see `src/lib/guestbook-admin.test.ts`).
 
 ## Code style
 

@@ -180,8 +180,8 @@ the cream background. Hierarchy comes from size and weight instead.
 - Search engines may crawl so that `noindex` is actually seen; AI crawlers
   (GPTBot, ClaudeBot, Google-Extended, PerplexityBot, CCBot, Bytespider and
   others) are disallowed.
-- `X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex` on every
-  response, plus root metadata and redundant meta tags.
+- `X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai`
+  on every response, plus root metadata and redundant meta tags.
 - No OG images, sitemap, or structured data.
 - The only telemetry is first-party Vercel Analytics.
 
@@ -191,9 +191,6 @@ Deploys to **[Vercel](https://vercel.com/)** from `main` via the Git
 integration, live at **[senbon.ch](https://senbon.ch)**.
 
 - [`ci.yml`](.github/workflows/ci.yml) lints and builds on every push and PR.
-- [`deploy.yml`](.github/workflows/deploy.yml) is an optional CLI deploy, gated on
-  repository secrets; a no-op when they're absent, since the Git integration
-  already handles deploys.
 
 [Dependabot](.github/dependabot.yml) keeps dependencies and Actions current.
 
