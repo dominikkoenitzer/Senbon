@@ -27,10 +27,6 @@ const Home = () => (
       <h1 className="font-display text-7xl lowercase leading-[0.82] tracking-tight text-foreground md:text-9xl display-balance">
         senbon
       </h1>
-      <p className="max-w-md text-lg leading-relaxed text-foreground/85 read-prose md:text-xl">
-        dominik. two rooms: a journal, and a guestbook i refresh more than
-        i&apos;ll admit. take the second door.
-      </p>
     </header>
 
     <nav className="flex flex-col gap-3" aria-label="Sections">
