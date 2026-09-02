@@ -56,7 +56,11 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
 
         {/* Title is author-supplied frontmatter; one unbroken string must not
             push the column sideways. */}
-        <h1 className="overflow-wrap-anywhere font-display text-4xl lowercase leading-[0.95] tracking-tight text-foreground md:text-6xl display-balance">
+        {/* leading-[1.05] not tighter: Fraunces sets a tall apostrophe and a
+            deep `y`, so a wrapped title collided line to line at 0.95 (the
+            apostrophe of "i'd" landed inside the descender of "employed"). Only
+            single-word headlines elsewhere can afford sub-1 leading. */}
+        <h1 className="overflow-wrap-anywhere font-display text-4xl lowercase leading-[1.05] tracking-tight text-foreground md:text-6xl display-balance">
           {post.title}
         </h1>
 
