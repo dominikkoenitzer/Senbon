@@ -1,7 +1,7 @@
 ---
 title: "the email said nothing about a whiteboard"
 excerpt: "prepared for weeks. presented perfectly. then they stood up and handed me a marker."
-publishedAt: "2026-09-02"
+publishedAt: "2026-08-27"
 tags:
   - interviews
 ---
