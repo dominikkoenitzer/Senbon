@@ -30,10 +30,10 @@ const GuestbookPage = async () => {
   const configured = isGuestbookConfigured();
 
   // Only the boolean crosses into the markup; resolveAutoPublish runs on the
-  // server and GUESTBOOK_ADMIN_TOKEN stays there.
+  // server and the database secret stays there.
   //
-  // `entries` is null when the API could not be reached at all, which is a
-  // different page from an API that answered with nothing. Signing is hidden in
+  // `entries` is null when the database could not be reached at all, which is
+  // a different page from a database that answered with nothing. Signing is hidden in
   // that case rather than offered and then failed on submit: if the wall could
   // not be read, there is no reason to believe a write would land.
   const [entries, autoPublish]: [GuestbookEntry[] | null, boolean | null] =

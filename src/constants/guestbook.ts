@@ -1,12 +1,18 @@
 /**
  * Guestbook-related constants.
  *
- * The length caps mirror the validation in the guestbook API, so keep the two in
- * sync, so the client-side counter never promises something the server rejects.
+ * The length caps are enforced here, in the sign action, and as CHECK
+ * constraints in the database migration. Keep the three in sync, so the
+ * client-side counter never promises something the database rejects.
  */
 export const GUESTBOOK_CONFIG = {
   NAME_MAX: 40,
   MESSAGE_MAX: 280,
+  /**
+   * One signature per visitor bucket per window. Counted against the entries
+   * table itself, so deleting a test signature frees the slot immediately.
+   */
+  RATE_LIMIT_SECONDS: 30,
   /** How many approved signatures the wall renders. */
   FETCH_LIMIT: 100,
   /**
@@ -16,10 +22,4 @@ export const GUESTBOOK_CONFIG = {
    * visitor silently discarded as a bot.
    */
   HONEYPOT_FIELD: "contact_time",
-  /**
-   * Cap on calls to the external API. Without this a stalled server (accepting
-   * the connection but never answering) leaves the visitor on a spinner until
-   * the platform's own execution limit fires.
-   */
-  REQUEST_TIMEOUT_MS: 8000,
 } as const;

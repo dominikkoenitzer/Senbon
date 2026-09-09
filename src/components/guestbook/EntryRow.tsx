@@ -155,7 +155,7 @@ const EntryRow = ({ entry }: EntryRowProps) => {
           {failed
             ? expired
               ? "your session ran out. sign in again and it'll work."
-              : "that didn't go through. the api may be restarting. try again."
+              : "that didn't go through. try it again in a second."
             : armed
               ? "press it again and it's gone. permanently. there is no undo."
               : ""}

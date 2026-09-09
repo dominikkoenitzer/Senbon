@@ -187,8 +187,8 @@ const AdminPage = async () => {
             <div className="card flex flex-col items-center gap-4 p-8 text-center md:p-12">
               <p className="kicker">can&apos;t reach it</p>
               <p className="max-w-md text-base leading-relaxed text-foreground/85 read-prose">
-                the api isn&apos;t answering. it does this sometimes, usually
-                while restarting. give it a second and refresh.
+                the database isn&apos;t answering. it does this sometimes,
+                usually while waking up. give it a second and refresh.
               </p>
             </div>
           ) : entries.length === 0 ? (
