@@ -6,22 +6,20 @@ tags:
   - interviews
 ---
 
-i was ready. you don't understand. i was *ready*.
+i had an interview and i would like it struck from the record.
 
-they said bring a project, so i brought [zephyr](https://zephyr.punds.ch) and i learned it like scripture. every decision and why it's there. what i cut and what cutting it cost. i had answers for questions nobody was ever going to ask. i knew the lines i'm not proud of and i had a story ready for those too.
+they said bring a project, so i brought [zephyr](https://zephyr.punds.ch), and i did not just bring it, i studied it. every decision and why it's there, what i cut and what cutting it cost, answers ready for questions nobody was ever going to ask. weeks of this. i was so prepared it was embarrassing for everyone else in the building.
 
-and it went perfectly. genuinely, i was good. i watched them nod at the exact part i'd built the whole thing around.
+and the presentation went well. it went really well. they nodded at the exact part i built the whole thing around, an actual nod, and i want that nod framed and hung somewhere before we get to the rest.
 
-then: "great. now for the questions."
+then someone said "great, now the questions", and i said ask me anything, it's my project, i live there, i pay rent.
 
-fine. ask me anything. it's my project, i live there.
+and someone stood up, opened a drawer, and took out a marker.
 
-they meant a different kind of question. someone got up and handed me a marker.
+a marker. and in that exact second, before anyone said the word whiteboard, before anyone said the word algorithm, i knew. it was over. the email said nothing about a whiteboard, not a word, not a hint, and i had prepared for weeks and not one minute of it was for this, and everyone in that room was about to find that out at the same time as me.
 
-whiteboard. algorithms. write it out, out loud, while they watch. the email said nothing. not a word, not a hint, and this was not google. i was not applying to some big name with a hiring pipeline and a leetcode gauntlet attached to it. nobody warned me, because apparently this is a thing you're simply supposed to know.
+i was so cooked. standing up, holding a marker, looking at a whiteboard, with a brain that had already left the building without me.
 
-i blacked out. standing up, marker in hand, in front of people. i have done harder things than that half asleep and in that room i could not produce one thought.
+they said no in the room. in the room! didn't even let me have the walk home to guess.
 
-and they told me no right there. in the room. didn't even let me have the walk home.
-
-so that was my week. i'm going to go be excellent at something else now, quietly, where none of you can see me.
+so here's the new rule, and i'll be enforcing it personally: if there's going to be a whiteboard, it goes in the email. in bold. i'd also accept a warning siren. T_T
