@@ -1,24 +1,33 @@
 "use server";
 
+import { createHmac } from "node:crypto";
 import { cache } from "react";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import type { GuestbookFormState } from "@/types/guestbook";
 import { GUESTBOOK_CONFIG } from "@/constants/guestbook";
 import {
-  guestbookApi,
-  guestbookAuthHeader,
+  insertEntry,
   isGuestbookConfigured,
-} from "@/lib/guestbook";
-import { fetchAutoApprove, isAdminConfigured } from "@/lib/guestbook-admin";
+  readAutoApprove,
+  signedRecently,
+} from "@/lib/guestbook-db";
+import {
+  clean,
+  hasBlockedWord,
+  isMashed,
+  looksLikeSpam,
+  visitorBucket,
+} from "@/lib/guestbook-moderation";
+import { visitorHashKey } from "@/lib/guestbook-admin";
 
 /**
  * Signing has two outcomes and they are not interchangeable. Either the
- * signature is on the wall, or it is holding for review and the public
- * `/entries` feed filters it out. Saying the first when the second happened
- * sends someone to look for a name that is not there and conclude the wall is
- * broken. `null` is a third case: we could not establish which mode is on, so
- * nothing is promised about timing.
+ * signature is on the wall, or it is holding for review and the public wall
+ * filters it out. Saying the first when the second happened sends someone to
+ * look for a name that is not there and conclude the wall is broken. `null` is
+ * a third case: we could not establish which mode is on, so nothing is
+ * promised about timing.
  */
 const SIGNED = {
   published:
@@ -56,109 +65,29 @@ const COPY = {
     "one of those words is not going on my wall. you know which one. take it out and try again.",
   mashed:
     "that's a keyboard mash and we both know it. give me four real words. you have four words in you.",
-  tooFast:
-    "you just signed. seconds ago. i saw. wait a bit longer and you can go again.",
-  rejected:
-    "the wall didn't take that one. reword it in plain sentences and it'll go through.",
+  tooFast: `you just signed. seconds ago. i saw. give it ${GUESTBOOK_CONFIG.RATE_LIMIT_SECONDS} seconds and go again.`,
   broke:
     "that broke on my end, not yours. nothing was saved, so hit sign again in a moment.",
 } as const;
 
 /**
- * The API returns one flat `error` string, so the reason a signature bounced is
- * recovered by matching it. Ordered: the first pattern that matches wins, and
- * anything unrecognised (an older API build, a proxy error page) falls back to
- * COPY.rejected instead of guessing wrong. Telling someone to remove a link
- * they never wrote is worse than saying nothing specific.
- */
-const REJECTION_COPY: ReadonlyArray<readonly [RegExp, string]> = [
-  [/keyboard mash/, COPY.mashed],
-  [/link/, COPY.links],
-  [/word/, COPY.blockedWord],
-  [/^name has to be/, COPY.nameTooLong],
-  [/^message has to be/, COPY.messageTooLong],
-  [/name and a message/, COPY.noMessage],
-];
-
-/** The API's flat `error` string, or "" if the body was not readable. */
-const errorField = async (response: Response): Promise<string> => {
-  try {
-    const body: unknown = await response.json();
-    return typeof body === "object" && body !== null && "error" in body
-      ? String((body as { error: unknown }).error)
-      : "";
-  } catch {
-    return "";
-  }
-};
-
-const rejectionCopy = async (response: Response): Promise<string> => {
-  const reason = (await errorField(response)).toLowerCase();
-  return (
-    REJECTION_COPY.find(([pattern]) => pattern.test(reason))?.[1] ??
-    COPY.rejected
-  );
-};
-
-/**
- * The rate-limit window is RATE_LIMIT_SECONDS, a server-side env var, and it
- * has been changed since this copy was written. The old line promised "about
- * thirty seconds" against a 120 second window, wrong by 4x. A mirrored copy of
- * the number here would drift again the next time it is tuned, so the API's own
- * 429 body is passed through instead: it names the real figure, in the same
- * voice, and cannot go stale. The local fallback names no number at all.
- */
-const PASSTHROUGH_MAX = 200;
-
-const rateLimitCopy = async (response: Response): Promise<string> => {
-  const reason = (await errorField(response)).trim();
-  return reason && reason.length <= PASSTHROUGH_MAX ? reason : COPY.tooFast;
-};
-
-/**
- * A signature that was accepted answers 201 for both outcomes and separates
- * them in the body: `status: "approved"` went straight to the wall,
- * `status: "pending"` is holding for review. Anything else, an older API build
- * or a proxy rewriting the body, is unknown rather than assumed.
- */
-const publishedFromBody = async (
-  response: Response,
-): Promise<boolean | null> => {
-  try {
-    const body: unknown = await response.json();
-    const status =
-      typeof body === "object" && body !== null && "status" in body
-        ? String((body as { status: unknown }).status)
-        : "";
-    if (status === "approved") return true;
-    if (status === "pending") return false;
-    return null;
-  } catch {
-    return null;
-  }
-};
-
-/**
  * Whether a signature sent right now lands on the wall immediately.
  *
- * The switch lives in Postgres and only the admin token can read it, so this
- * runs on the server and hands back a plain boolean. GUESTBOOK_ADMIN_TOKEN
- * never leaves it. `null` means unknown: no admin credentials (preview
- * deployments) or the settings call failed. Callers must then say nothing
+ * The switch lives in the database. This runs on the server and hands back a
+ * plain boolean. `null` means unknown: the guestbook is not configured
+ * (preview deployments) or the read failed. Callers must then say nothing
  * about timing rather than guess, since guessing is the bug this fixes.
  *
  * Exported so the hero, the form and this action all state the same rule from
- * one read. The value is one the page already says out loud in prose, so
- * reaching it through a server action discloses nothing new.
+ * one read. Wrapped in React.cache so a single request that reads the mode
+ * more than once (the page, then the honeypot branch of a submission) makes
+ * one database call rather than several.
  */
-// Wrapped in React.cache so a single request that reads the mode more than once
-// (the page, then the honeypot branch of a submission) makes one call to the
-// admin-settings endpoint rather than several with the admin credential.
 const readAutoPublish = cache(async (): Promise<boolean | null> => {
-  if (!isAdminConfigured()) return null;
+  if (!isGuestbookConfigured()) return null;
 
   try {
-    return await fetchAutoApprove();
+    return await readAutoApprove();
   } catch (error) {
     console.error("[guestbook] auto-publish lookup failed:", error);
     return null;
@@ -174,18 +103,17 @@ const fail = (message: string): GuestbookFormState => ({
 });
 
 /**
- * Best-effort visitor IP. The request to the guestbook API originates from
- * Vercel's infrastructure, so the real client address has to be forwarded
- * explicitly. The API hashes it and never stores it raw.
+ * Best-effort visitor address, used only as a rate-limit bucket and only
+ * after hashing. Prefer the platform-set x-real-ip; fall back to the
+ * right-most forwarded hop. The platform appends the real client address on
+ * the right; the left-most entries are client-supplied, so keying the abuse
+ * bucket off them lets a script send a fresh spoofed value per request and
+ * slip the rate limit entirely.
  */
-const visitorIp = async (): Promise<string> => {
+const visitorAddress = async (): Promise<string> => {
   const headerList = await headers();
   const realIp = headerList.get("x-real-ip")?.trim();
   if (realIp) return realIp;
-  // Fall back to the right-most x-forwarded-for hop. The platform appends the
-  // real client address on the right; the left-most entries are client-supplied,
-  // so keying the abuse bucket off them lets a script send a fresh spoofed value
-  // per request and slip the rate limit entirely.
   const hops =
     headerList
       .get("x-forwarded-for")
@@ -194,6 +122,16 @@ const visitorIp = async (): Promise<string> => {
       .filter(Boolean) ?? [];
   return hops[hops.length - 1] ?? "";
 };
+
+/**
+ * The stored bucket key. HMAC keyed by a server secret, so the table holds
+ * nothing that resolves back to an address. Fails closed: a request with no
+ * usable address hashes the shared bucket rather than skipping the limit.
+ */
+const visitorHash = async (): Promise<string> =>
+  createHmac("sha256", visitorHashKey())
+    .update(`visitor:${visitorBucket(await visitorAddress())}`)
+    .digest("hex");
 
 export const signGuestbook = async (
   _prevState: GuestbookFormState,
@@ -208,7 +146,7 @@ export const signGuestbook = async (
   // byte-identical to what a real signature would have produced *in the
   // current mode*, or the difference is the signal, hence the lookup rather
   // than a hardcoded one of the two. If the mode cannot be read, assume
-  // publishing: it is the deployed default, and it is the only mode that makes
+  // publishing: it is the seeded default, and it is the only mode that makes
   // sense when the moderation queue is unreachable anyway.
   if (String(formData.get(GUESTBOOK_CONFIG.HONEYPOT_FIELD) ?? "").trim()) {
     return {
@@ -217,8 +155,11 @@ export const signGuestbook = async (
     };
   }
 
-  const name = String(formData.get("name") ?? "").trim();
-  const message = String(formData.get("message") ?? "").trim();
+  // clean() strips invisible characters, not just control characters.
+  // Zero-width and bidi controls defeat the link filter and let a signature
+  // visually reorder itself on the page.
+  const name = clean(formData.get("name"));
+  const message = clean(formData.get("message"));
 
   if (!name) {
     return fail(COPY.noName);
@@ -232,41 +173,41 @@ export const signGuestbook = async (
   if (message.length > GUESTBOOK_CONFIG.MESSAGE_MAX) {
     return fail(COPY.messageTooLong);
   }
+  if (looksLikeSpam(message) || looksLikeSpam(name)) {
+    return fail(COPY.links);
+  }
+  if (hasBlockedWord(message) || hasBlockedWord(name)) {
+    return fail(COPY.blockedWord);
+  }
+  if (isMashed(message) || isMashed(name)) {
+    return fail(COPY.mashed);
+  }
 
   try {
-    const response = await fetch(guestbookApi("/sign"), {
-      method: "POST",
-      headers: {
-        ...guestbookAuthHeader(),
-        "content-type": "application/json",
-        "x-visitor-ip": await visitorIp(),
-      },
-      body: JSON.stringify({ name, message }),
-      signal: AbortSignal.timeout(GUESTBOOK_CONFIG.REQUEST_TIMEOUT_MS),
-    });
+    const ipHash = await visitorHash();
 
-    if (response.status === 429) {
-      return fail(await rateLimitCopy(response));
-    }
-    if (response.status === 422 || response.status === 400) {
-      return fail(await rejectionCopy(response));
-    }
-    if (!response.ok) {
-      console.error(
-        `[guestbook] sign failed: ${response.status} ${response.statusText}`,
-      );
-      return fail(COPY.broke);
+    if (
+      GUESTBOOK_CONFIG.RATE_LIMIT_SECONDS > 0 &&
+      (await signedRecently(ipHash, GUESTBOOK_CONFIG.RATE_LIMIT_SECONDS))
+    ) {
+      return fail(COPY.tooFast);
     }
 
-    // 2xx only means the API took it, not that anyone can see it. The body says
-    // which, and the visitor is told which.
-    const published = await publishedFromBody(response);
+    // Read the mode at the moment of writing, not at page render: the owner
+    // may have flipped it between the two.
+    const autoPublish = await resolveAutoPublish();
+    const status = (autoPublish ?? true) ? "approved" : "pending";
+
+    const saved = await insertEntry({ name, message, status, ipHash });
 
     revalidatePath("/guestbook");
 
+    // Report what was actually stored, not what was intended.
     return {
       status: "success",
-      message: signedCopy(published),
+      message: signedCopy(
+        autoPublish === null ? null : saved.status === "approved",
+      ),
     };
   } catch (error) {
     console.error("[guestbook] sign threw:", error);

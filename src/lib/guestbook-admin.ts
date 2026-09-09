@@ -9,20 +9,23 @@ import "server-only";
 
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies, headers } from "next/headers";
-import type {
-  AdminGuestbookEntry,
-  GuestbookEntryStatus,
-  GuestbookSettings,
-} from "@/types/guestbook";
-import { GUESTBOOK_CONFIG } from "@/constants/guestbook";
-import { guestbookApi } from "@/lib/guestbook";
+import type { AdminGuestbookEntry } from "@/types/guestbook";
+import {
+  approveEntryById,
+  deleteEntryById,
+  readAllEntries,
+  readAutoApprove,
+  writeAutoApprove,
+} from "@/lib/guestbook-db";
 
 /**
- * Moderation credentials. All three are server-only.
+ * Moderation credentials. Both are server-only.
  *
  * - ADMIN_PASSWORD is what the human types.
- * - ADMIN_TOKEN is the API's admin bearer secret. It must never reach the
- *   browser, so every moderation call is proxied through a server action.
+ * - ADMIN_TOKEN is a server secret that keys every HMAC in the guestbook: the
+ *   session cookie, the sign-in throttle buckets and the stored visitor
+ *   hashes. It never reaches the browser. Rotating it signs every admin out
+ *   and resets every rate-limit bucket, and nothing else.
  */
 const ADMIN_PASSWORD = process.env.GUESTBOOK_ADMIN_PASSWORD;
 const ADMIN_TOKEN = process.env.GUESTBOOK_ADMIN_TOKEN;
@@ -66,8 +69,8 @@ export const passwordMatches = (candidate: string): boolean =>
  * It is worth having anyway because the fixed delay on a wrong password only
  * slows sequential guesses; ten parallel requests each waited 600ms and then
  * all returned. What actually keeps this door shut is the password itself
- * (12 random alphanumerics). A real distributed limiter belongs in the API,
- * where there is one process and a database to count in.
+ * (12 random alphanumerics). The public sign limiter, by contrast, counts in
+ * the database and survives instance churn.
  * ------------------------------------------------------------------------ */
 
 interface AttemptRecord {
@@ -123,8 +126,17 @@ const pruneAttempts = (now: number): void => {
 };
 
 /**
+ * The HMAC key for hashing visitor addresses before they are stored. Lives
+ * here because it is the same secret the session cookie uses, and exposing it
+ * through one named function keeps the sign action from reading the env var
+ * for itself.
+ */
+export const visitorHashKey = (): string => ADMIN_TOKEN ?? "";
+
+/**
  * An opaque per-client key. The address is HMAC'd with the admin token for the
- * same reason the API hashes visitor IPs: nothing here should hold a raw one.
+ * same reason the sign action hashes visitor IPs: nothing here should hold a
+ * raw one.
  *
  * Fails closed, like the public rate limiter: a request with no usable
  * address shares a single bucket rather than skipping the limit entirely.
@@ -207,102 +219,33 @@ export const isSignedIn = async (): Promise<boolean> => {
   return Boolean(value) && constantTimeEqual(value ?? "", sessionValue());
 };
 
-const adminHeaders = (): Record<string, string> => ({
-  authorization: `Bearer ${ADMIN_TOKEN}`,
-});
-
-/**
- * The API's status column is wider than this app's union, since it also permits
- * "rejected", and nothing stops it widening again. Only the exact string
- * "approved" is treated as published; everything else, known or not, falls
- * into the review queue.
- *
- * The failure this prevents is one-directional and deliberate: an unfamiliar
- * status showing up with an approve button is a shrug, whereas one silently
- * rendering as "published" would tell the owner a signature is live and
- * vetted when neither is established.
- */
-const narrowStatus = (status: unknown): GuestbookEntryStatus =>
-  status === "approved" ? "approved" : "pending";
-
-/** Every signature, approved or pending, newest first. */
-export const fetchAllEntries = async (): Promise<AdminGuestbookEntry[]> => {
-  const response = await fetch(guestbookApi("/admin/entries?status=all"), {
-    headers: adminHeaders(),
-    cache: "no-store",
-    signal: AbortSignal.timeout(GUESTBOOK_CONFIG.REQUEST_TIMEOUT_MS),
-  });
-
-  if (!response.ok) {
-    throw new Error(`admin list failed: ${response.status}`);
-  }
-
-  const data = (await response.json()) as {
-    entries?: (Omit<AdminGuestbookEntry, "status"> & { status?: unknown })[];
-  };
-
-  return (data.entries ?? []).map((entry) => ({
-    ...entry,
-    status: narrowStatus(entry.status),
-  }));
+/** Reject anything that is not a positive integer before it reaches the database. */
+const parseId = (raw: string): number | null => {
+  if (!/^\d+$/.test(raw)) return null;
+  const id = Number(raw);
+  return Number.isSafeInteger(id) && id > 0 ? id : null;
 };
 
-export const deleteEntry = async (id: string): Promise<void> => {
-  const response = await fetch(guestbookApi(`/admin/entries/${id}`), {
-    method: "DELETE",
-    headers: adminHeaders(),
-    signal: AbortSignal.timeout(GUESTBOOK_CONFIG.REQUEST_TIMEOUT_MS),
-  });
+/** Every signature, approved or pending, newest first. */
+export const fetchAllEntries = async (): Promise<AdminGuestbookEntry[]> =>
+  readAllEntries();
 
-  if (!response.ok && response.status !== 404) {
-    throw new Error(`admin delete failed: ${response.status}`);
-  }
+/** Idempotent: a signature that is already gone is not an error. */
+export const deleteEntry = async (id: string): Promise<void> => {
+  const parsed = parseId(id);
+  if (parsed === null) throw new Error("invalid id");
+  await deleteEntryById(parsed);
 };
 
 export const approveEntry = async (id: string): Promise<void> => {
-  const response = await fetch(guestbookApi(`/admin/entries/${id}/approve`), {
-    method: "POST",
-    headers: adminHeaders(),
-    signal: AbortSignal.timeout(GUESTBOOK_CONFIG.REQUEST_TIMEOUT_MS),
-  });
-
-  if (!response.ok) {
-    throw new Error(`admin approve failed: ${response.status}`);
-  }
+  const parsed = parseId(id);
+  if (parsed === null) throw new Error("invalid id");
+  if (!(await approveEntryById(parsed))) throw new Error("not found");
 };
 
-/** Whether new signatures publish unreviewed. Stays closed-mouthed on failure, so callers decide the fallback. */
-export const fetchAutoApprove = async (): Promise<boolean> => {
-  const response = await fetch(guestbookApi("/admin/settings"), {
-    headers: adminHeaders(),
-    cache: "no-store",
-    signal: AbortSignal.timeout(GUESTBOOK_CONFIG.REQUEST_TIMEOUT_MS),
-  });
+/** Whether new signatures publish unreviewed. Throws on failure, so callers decide the fallback. */
+export const fetchAutoApprove = async (): Promise<boolean> => readAutoApprove();
 
-  if (!response.ok) {
-    throw new Error(`admin settings fetch failed: ${response.status}`);
-  }
-
-  const data = (await response.json()) as GuestbookSettings;
-  return Boolean(data.autoApprove);
-};
-
-/** Returns the value the API actually persisted, not just an echo of the request. */
-export const setAutoApprove = async (autoApprove: boolean): Promise<boolean> => {
-  const response = await fetch(guestbookApi("/admin/settings"), {
-    method: "POST",
-    headers: {
-      ...adminHeaders(),
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({ autoApprove }),
-    signal: AbortSignal.timeout(GUESTBOOK_CONFIG.REQUEST_TIMEOUT_MS),
-  });
-
-  if (!response.ok) {
-    throw new Error(`admin settings update failed: ${response.status}`);
-  }
-
-  const data = (await response.json()) as { ok: boolean; autoApprove: boolean };
-  return Boolean(data.autoApprove);
-};
+/** Returns the value actually persisted, not just an echo of the request. */
+export const setAutoApprove = async (autoApprove: boolean): Promise<boolean> =>
+  writeAutoApprove(autoApprove);

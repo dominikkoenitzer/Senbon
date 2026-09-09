@@ -24,9 +24,9 @@ export interface GuestbookWallProps {
  * Moderation state of a signature, as this app models it. Only present on
  * admin responses.
  *
- * The API's own schema is wider, since its status column also permits "rejected",
- * but nothing writes that today and there is no UI that could act on it.
- * `fetchAllEntries` narrows at the boundary instead: anything it does not
+ * The database column is wider, since it also permits "rejected", but nothing
+ * writes that today and there is no UI that could act on it. The database
+ * layer narrows at the boundary instead: anything it does not
  * recognise becomes "pending", so an unfamiliar status lands in the queue that
  * has an approve button rather than rendering as already published. Widen this
  * union only together with UI that can handle the new state.
@@ -34,14 +34,9 @@ export interface GuestbookWallProps {
 export type GuestbookEntryStatus = "pending" | "approved";
 
 /**
- * A signature as seen by the moderation API: everything a public entry has,
- * plus the status the public `/entries` endpoint never exposes.
+ * A signature as seen by moderation: everything a public entry has, plus the
+ * status the public wall never exposes.
  */
 export interface AdminGuestbookEntry extends GuestbookEntry {
   status: GuestbookEntryStatus;
-}
-
-/** Moderation settings. Currently a single switch: publish on sight, or hold for review. */
-export interface GuestbookSettings {
-  autoApprove: boolean;
 }

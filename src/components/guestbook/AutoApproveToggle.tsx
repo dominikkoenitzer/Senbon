@@ -21,7 +21,7 @@ interface AutoApproveToggleProps {
  */
 const AutoApproveToggle = ({ initialAutoApprove }: AutoApproveToggleProps) => {
   // What we believe the server actually holds. Seeded from the prop, then
-  // corrected by whatever the API reports it persisted.
+  // corrected by whatever the server reports it persisted.
   const [saved, setSaved] = useState(initialAutoApprove);
   const [lastProp, setLastProp] = useState(initialAutoApprove);
   const [failed, setFailed] = useState(false);
@@ -56,7 +56,7 @@ const AutoApproveToggle = ({ initialAutoApprove }: AutoApproveToggleProps) => {
         return;
       }
 
-      // Trust the API's own answer over our optimism.
+      // Trust the server's own answer over our optimism.
       if (typeof result.autoApprove === "boolean") {
         setSaved(result.autoApprove);
       }

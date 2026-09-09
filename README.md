@@ -80,7 +80,8 @@ place.
   under reduced motion
 - **[react-markdown](https://github.com/remarkjs/react-markdown)** + `remark-gfm` +
   `rehype-highlight` for entry rendering
-- An external guestbook API
+- **[Supabase](https://supabase.com/)** Postgres for the guestbook, reached only from
+  server actions with the secret key; nothing in the browser talks to it
 - **[Vercel](https://vercel.com/)** hosting + first-party `@vercel/analytics`
 
 No Framer Motion, no shadcn/ui, no Radix. Entrance animation is a CSS class, and
@@ -105,6 +106,15 @@ bun run dev          # → http://localhost:1000
 No configuration is needed to run the journal locally; entries are read from
 `content/journal/`. The guestbook degrades to an "offline" notice unless its
 environment variables are set. See [`env.example`](env.example).
+
+The guestbook schema lives in `supabase/migrations/`. Apply it to a fresh
+project with the Supabase CLI (installed as a dev dependency):
+
+```bash
+bun x supabase login
+bun x supabase link --project-ref <project-ref>
+bun x supabase db push
+```
 
 ## Scripts
 
