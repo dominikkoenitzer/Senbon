@@ -18,6 +18,11 @@ export const Paragraph = ({ className, children }: MarkdownComponentProps) => (
   </p>
 );
 
+/**
+ * The underline colour, offset and thickness come from `.read-prose a` in
+ * globals.css, which is unlayered and would override any decoration utility
+ * set here. So none are set here.
+ */
 export const Link = ({ className, children, href }: MarkdownLinkProps) => {
   const isExternal = Boolean(href && /^https?:\/\//i.test(href));
   return (
@@ -26,7 +31,7 @@ export const Link = ({ className, children, href }: MarkdownLinkProps) => {
       target={isExternal ? "_blank" : undefined}
       rel={isExternal ? "noopener noreferrer" : undefined}
       className={cn(
-        "overflow-wrap-anywhere inline-flex min-w-0 items-baseline gap-0.5 text-primary underline decoration-primary/40 decoration-1 underline-offset-4 transition-colors hover:decoration-primary",
+        "overflow-wrap-anywhere inline-flex min-w-0 items-baseline gap-0.5 text-primary underline transition-colors",
         className
       )}
     >

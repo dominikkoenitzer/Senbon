@@ -152,7 +152,7 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
         <span
           aria-hidden="true"
           className={cn(
-            "self-end text-xs lowercase tracking-wider",
+            "self-end text-xs lowercase",
             remaining < 20 ? "text-primary" : "text-foreground/70",
           )}
         >

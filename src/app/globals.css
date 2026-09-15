@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 
 @theme inline {
   --color-background: var(--background);
@@ -424,8 +423,9 @@ code {
 
 /*
  * Entrance animation in CSS so pages that only needed a fade can stay server
- * components. Framer Motion is still available for anything genuinely
- * interactive. It just shouldn't be imported to move something 12px.
+ * components. There is no animation library in the bundle any more. If
+ * something genuinely interactive ever needs one, add it for that thing, not
+ * to move a card 12px.
  */
 @keyframes fade-up {
   from {
@@ -462,11 +462,20 @@ code {
   }
 }
 
-/* Links in prose get a soft blush underline that fills in on hover. */
+/*
+ * Links in prose get a soft blush underline that fills in to rose on hover.
+ * Unlayered on purpose, so it outranks decoration utilities: the markdown Link
+ * component sets none of its own, and this is the one place the look lives.
+ */
 .read-prose a {
   text-decoration-color: var(--accent);
   text-underline-offset: 0.2em;
   text-decoration-thickness: 0.12em;
+}
+
+.read-prose a:hover,
+.read-prose a:focus-visible {
+  text-decoration-color: var(--primary);
 }
 
 @media (prefers-reduced-motion: reduce) {
