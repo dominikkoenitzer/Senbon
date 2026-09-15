@@ -179,7 +179,9 @@ const GuestbookForm = ({ autoPublish }: GuestbookFormProps) => {
           type="submit"
           disabled={isPending}
           aria-describedby={statusId}
-          className="group inline-flex w-fit items-center gap-2.5 rounded-full border border-primary/30 px-6 py-3 text-xs lowercase text-primary transition-colors hover:border-primary/60 hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-50"
+          // shrink-0 + nowrap: the status line beside it is long, and without them the
+          // flex row squeezed the button until its label broke onto two lines.
+          className="group inline-flex w-fit shrink-0 items-center gap-2.5 whitespace-nowrap rounded-full border border-primary/30 px-6 py-3 text-xs lowercase text-primary transition-colors hover:border-primary/60 hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isPending ? (
             <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
