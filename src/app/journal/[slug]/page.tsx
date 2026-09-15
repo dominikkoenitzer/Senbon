@@ -69,7 +69,7 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
           title={formatJournalDate(post.publishedAt)}
           className="text-xs lowercase text-foreground/70"
         >
-          {formatRelativeDate(post.publishedAt).toLowerCase()}
+          {formatRelativeDate(post.publishedAt)}
         </time>
       </header>
 

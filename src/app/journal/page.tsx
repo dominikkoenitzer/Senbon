@@ -56,7 +56,7 @@ const JournalPage = async () => {
                   title={formatJournalDate(post.publishedAt)}
                   className="text-xs lowercase text-foreground/70"
                 >
-                  {formatRelativeDate(post.publishedAt).toLowerCase()}
+                  {formatRelativeDate(post.publishedAt)}
                 </time>
                 {/* Title and excerpt are author-supplied frontmatter, so a
                     single unbroken string could otherwise widen the card. */}
