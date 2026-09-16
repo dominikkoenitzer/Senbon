@@ -57,14 +57,4 @@ next-env.d.ts
 .DS_Store
 Thumbs.db
 
-# Local
-.cursor/
-
-# AI agent tooling (local only)
-CLAUDE.md
-AGENTS.md
-.claude/
-.agents/
-skills-lock.json
-
 .vercel
