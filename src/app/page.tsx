@@ -64,7 +64,7 @@ const Home = () => (
         href="https://github.com/dominikkoenitzer"
         target="_blank"
         rel="noopener noreferrer"
-        className="group inline-flex items-center gap-2 text-sm lowercase text-foreground/70 transition-colors hover:text-primary"
+        className="group inline-flex items-center gap-2 py-2 -my-2 text-sm lowercase text-foreground/70 transition-colors hover:text-primary"
       >
         <GithubMark className="size-4" aria-hidden="true" />
         <span>github</span>

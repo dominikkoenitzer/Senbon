@@ -23,7 +23,7 @@ const JournalPage = async () => {
       <header className="flex flex-col gap-7">
         <Link
           href="/"
-          className="group inline-flex w-fit items-center gap-2 text-xs lowercase text-foreground/70 transition-colors hover:text-primary"
+          className="group inline-flex w-fit items-center gap-2 py-2 -my-2 text-xs lowercase text-foreground/70 transition-colors hover:text-primary"
         >
           <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
           <span>back</span>

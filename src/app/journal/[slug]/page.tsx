@@ -48,7 +48,7 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
       <header className="flex flex-col gap-6">
         <Link
           href="/journal"
-          className="group inline-flex w-fit items-center gap-2 text-xs lowercase text-foreground/70 transition-colors hover:text-primary"
+          className="group inline-flex w-fit items-center gap-2 py-2 -my-2 text-xs lowercase text-foreground/70 transition-colors hover:text-primary"
         >
           <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
           <span>journal</span>
@@ -83,7 +83,7 @@ const JournalPostPage = async ({ params }: { params: Promise<Params> }) => {
         </p>
         <Link
           href="/guestbook"
-          className="group inline-flex w-fit items-center gap-2 text-xs lowercase text-primary transition-colors hover:text-foreground"
+          className="group inline-flex w-fit items-center gap-2 py-2 -my-2 text-xs lowercase text-primary transition-colors hover:text-foreground"
         >
           <span>fine, i&apos;ll sign it</span>
           <ArrowUpRight
