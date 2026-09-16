@@ -23,7 +23,7 @@ const links = [
 
 const Home = () => (
   <div className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center gap-14 px-6 py-20 md:px-8">
-    <header className="flex flex-col gap-6 fade-up">
+    <header className="flex flex-col gap-6">
       <h1 className="font-display text-7xl lowercase leading-[0.82] tracking-tight text-foreground md:text-9xl display-balance">
         senbon
       </h1>
