@@ -22,17 +22,18 @@ const responseHeaders = [
     value: "max-age=63072000; includeSubDomains; preload",
   },
   /*
-   * A baseline CSP for defense-in-depth. No script-src nonce policy yet: Next's
-   * inline bootstrap makes that fiddly and there is no known injection today
+   * Defense-in-depth. `script-src` still carries 'unsafe-inline' because Next
+   * streams its bootstrap through inline script tags and a nonce policy means
+   * making every route dynamic; there is no known injection today anyway
    * (react-markdown runs without rehype-raw, everything else is auto-escaped).
-   * These four directives are the cheap, safe wins: frame-ancestors is the
-   * spoof-resistant successor to X-Frame-Options, and the rest lock down base
-   * href, plugins, and form targets.
+   * It is worth stating regardless: 'self' still blocks an injected script tag
+   * pointing at another origin, which is the shape an exfiltration would take.
+   * Supabase is only ever reached from the server, so connect-src stays closed.
    */
   {
     key: "Content-Security-Policy",
     value:
-      "frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self'",
+      "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests",
   },
 ];
 
