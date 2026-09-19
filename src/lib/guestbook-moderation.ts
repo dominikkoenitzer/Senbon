@@ -65,8 +65,10 @@ export const collapseRuns = (text: string): string =>
 const TLDS =
   "com|net|org|io|co|de|ch|ru|cn|xyz|top|info|biz|shop|club|online|site|live|link|app|dev|me|tv|cc|pw|casino|bet|loan|work|click|example";
 
+// A bare dot is a domain when it is tight ("spam.com") or spaced on both
+// sides ("spam . com"); trailing space alone is just a sentence ending.
 const SEPARATOR =
-  "\\s*(?:\\.|\\[\\s*dot\\s*\\]|\\(\\s*\\.?\\s*\\)|\\s+dot\\s+)\\s*";
+  "(?:\\.|\\s+\\.\\s+|\\s*(?:\\[\\s*dot\\s*\\]|\\(\\s*\\.?\\s*\\)|\\s+dot\\s+)\\s*)";
 
 const LINK_PATTERNS: readonly RegExp[] = [
   /https?:\s*\/\//i,
