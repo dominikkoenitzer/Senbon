@@ -145,13 +145,12 @@ export const signGuestbook = async (
   // bot has no signal to adapt to, but write nothing. The wording must stay
   // byte-identical to what a real signature would have produced *in the
   // current mode*, or the difference is the signal, hence the lookup rather
-  // than a hardcoded one of the two. If the mode cannot be read, assume
-  // publishing: it is the seeded default, and it is the only mode that makes
-  // sense when the moderation queue is unreachable anyway.
+  // than a hardcoded one of the two. A mode that cannot be read promises
+  // nothing about timing here either.
   if (String(formData.get(GUESTBOOK_CONFIG.HONEYPOT_FIELD) ?? "").trim()) {
     return {
       status: "success",
-      message: signedCopy((await resolveAutoPublish()) ?? true),
+      message: signedCopy(await resolveAutoPublish()),
     };
   }
 
@@ -196,6 +195,8 @@ export const signGuestbook = async (
     // Read the mode at the moment of writing, not at page render: the owner
     // may have flipped it between the two.
     const autoPublish = await resolveAutoPublish();
+    // An unreadable mode publishes: it is the seeded default, and holding
+    // entries in a queue nobody can reach would lose them quietly.
     const status = (autoPublish ?? true) ? "approved" : "pending";
 
     const saved = await insertEntry({ name, message, status, ipHash });
